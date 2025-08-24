@@ -49,6 +49,22 @@ Este é um projeto web que simula a comparação entre comprar um produto à vis
 
 ## Diretrizes Técnicas
 
+### Estrutura de Arquivos
+
+```
+simulacoes/
+├── index.html           # Página principal da calculadora
+├── styles.css           # Estilos CSS com tema dark
+├── script.js           # Lógica JavaScript da aplicação
+├── favicon.svg         # Ícone escalável da aplicação
+├── manifest.json       # Configuração PWA
+├── sitemap.xml         # Mapa do site para SEO
+├── robots.txt          # Instruções para crawlers
+└── .github/
+    └── instructions/
+        └── context.instructions.md
+```
+
 ### Tecnologias
 
 - **Frontend**: HTML5, CSS3, JavaScript (vanilla ou framework leve)
@@ -122,3 +138,143 @@ VP_total = Soma de todas as VP_parcela_i
 - **Comentários em Português**: Documentação em português brasileiro
 - **Validação robusta**: Validar todos os inputs financeiros
 - **Precisão decimal**: Usar bibliotecas adequadas para cálculos financeiros precisos
+
+## SEO e Otimizações Web
+
+### Meta Tags e Estrutura
+
+- **Title otimizado**: "Calculadora Financeira: À Vista vs Parcelado com Taxa Selic - Simulação Gratuita"
+- **Meta description**: Descrição clara e atrativa com palavras-chave relevantes
+- **Keywords**: calculadora financeira, à vista vs parcelado, taxa selic, simulação financeira, etc.
+- **Open Graph**: Meta tags para compartilhamento em redes sociais
+- **Twitter Cards**: Otimização para compartilhamento no Twitter
+- **Canonical URL**: https://satinp.github.io/simulacoes/
+
+### Estrutura Semântica
+
+- **HTML5 semântico**: Uso correto de header, main, section, footer
+- **Headings hierárquicos**: H1, H2, H3 organizados logicamente
+- **Schema.org**: JSON-LD com dados estruturados da aplicação web
+- **Lang attribute**: pt-BR para indicar idioma português brasileiro
+- **Alt texts**: Textos alternativos em imagens (quando aplicável)
+
+### Favicon e Identidade Visual
+
+- **Favicon SVG**: Ícone escalável de calculadora com tema dark
+- **Apple touch icon**: Compatibilidade com dispositivos iOS
+- **Theme color**: #1a1a2e para consistência visual
+- **Manifest.json**: Configuração PWA com metadados da aplicação
+
+### Arquivos de SEO
+
+- **sitemap.xml**: Mapeamento de URLs para motores de busca
+- **robots.txt**: Instruções para crawlers com referência ao sitemap
+- **manifest.json**: Configuração de Progressive Web App
+
+### Conteúdo Otimizado
+
+- **Texto descritivo**: Explicações claras sobre funcionamento da calculadora
+- **Palavras-chave naturais**: Integração orgânica de termos relevantes
+- **Conteúdo educativo**: Seções explicativas sobre metodologia e benefícios
+- **Call-to-actions**: Textos direcionais claros e objetivos
+
+### Performance e Acessibilidade
+
+- **Loading rápido**: Otimização para carregamento em iframe
+- **Mobile-first**: Responsividade completa para dispositivos móveis
+- **Contraste adequado**: Cores que garantem legibilidade
+- **Navigation**: Estrutura clara e intuitiva
+
+### Palavras-chave Alvo
+
+#### Primárias
+
+- calculadora financeira
+- à vista vs parcelado
+- taxa selic
+- simulação financeira
+- valor presente
+
+#### Secundárias
+
+- investimento vs parcelamento
+- custo de oportunidade
+- decisão financeira
+- economia doméstica
+- planejamento financeiro
+- calculadora selic
+- comparar formas de pagamento
+
+#### Long-tail
+
+- "calcular se vale a pena parcelar ou pagar à vista"
+- "simulador financeiro com taxa selic"
+- "qual melhor forma de pagamento considerando selic"
+- "calculadora online gratuita valor presente"
+
+### Estratégia de Conteúdo
+
+- **Conteúdo educativo**: Explicar conceitos financeiros de forma acessível
+- **Exemplos práticos**: Cases reais de uso da calculadora
+- **Benefícios claros**: Destacar vantagens de usar a ferramenta
+- **Metodologia transparente**: Explicar como os cálculos são realizados
+- **Atualizações**: Manter dados da Selic sempre atualizados
+
+### Implementação SEO Realizada
+
+#### Meta Tags Implementadas
+
+```html
+<!-- SEO básico -->
+<title>
+  Calculadora Financeira: À Vista vs Parcelado com Taxa Selic - Simulação
+  Gratuita
+</title>
+<meta
+  name="description"
+  content="Calculadora online gratuita para comparar pagamento à vista vs parcelado considerando a taxa Selic atual..."
+/>
+<meta
+  name="keywords"
+  content="calculadora financeira, à vista vs parcelado, taxa selic..."
+/>
+
+<!-- Open Graph para redes sociais -->
+<meta
+  property="og:title"
+  content="Calculadora Financeira: À Vista vs Parcelado com Taxa Selic"
+/>
+<meta property="og:description" content="Calculadora online gratuita..." />
+<meta property="og:url" content="https://satinp.github.io/simulacoes/" />
+
+<!-- Twitter Cards -->
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:title" content="Calculadora Financeira..." />
+```
+
+#### Dados Estruturados (JSON-LD)
+
+```json
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Calculadora Financeira: À Vista vs Parcelado",
+  "description": "Calculadora online gratuita...",
+  "applicationCategory": "FinanceApplication"
+}
+```
+
+#### Arquivos SEO Criados
+
+- **sitemap.xml**: Mapa do site com URL principal e frequência de atualização
+- **robots.txt**: Permite indexação e referencia o sitemap
+- **manifest.json**: Configuração PWA com metadados da aplicação
+- **favicon.svg**: Ícone otimizado com tema da calculadora
+
+#### Otimizações de Conteúdo
+
+- **Headings semânticos**: H1 principal, H2 e H3 organizados hierarquicamente
+- **Conteúdo descritivo**: Seções explicativas sobre metodologia e benefícios
+- **Palavras-chave naturais**: Integração orgânica nos textos
+- **Alt texts**: Implementados para elementos visuais
+- **Estrutura HTML5**: Tags semânticas (header, main, section, footer)
