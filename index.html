@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simulação: À Vista vs Parcelado</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>🧮 Simulação Financeira</h1>
+        <p class="subtitle">À Vista vs Parcelado com Taxa Selic</p>
+      </header>
+
+      <div class="selic-info">
+        <div class="selic-card">
+          <span class="selic-label">Taxa Selic Atual:</span>
+          <span id="selicRate" class="selic-value">Carregando...</span>
+          <span id="selicDate" class="selic-date"></span>
+        </div>
+      </div>
+
+      <form id="simulationForm" class="form-container">
+        <div class="input-group">
+          <label for="productValue">Valor do Produto (R$)</label>
+          <input
+            type="text"
+            id="productValue"
+            placeholder="R$ 1.000,00"
+            required
+          />
+        </div>
+
+        <div class="input-group">
+          <label for="cashValue">Valor à Vista (R$)</label>
+          <input type="text" id="cashValue" placeholder="R$ 950,00" required />
+        </div>
+
+        <div class="input-group">
+          <label for="installments">Número de Parcelas</label>
+          <input
+            type="number"
+            id="installments"
+            placeholder="Ex: 12"
+            min="1"
+            max="60"
+            required
+          />
+        </div>
+
+        <button type="submit" class="calculate-btn">
+          <span>Calcular Simulação</span>
+          <span class="btn-icon">📊</span>
+        </button>
+      </form>
+
+      <div id="results" class="results-container" style="display: none">
+        <h2>Resultado da Simulação</h2>
+
+        <div class="comparison-cards">
+          <div class="option-card cash-option">
+            <h3>💰 Pagamento à Vista</h3>
+            <div class="value-display">
+              <span class="value-label">Valor pago:</span>
+              <span id="cashPayment" class="value-amount"></span>
+            </div>
+            <div class="value-display total">
+              <span class="value-label">Custo total:</span>
+              <span id="cashTotalCost" class="value-amount"></span>
+            </div>
+          </div>
+
+          <div class="option-card installment-option">
+            <h3>📅 Pagamento Parcelado</h3>
+            <div class="value-display">
+              <span class="value-label">Valor da parcela:</span>
+              <span id="installmentValue" class="value-amount"></span>
+            </div>
+            <div class="value-display">
+              <span class="value-label">Total nominal:</span>
+              <span id="installmentTotal" class="value-amount"></span>
+            </div>
+            <div class="value-display total">
+              <span class="value-label">Custo efetivo (valor presente):</span>
+              <span id="installmentTotalCost" class="value-amount"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="recommendation-card">
+          <h3 id="recommendationTitle">Recomendação</h3>
+          <p id="recommendationText"></p>
+          <div class="savings-display">
+            <span id="savingsLabel" class="savings-label"></span>
+            <span id="savingsValue" class="savings-value"></span>
+            <span id="savingsPercent" class="savings-percent"></span>
+          </div>
+        </div>
+
+        <div class="details-section">
+          <h3>Detalhes do Cálculo</h3>
+          <div class="detail-item">
+            <span>Taxa Selic mensal utilizada:</span>
+            <span id="monthlySelicRate"></span>
+          </div>
+          <div class="detail-item">
+            <span>Período de análise:</span>
+            <span id="investmentPeriod"></span>
+          </div>
+          <div class="detail-item">
+            <span
+              >Conceito: Valor presente das parcelas vs pagamento à vista</span
+            >
+            <span id="grossReturn"></span>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <p>💡 Simulação baseada na taxa Selic atual do Banco Central</p>
+        <p class="disclaimer">
+          Esta é uma simulação educativa. Consulte um especialista para decisões
+          financeiras importantes.
+        </p>
+      </footer>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
