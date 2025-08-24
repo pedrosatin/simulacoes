@@ -313,8 +313,6 @@ const SelicAPI = {
         throw new Error('Taxa Selic inválida recebida da API')
       }
 
-      console.log(`Taxa Selic carregada: ${rate}% (${date})`)
-
       // Atualizar cache
       selicCache = {
         rate: rate,
