@@ -1,0 +1,23 @@
+{
+  "name": "Calculadora Financeira: À Vista vs Parcelado",
+  "short_name": "Calc Financeira",
+  "description": "Calculadora online gratuita para comparar pagamento à vista vs parcelado considerando a taxa Selic atual",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f0f0f",
+  "theme_color": "#1a1a2e",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["finance", "productivity", "utilities"],
+  "lang": "pt-BR",
+  "scope": "/",
+  "related_applications": [],
+  "prefer_related_applications": false
+}

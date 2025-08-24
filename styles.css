@@ -45,6 +45,15 @@ header h1 {
   font-size: 1.1rem;
   color: #a0a0a0;
   font-weight: 400;
+  margin-bottom: 10px;
+}
+
+.description {
+  font-size: 0.95rem;
+  color: #b0b0b0;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.5;
 }
 
 /* Taxa Selic Info */
@@ -441,5 +450,104 @@ footer p {
   .recommendation-card,
   .details-section {
     margin-bottom: 20px;
+  }
+}
+
+/* Footer aprimorado */
+footer {
+  margin-top: 40px;
+  padding-top: 30px;
+  border-top: 1px solid #2a2a2a;
+}
+
+.info-section {
+  margin-bottom: 25px;
+}
+
+.info-section h2 {
+  font-size: 1.4rem;
+  color: #ffffff;
+  margin-bottom: 15px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.info-section h3 {
+  font-size: 1.1rem;
+  color: #00d4aa;
+  margin: 20px 0 10px 0;
+}
+
+.info-section p {
+  color: #b0b0b0;
+  line-height: 1.6;
+  margin-bottom: 15px;
+}
+
+.info-section ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.info-section li {
+  color: #b0b0b0;
+  margin-bottom: 8px;
+  padding-left: 20px;
+  position: relative;
+}
+
+.info-section li::before {
+  content: '✓';
+  color: #00d4aa;
+  font-weight: bold;
+  position: absolute;
+  left: 0;
+}
+
+.footer-disclaimer {
+  text-align: center;
+  padding-top: 20px;
+  border-top: 1px solid #2a2a2a;
+}
+
+.footer-disclaimer p {
+  color: #808080;
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+}
+
+.disclaimer {
+  font-size: 0.85rem !important;
+  color: #606060 !important;
+}
+
+/* Input help text */
+.input-help {
+  display: block;
+  font-size: 0.8rem;
+  color: #808080;
+  margin-top: 4px;
+  line-height: 1.3;
+}
+
+/* Semantic sections */
+.calculator-section {
+  margin: 20px 0;
+}
+
+.selic-info {
+  margin-bottom: 25px;
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  .input-group input,
+  .calculate-btn,
+  .option-card,
+  .recommendation-card,
+  .details-section {
+    transition: none;
   }
 }
