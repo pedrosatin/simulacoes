@@ -9,6 +9,7 @@ A Calculadora de Rescisão Trabalhista é uma ferramenta online gratuita que cal
 ### Tipos de Rescisão Suportados
 
 1. **Demissão sem Justa Causa**
+
    - Aviso prévio indenizado
    - 13º salário proporcional
    - Férias vencidas e proporcionais + 1/3
@@ -17,11 +18,13 @@ A Calculadora de Rescisão Trabalhista é uma ferramenta online gratuita que cal
    - Direito ao seguro-desemprego
 
 2. **Demissão por Justa Causa**
+
    - Apenas saldo de salário
    - Férias vencidas + 1/3 (se houver)
    - Sem demais verbas
 
 3. **Pedido de Demissão**
+
    - Saldo de salário
    - 13º salário proporcional
    - Férias vencidas e proporcionais + 1/3
@@ -54,11 +57,13 @@ A Calculadora de Rescisão Trabalhista é uma ferramenta online gratuita que cal
 ## Como Usar
 
 1. **Informações Básicas**
+
    - Informe o salário mensal
    - Selecione as datas de admissão e rescisão
    - Escolha o tipo de rescisão
 
 2. **Informações Adicionais**
+
    - Dias de aviso prévio trabalhado (opcional)
    - Período de férias vencidas (opcional)
    - Marque se é optante do saque-aniversário
@@ -72,21 +77,25 @@ A Calculadora de Rescisão Trabalhista é uma ferramenta online gratuita que cal
 ## Regras de Cálculo
 
 ### Aviso Prévio
+
 - Base: 30 dias
 - Adicional: 3 dias por ano completo trabalhado
 - Máximo: 90 dias
 - Acordo: 50% do valor total
 
 ### 13º Salário
+
 - Proporcional aos meses trabalhados no ano da rescisão
 - 15 dias ou mais = mês completo
 
 ### Férias Proporcionais
+
 - Calculadas desde o último aniversário de contrato
 - 15 dias ou mais = mês completo
 - Sempre com adicional de 1/3
 
 ### Multa FGTS
+
 - Demissão sem justa causa: 40%
 - Saque-aniversário: 20%
 - Acordo: 20%

@@ -6,10 +6,11 @@ applyTo: '**'
 
 ## Descrição do Projeto
 
-Este é um projeto web que oferece calculadoras financeiras para auxiliar em decisões econômicas pessoais. O projeto inclui duas principais ferramentas:
+Este é um projeto web que oferece calculadoras financeiras para auxiliar em decisões econômicas pessoais. O projeto inclui três principais ferramentas:
 
 1. **Calculadora À Vista vs Parcelado**: Simula a comparação entre comprar um produto à vista ou parcelado, considerando a taxa Selic atual
 2. **Calculadora de Salário Líquido**: Calcula o salário líquido considerando descontos obrigatórios (INSS, IRRF) e opcionais
+3. **Calculadora de Rescisão Trabalhista**: Calcula o valor das verbas rescisórias para todos os tipos de rescisão trabalhista
 
 ## Funcionalidades Principais
 
@@ -26,14 +27,22 @@ Este é um projeto web que oferece calculadoras financeiras para auxiliar em dec
 - **Consideração**: Aplicação correta das alíquotas por faixas salariais
 - **Descontos opcionais**: Plano de saúde, vale refeição, vale transporte, outros
 
-### 3. Dados Dinâmicos
+### 3. Calculadora de Rescisão Trabalhista
+
+- **Input**: Salário mensal, datas de admissão e rescisão, tipo de rescisão, informações adicionais
+- **Tipos de rescisão**: Demissão sem/com justa causa, pedido de demissão, acordo (Reforma Trabalhista)
+- **Verbas calculadas**: Saldo de salário, aviso prévio, 13º salário, férias vencidas/proporcionais, multa FGTS
+- **Funcionalidades especiais**: Saque-aniversário FGTS, aviso prévio trabalhado, validação de datas
+- **Cálculos específicos**: Aviso prévio progressivo (30 dias + 3 por ano), férias proporcionais, multas diferenciadas
+
+### 4. Dados Dinâmicos
 
 - **Taxa Selic**: Buscar automaticamente a taxa atual do Banco Central a cada acesso
 - **API Sugerida**: Usar API do Banco Central do Brasil ou similar
 - **Atualização**: Dados devem ser atualizados dinamicamente
 - **Tabelas tributárias**: INSS e IRRF atualizadas para 2025
 
-### 4. Cálculos Financeiros
+### 5. Cálculos Financeiros
 
 - **Valor Presente**: Calcular o valor presente das parcelas descontado pela taxa Selic
 - **Custo de Oportunidade**: Comparar custo à vista vs valor presente do parcelamento
@@ -69,13 +78,16 @@ Este é um projeto web que oferece calculadoras financeiras para auxiliar em dec
 simulacoes/
 ├── index.html           # Página principal da calculadora À Vista vs Parcelado
 ├── salario.html         # Página da calculadora de Salário Líquido
+├── rescisao.html        # Página da calculadora de Rescisão Trabalhista
 ├── styles.css           # Estilos CSS com tema dark (compartilhado)
 ├── script.js           # Lógica JavaScript da calculadora À Vista vs Parcelado
 ├── salario.js          # Lógica JavaScript da calculadora de Salário Líquido
+├── rescisao.js         # Lógica JavaScript da calculadora de Rescisão Trabalhista
 ├── favicon.svg         # Ícone escalável da aplicação
 ├── manifest.json       # Configuração PWA
-├── sitemap.xml         # Mapa do site para SEO (inclui ambas as páginas)
+├── sitemap.xml         # Mapa do site para SEO (inclui todas as páginas)
 ├── robots.txt          # Instruções para crawlers
+├── RESCISAO.md         # Documentação específica da calculadora de rescisão
 └── .github/
     └── instructions/
         └── context.instructions.md
@@ -151,6 +163,22 @@ VP_total = Soma de todas as VP_parcela_i
 - VP das parcelas ≈ R$ 938
 - Resultado: Parcelar é R$ 52 melhor que à vista
 
+#### Calculadora de Rescisão Trabalhista
+
+1. **Saldo de salário**: Dias trabalhados no mês da rescisão ÷ 30 × salário
+2. **Aviso prévio**: 30 dias base + 3 dias por ano trabalhado (máximo 90 dias)
+3. **13º salário**: Proporcional aos meses trabalhados no ano (≥15 dias = mês completo)
+4. **Férias vencidas**: Períodos não gozados × salário × 1,33
+5. **Férias proporcionais**: Meses desde último aniversário × salário ÷ 12 × 1,33
+6. **Multa FGTS**: 40% (demissão), 20% (acordo/saque-aniversário), 0% (justa causa/pedido)
+
+### Regras Específicas por Tipo de Rescisão
+
+- **Demissão sem justa causa**: Todas as verbas + seguro-desemprego
+- **Demissão por justa causa**: Apenas saldo + férias vencidas (se houver)
+- **Pedido de demissão**: Sem multa FGTS, sem seguro-desemprego
+- **Acordo (Reforma Trabalhista)**: 50% aviso prévio, 20% multa FGTS, 80% saque FGTS
+
 ## Fontes de Dados
 
 - **API Banco Central**: https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados/ultimos/1?formato=json (Meta Selic COPOM)
@@ -199,7 +227,7 @@ VP_total = Soma de todas as VP_parcela_i
 
 ### Arquivos de SEO
 
-- **sitemap.xml**: Mapeamento de URLs para motores de busca (inclui ambas as páginas)
+- **sitemap.xml**: Mapeamento de URLs para motores de busca (inclui todas as páginas)
 - **robots.txt**: Instruções para crawlers com referência ao sitemap
 - **manifest.json**: Configuração de Progressive Web App
 
@@ -229,6 +257,10 @@ VP_total = Soma de todas as VP_parcela_i
 - calculadora salário líquido
 - INSS
 - IRRF
+- calculadora rescisão trabalhista
+- demissão sem justa causa
+- aviso prévio
+- verbas rescisórias
 
 #### Secundárias
 
@@ -242,6 +274,11 @@ VP_total = Soma de todas as VP_parcela_i
 - desconto folha pagamento
 - salário bruto líquido
 - tabela imposto renda 2025
+- 13º salário proporcional
+- férias vencidas
+- FGTS multa
+- acordo trabalhista
+- reforma trabalhista
 
 #### Long-tail
 
@@ -252,6 +289,10 @@ VP_total = Soma de todas as VP_parcela_i
 - "calcular salário líquido com INSS e IRRF"
 - "quanto desconta de INSS do meu salário"
 - "tabela imposto de renda 2025 salário"
+- "calcular rescisão trabalhista demissão sem justa causa"
+- "valor verbas rescisórias aviso prévio 13º férias"
+- "calculadora FGTS multa rescisão trabalhista"
+- "acordo rescisão trabalhista reforma trabalhista"
 
 ### Estratégia de Conteúdo
 
@@ -385,3 +426,53 @@ VP_total = Soma de todas as VP_parcela_i
 - **Mobile-first**: Otimizado para dispositivos móveis
 - **Grid adaptável**: Layout flexível para diferentes telas
 - **Navegação touch**: Botões e campos otimizados para toque
+
+## Calculadora de Rescisão Trabalhista - Especificações Técnicas
+
+### Regras de Cálculo Implementadas
+
+#### Tipos de Rescisão Suportados
+
+1. **Demissão sem Justa Causa**
+
+   - Todas as verbas rescisórias
+   - Multa de 40% sobre FGTS (ou 20% se saque-aniversário)
+   - Direito ao seguro-desemprego
+
+2. **Demissão por Justa Causa**
+
+   - Apenas saldo de salário e férias vencidas
+   - Sem multa do FGTS, sem seguro-desemprego
+
+3. **Pedido de Demissão**
+
+   - Todas as verbas exceto multa do FGTS
+   - Sem seguro-desemprego
+
+4. **Acordo (Reforma Trabalhista)**
+   - 50% do aviso prévio
+   - Multa de 20% sobre FGTS
+   - Saque de até 80% do FGTS
+
+#### Cálculos Específicos
+
+- **Aviso Prévio**: 30 dias + 3 dias por ano trabalhado (máx. 90 dias)
+- **13º Salário**: Proporcional aos meses trabalhados (≥15 dias = mês completo)
+- **Férias Proporcionais**: Desde último aniversário + 1/3 constitucional
+- **Saldo de Salário**: Dias trabalhados no mês ÷ 30 × salário
+
+#### Validações e Recursos
+
+- **Validação de datas**: Impede inconsistências temporais
+- **Saque-aniversário**: Reduz multa FGTS de 40% para 20%
+- **Aviso trabalhado**: Desconta dias trabalhados do total
+- **Formatação monetária**: Máscara brasileira automática
+- **Responsividade**: Interface adaptada para mobile e desktop
+
+#### Interface Específica
+
+- **Cards informativos**: Explicação dos tipos de rescisão
+- **Formulário estruturado**: Informações básicas e adicionais separadas
+- **Breakdown detalhado**: Cada verba calculada separadamente
+- **Informações legais**: Grid com regras por tipo de rescisão
+- **Validação em tempo real**: Feedback imediato para o usuário
