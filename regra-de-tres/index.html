@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- SEO Meta Tags -->
+    <title>
+      Calculadora de Regra de Três e Porcentagens - Simulações Online
+    </title>
+    <meta
+      name="description"
+      content="Calculadora online gratuita de regra de três simples e cálculos de porcentagem. Descubra quanto vale um valor em porcentagem de outro, calcule aumentos, descontos e proporções."
+    />
+    <meta
+      name="keywords"
+      content="regra de três, porcentagem, calculadora porcentagem, regra de três simples, proporção, calcular percentual, aumento porcentagem, desconto porcentagem"
+    />
+    <meta name="author" content="satinP" />
+    <meta name="robots" content="index, follow" />
+    <meta name="language" content="Portuguese" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="https://satinp.github.io/simulacoes/regra-de-tres/"
+    />
+    <meta
+      property="og:title"
+      content="Calculadora de Regra de Três e Porcentagens"
+    />
+    <meta
+      property="og:description"
+      content="Calculadora online gratuita de regra de três simples e cálculos de porcentagem. Descubra proporções e percentuais facilmente."
+    />
+    <meta
+      property="og:image"
+      content="https://satinp.github.io/simulacoes/favicon.svg"
+    />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta
+      property="twitter:url"
+      content="https://satinp.github.io/simulacoes/regra-de-tres/"
+    />
+    <meta
+      property="twitter:title"
+      content="Calculadora de Regra de Três e Porcentagens"
+    />
+    <meta
+      property="twitter:description"
+      content="Calculadora online gratuita de regra de três simples e cálculos de porcentagem."
+    />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <link
+      rel="canonical"
+      href="https://satinp.github.io/simulacoes/regra-de-tres/"
+    />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="../assets/global.css" />
+    <link rel="stylesheet" href="regra-de-tres.css" />
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Calculadora de Regra de Três e Porcentagens",
+        "description": "Calculadora online gratuita de regra de três simples e cálculos de porcentagem",
+        "url": "https://satinp.github.io/simulacoes/regra-de-tres/",
+        "applicationCategory": "UtilityApplication",
+        "operatingSystem": "Any",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "BRL"
+        },
+        "creator": {
+          "@type": "Person",
+          "name": "satinP"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div class="container">
+      <nav class="navigation">
+        <div class="nav-brand">
+          <span class="nav-logo">🧮</span>
+          <span class="nav-title">Simulações Online</span>
+        </div>
+        <ul class="nav-menu">
+          <li><a href="../" class="nav-link">🏠 Início</a></li>
+          <li>
+            <a href="../a-vista-vs-parcelado/" class="nav-link"
+              >À Vista vs Parcelado</a
+            >
+          </li>
+          <li>
+            <a href="../salario-liquido/" class="nav-link">Salário Líquido</a>
+          </li>
+          <li>
+            <a href="../rescisao-trabalhista/" class="nav-link"
+              >Rescisão Trabalhista</a
+            >
+          </li>
+          <li>
+            <a href="../regra-de-tres/" class="nav-link active"
+              >Regra de Três</a
+            >
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Header -->
+      <header>
+        <h1>Regra de Três e Porcentagens</h1>
+        <p class="subtitle">
+          Calculadora online para regra de três simples e cálculos de
+          porcentagem
+        </p>
+        <p class="description">
+          Resolva problemas matemáticos do dia a dia com nossa calculadora de
+          regra de três e porcentagens. Ferramenta ideal para calcular
+          proporções, aumentos, descontos e descobrir que porcentagem um valor
+          representa em relação a outro.
+        </p>
+      </header>
+
+      <!-- Menu de Abas -->
+      <div class="tabs-container">
+        <button class="tab-button active" data-tab="regra-tres">
+          Regra de Três
+        </button>
+        <button class="tab-button" data-tab="porcentagem">Porcentagens</button>
+        <button class="tab-button" data-tab="proporcao">Que % é de</button>
+      </div>
+
+      <!-- Conteúdo Principal -->
+      <main>
+        <!-- Aba Regra de Três -->
+        <div id="regra-tres" class="tab-content active">
+          <div class="calculator-section">
+            <h2>🔢 Regra de Três Simples</h2>
+            <p class="section-description">
+              Se <strong>A está para B</strong>, então
+              <strong>C está para X</strong>. Informe três valores conhecidos
+              para descobrir o quarto.
+            </p>
+
+            <div class="regra-tres-visual">
+              <div class="proporcao">
+                <div class="proporcao-lado">
+                  <label for="valorA">A:</label>
+                  <input
+                    type="text"
+                    id="valorA"
+                    class="input-number"
+                    placeholder="0"
+                  />
+                  <span class="proporcao-separator">está para</span>
+                  <label for="valorB">B:</label>
+                  <input
+                    type="text"
+                    id="valorB"
+                    class="input-number"
+                    placeholder="0"
+                  />
+                </div>
+
+                <div class="proporcao-centro">
+                  <span class="equals">=</span>
+                </div>
+
+                <div class="proporcao-lado">
+                  <label for="valorC">C:</label>
+                  <input
+                    type="text"
+                    id="valorC"
+                    class="input-number"
+                    placeholder="0"
+                  />
+                  <span class="proporcao-separator">está para</span>
+                  <label for="valorX">X:</label>
+                  <input
+                    type="text"
+                    id="valorX"
+                    class="input-number resultado"
+                    readonly
+                    placeholder="?"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="calculation-info">
+              <h3>📐 Como funciona</h3>
+              <p>
+                A regra de três é uma forma de encontrar um valor desconhecido
+                através de uma proporção.
+              </p>
+              <div class="formula">
+                <strong>Fórmula:</strong> A × X = B × C → X = (B × C) ÷ A
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Aba Porcentagem -->
+        <div id="porcentagem" class="tab-content">
+          <div class="calculator-section">
+            <h2>📊 Cálculos de Porcentagem</h2>
+            <p class="section-description">
+              Calcule aumentos, descontos e valores baseados em porcentagens.
+            </p>
+
+            <div class="porcentagem-opcoes">
+              <div class="opcao-card">
+                <h3>Quanto é X% de um valor?</h3>
+                <div class="input-group">
+                  <label for="percentual1">Porcentagem (%):</label>
+                  <input
+                    type="text"
+                    id="percentual1"
+                    class="input-number"
+                    placeholder="0"
+                  />
+                </div>
+                <div class="input-group">
+                  <label for="valor1">De qual valor:</label>
+                  <input
+                    type="text"
+                    id="valor1"
+                    class="input-number"
+                    placeholder="0,00"
+                  />
+                </div>
+                <div class="resultado-card">
+                  <span class="resultado-label">Resultado:</span>
+                  <span id="resultado1" class="resultado-valor">0,00</span>
+                </div>
+              </div>
+
+              <div class="opcao-card">
+                <h3>Aplicar aumento/desconto</h3>
+                <div class="input-group">
+                  <label for="valorBase">Valor base:</label>
+                  <input
+                    type="text"
+                    id="valorBase"
+                    class="input-number"
+                    placeholder="0,00"
+                  />
+                </div>
+                <div class="input-group">
+                  <label for="percentualMudanca">Percentual:</label>
+                  <div class="input-with-toggle">
+                    <input
+                      type="text"
+                      id="percentualMudanca"
+                      class="input-number"
+                      placeholder="0"
+                    />
+                    <div class="toggle-buttons">
+                      <button
+                        type="button"
+                        class="toggle-btn active"
+                        data-type="aumento"
+                      >
+                        + Aumento
+                      </button>
+                      <button
+                        type="button"
+                        class="toggle-btn"
+                        data-type="desconto"
+                      >
+                        - Desconto
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="resultado-detalhado">
+                  <div class="resultado-linha">
+                    <span>Valor original:</span>
+                    <span id="valorOriginal">0,00</span>
+                  </div>
+                  <div class="resultado-linha">
+                    <span id="tipoMudanca">Aumento:</span>
+                    <span id="valorMudanca">0,00</span>
+                  </div>
+                  <div class="resultado-linha total">
+                    <span>Valor final:</span>
+                    <span id="valorFinal">0,00</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Aba Que % é de -->
+        <div id="proporcao" class="tab-content">
+          <div class="calculator-section">
+            <h2>🔍 Que porcentagem um valor representa</h2>
+            <p class="section-description">
+              Descubra que porcentagem um valor representa em relação a outro.
+            </p>
+
+            <div class="proporcao-calc">
+              <div class="input-group-horizontal">
+                <div class="input-group">
+                  <label for="valorParte">Valor (parte):</label>
+                  <input
+                    type="text"
+                    id="valorParte"
+                    class="input-number"
+                    placeholder="0,00"
+                  />
+                </div>
+
+                <span class="operador">é que % de</span>
+
+                <div class="input-group">
+                  <label for="valorTotal">Valor (total):</label>
+                  <input
+                    type="text"
+                    id="valorTotal"
+                    class="input-number"
+                    placeholder="0,00"
+                  />
+                </div>
+              </div>
+
+              <div class="resultado-proporcao">
+                <div class="resultado-principal">
+                  <span id="resultadoPorcentagem">0%</span>
+                  <p class="resultado-explicacao">
+                    <span id="explicacaoCalculo">0 representa 0% de 0</span>
+                  </p>
+                </div>
+              </div>
+
+              <div class="exemplos-praticos">
+                <h3>📚 Exemplos práticos:</h3>
+                <ul>
+                  <li>
+                    <strong>Desconto:</strong> Se você pagou 80 em um produto
+                    que custava 100, você teve 20% de desconto
+                  </li>
+                  <li>
+                    <strong>Aprovação:</strong> Se você acertou 85 questões de
+                    100, sua taxa de acerto foi de 85%
+                  </li>
+                  <li>
+                    <strong>Crescimento:</strong> Se um valor subiu de 2.000
+                    para 2.400, houve um aumento de 20%
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Seção Informativa -->
+        <section class="info-section">
+          <div class="info-card">
+            <h3>🎯 Como usar</h3>
+            <p>
+              Esta calculadora oferece três ferramentas matemáticas essenciais
+              para o dia a dia. Use as abas acima para navegar entre as
+              diferentes funcionalidades.
+            </p>
+          </div>
+
+          <div class="info-card">
+            <h3>📐 Precisão</h3>
+            <p>
+              Todos os cálculos são realizados com precisão decimal para
+              garantir resultados exatos em suas operações matemáticas.
+            </p>
+          </div>
+
+          <div class="info-card">
+            <h3>💡 Dicas</h3>
+            <p>
+              Use vírgula (,) para decimais. Os valores são formatados
+              automaticamente conforme você digita, facilitando a visualização.
+            </p>
+          </div>
+        </section>
+      </main>
+
+      <!-- Footer -->
+      <footer>
+        <div class="footer-content">
+          <p>
+            <strong>Simulações Online</strong> - Ferramentas educativas para
+            decisões inteligentes
+          </p>
+          <p class="disclaimer">
+            ⚠️ <strong>Aviso Legal:</strong> Esta é uma ferramenta educativa
+            para auxiliar em cálculos matemáticos. Os resultados são baseados em
+            operações matemáticas padrão. Para aplicações acadêmicas ou
+            profissionais importantes, confirme sempre os cálculos com fontes
+            especializadas.
+          </p>
+        </div>
+      </footer>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="regra-de-tres.js"></script>
+  </body>
+</html>

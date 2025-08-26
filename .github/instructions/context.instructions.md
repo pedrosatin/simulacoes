@@ -2,15 +2,16 @@
 applyTo: '**'
 ---
 
-# Projeto: Simulações Financeiras
+# Projeto: Simulações Online
 
 ## Descrição do Projeto
 
-Este é um projeto web que oferece calculadoras financeiras para auxiliar em decisões econômicas pessoais. O projeto inclui três principais ferramentas:
+Este é um projeto web que oferece calculadoras online para auxiliar em decisões econômicas pessoais e cálculos matemáticos do dia a dia. O projeto inclui quatro principais ferramentas:
 
 1. **Calculadora À Vista vs Parcelado**: Simula a comparação entre comprar um produto à vista ou parcelado, considerando a taxa Selic atual
 2. **Calculadora de Salário Líquido**: Calcula o salário líquido considerando descontos obrigatórios (INSS, IRRF) e opcionais
 3. **Calculadora de Rescisão Trabalhista**: Calcula o valor das verbas rescisórias para todos os tipos de rescisão trabalhista
+4. **Calculadora de Regra de Três e Porcentagens**: Resolve problemas de regra de três simples e calcula porcentagens, aumentos, descontos e proporções
 
 ## Funcionalidades Principais
 
@@ -35,7 +36,17 @@ Este é um projeto web que oferece calculadoras financeiras para auxiliar em dec
 - **Funcionalidades especiais**: Saque-aniversário FGTS, aviso prévio trabalhado, validação de datas
 - **Cálculos específicos**: Aviso prévio progressivo (30 dias + 3 por ano), férias proporcionais, multas diferenciadas
 
-### 4. Dados Dinâmicos
+### 4. Calculadora de Regra de Três e Porcentagens
+
+- **Interface**: Sistema de abas para diferentes tipos de cálculo
+- **Aba Regra de Três**: Interface visual para resolver proporções A:B = C:X
+- **Aba Porcentagens**: Calcular X% de um valor e aplicar aumentos/descontos
+- **Aba "Que % é de"**: Descobrir que porcentagem um valor representa de outro
+- **Formatação**: Máscara numérica brasileira (vírgula para decimais)
+- **Validação**: Validação em tempo real dos inputs
+- **Resultados**: Exibição clara dos resultados sem prefixos desnecessários
+
+### 5. Dados Dinâmicos
 
 - **Taxa Selic**: Buscar automaticamente a taxa atual do Banco Central a cada acesso
 - **API Sugerida**: Usar API do Banco Central do Brasil ou similar
@@ -93,6 +104,10 @@ simulacoes/
 │   ├── index.html      # Página da calculadora de Rescisão Trabalhista
 │   ├── rescisao-trabalhista.css
 │   └── rescisao-trabalhista.js
+├── regra-de-tres/
+│   ├── index.html      # Página da calculadora de Regra de Três e Porcentagens
+│   ├── regra-de-tres.css
+│   └── regra-de-tres.js
 ├── assets/
 │   └── global.css      # Estilos CSS globais com tema dark
 └── .github/
@@ -133,6 +148,12 @@ simulacoes/
 5. **Descontos opcionais**: Vale transporte (máximo 6%), plano de saúde, outros
 
 ## Integração com satinp.dev.br
+
+- **Iframe**: O projeto será incorporado como iframe
+- **Dimensões**: Considerar tamanhos responsivos
+- **Comunicação**: Se necessário, implementar postMessage para comunicação com o site pai
+- **Performance**: Otimizar para carregamento em iframe
+- **Consistência visual**: Manter harmonia com o design do site principal
 
 - **Iframe**: O projeto será incorporado como iframe
 - **Dimensões**: Considerar tamanhos responsivos
@@ -186,6 +207,58 @@ VP_total = Soma de todas as VP_parcela_i
 - **Pedido de demissão**: Sem multa FGTS, sem seguro-desemprego
 - **Acordo (Reforma Trabalhista)**: 50% aviso prévio, 20% multa FGTS, 80% saque FGTS
 
+#### Calculadora de Regra de Três e Porcentagens
+
+### Funcionalidades por Aba
+
+#### Aba 1: Regra de Três Simples
+
+- **Interface visual**: Proporção A:B = C:X com layout intuitivo
+- **Fórmula**: X = (B × C) ÷ A
+- **Validação**: Impede divisão por zero e inputs inválidos
+- **Resultado**: Formatação automática com vírgula decimal brasileira
+- **Explicação**: Seção educativa sobre como funciona a regra de três
+
+#### Aba 2: Cálculos de Porcentagem
+
+- **Subseção 1**: "Quanto é X% de um valor?"
+  - Input: Percentual e valor base
+  - Output: Resultado numérico (sem prefixo R$)
+- **Subseção 2**: "Aplicar aumento/desconto"
+  - Toggle entre aumento e desconto
+  - Exibe: Valor original, valor da mudança, valor final
+  - Cores dinâmicas: Verde para aumento, vermelho para desconto
+
+#### Aba 3: "Que % é de"
+
+- **Funcionalidade**: Calcular que porcentagem um valor representa de outro
+- **Layout**: Inputs alinhados com operador "é que % de" centralizado
+- **Resultado**: Porcentagem com explicação textual
+- **Exemplos práticos**: Casos de uso reais (descontos, aprovações, crescimento)
+
+### Características Técnicas
+
+#### Formatação de Números
+
+- **Entrada**: Aceita vírgula como separador decimal
+- **Validação**: Regex para formato brasileiro (0000,00)
+- **Saída**: Formatação automática conforme padrão nacional
+- **Precisão**: Até 2 casas decimais para valores, 1 para porcentagens
+
+#### Interface por Abas
+
+- **Sistema de tabs**: JavaScript para alternar entre funcionalidades
+- **Estado ativo**: Indicação visual da aba selecionada
+- **Responsividade**: Tabs adaptáveis para mobile
+- **Navegação**: Mudança suave entre abas sem reload
+
+#### Validações Implementadas
+
+- **Campos obrigatórios**: Validação em tempo real
+- **Divisão por zero**: Tratamento específico na regra de três
+- **Limites**: Máximo de 2 casas decimais
+- **Feedback visual**: Cores de erro nos inputs inválidos
+
 ## Fontes de Dados
 
 - **API Banco Central**: https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados/ultimos/1?formato=json (Meta Selic COPOM)
@@ -204,18 +277,19 @@ VP_total = Soma de todas as VP_parcela_i
 
 ### Meta Tags e Estrutura
 
-- **Title otimizado**: "Calculadora Financeira: À Vista vs Parcelado com Taxa Selic - Simulação Gratuita"
+- **Title otimizado**: "Simulações Online - Calculadoras Gratuitas"
 - **Meta description**: Descrição clara e atrativa com palavras-chave relevantes
-- **Keywords**: calculadora financeira, à vista vs parcelado, taxa selic, simulação financeira, etc.
+- **Keywords**: calculadoras online, financeiras, matemáticas, regra de três, porcentagem, etc.
 - **Open Graph**: Meta tags para compartilhamento em redes sociais
 - **Twitter Cards**: Otimização para compartilhamento no Twitter
 - **Canonical URL**: https://satinp.github.io/simulacoes/
 
-#### Página de Salário Líquido
+#### Páginas Específicas
 
-- **Title**: "Calculadora de Salário Líquido 2025 - Desconto INSS e IRRF"
-- **Keywords**: calculadora salário líquido, INSS, IRRF, desconto folha pagamento, tabela imposto renda 2025
-- **Canonical URL**: https://satinp.github.io/simulacoes/salario.html
+- **Salário Líquido**: "Calculadora de Salário Líquido 2025 - Desconto INSS e IRRF"
+- **Rescisão Trabalhista**: "Calculadora de Rescisão Trabalhista - Verbas Rescisórias"
+- **Regra de Três**: "Calculadora de Regra de Três e Porcentagens - Online Gratuita"
+- **À Vista vs Parcelado**: "Calculadora À Vista vs Parcelado com Taxa Selic"
 
 ### Estrutura Semântica
 
@@ -268,6 +342,9 @@ VP_total = Soma de todas as VP_parcela_i
 - demissão sem justa causa
 - aviso prévio
 - verbas rescisórias
+- regra de três
+- calculadora porcentagem
+- calculadora online
 
 #### Secundárias
 
@@ -286,6 +363,11 @@ VP_total = Soma de todas as VP_parcela_i
 - FGTS multa
 - acordo trabalhista
 - reforma trabalhista
+- regra de três simples
+- calcular porcentagem
+- aumento desconto percentual
+- proporção matemática
+- que porcentagem representa
 
 #### Long-tail
 
@@ -300,14 +382,22 @@ VP_total = Soma de todas as VP_parcela_i
 - "valor verbas rescisórias aviso prévio 13º férias"
 - "calculadora FGTS multa rescisão trabalhista"
 - "acordo rescisão trabalhista reforma trabalhista"
+- "regra de três simples como calcular"
+- "calcular porcentagem de um valor online"
+- "quanto é X por cento de um número"
+- "calcular aumento percentual desconto"
+- "que porcentagem representa um valor de outro"
+- "calculadora proporção matemática online"
+- "resolver regra de três passo a passo"
 
 ### Estratégia de Conteúdo
 
-- **Conteúdo educativo**: Explicar conceitos financeiros de forma acessível
-- **Exemplos práticos**: Cases reais de uso da calculadora
-- **Benefícios claros**: Destacar vantagens de usar a ferramenta
+- **Conteúdo educativo**: Explicar conceitos financeiros e matemáticos de forma acessível
+- **Exemplos práticos**: Cases reais de uso das calculadoras
+- **Benefícios claros**: Destacar vantagens de usar cada ferramenta
 - **Metodologia transparente**: Explicar como os cálculos são realizados
 - **Atualizações**: Manter dados da Selic sempre atualizados
+- **Diversidade temática**: Abordar tanto aspectos financeiros quanto matemáticos
 
 ### Implementação SEO Realizada
 

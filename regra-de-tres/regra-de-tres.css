@@ -1,0 +1,522 @@
+/* Estilos específicos para Calculadora de Regra de Três e Porcentagens */
+
+/* ==========================================================================
+   Navegação por Abas
+   ========================================================================== */
+
+.tabs-container {
+  display: flex;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 6px;
+  margin-bottom: 30px;
+  overflow-x: auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.tab-button {
+  flex: 1;
+  min-width: 140px;
+  padding: 12px 16px;
+  background: transparent;
+  color: #a0a0a0;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.tab-button:hover {
+  background: rgba(102, 126, 234, 0.1);
+  color: #ffffff;
+}
+
+.tab-button.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* ==========================================================================
+   Seção da Calculadora
+   ========================================================================== */
+
+.calculator-section {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 30px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.calculator-section h2 {
+  color: #667eea;
+  margin-bottom: 15px;
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+.section-description {
+  color: #a0a0a0;
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+/* ==========================================================================
+   Regra de Três Visual
+   ========================================================================== */
+
+.regra-tres-visual {
+  background: rgba(102, 126, 234, 0.05);
+  border: 1px solid rgba(102, 126, 234, 0.2);
+  border-radius: 12px;
+  padding: 30px;
+  margin: 30px 0;
+}
+
+.proporcao {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 30px;
+  align-items: center;
+}
+
+.proporcao-lado {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.proporcao-lado label {
+  font-weight: 600;
+  color: #667eea;
+  font-size: 1.1rem;
+  margin-bottom: 5px;
+}
+
+.proporcao-lado input {
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #333;
+  background: #1a1a1a;
+  color: #ffffff;
+  font-size: 1.1rem;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.proporcao-lado input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.proporcao-lado input.resultado {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-color: #667eea;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.proporcao-lado input.resultado::placeholder {
+  color: #ffffff;
+  opacity: 0.8;
+}
+
+.proporcao-separator {
+  font-size: 0.9rem;
+  color: #a0a0a0;
+  text-align: center;
+  font-style: italic;
+  margin: 5px 0;
+}
+
+.proporcao-centro {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.equals {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #667eea;
+  background: rgba(102, 126, 234, 0.1);
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(102, 126, 234, 0.3);
+}
+
+/* ==========================================================================
+   Cálculos de Porcentagem
+   ========================================================================== */
+
+.porcentagem-opcoes {
+  display: grid;
+  gap: 30px;
+  margin: 30px 0;
+}
+
+.opcao-card {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.opcao-card h3 {
+  color: #667eea;
+  margin-bottom: 20px;
+  font-size: 1.3rem;
+  text-align: center;
+}
+
+.input-group {
+  margin-bottom: 20px;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #ffffff;
+  font-size: 1rem;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #333;
+  background: #1a1a1a;
+  color: #ffffff;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.input-with-toggle {
+  display: flex;
+  gap: 15px;
+  align-items: flex-end;
+}
+
+.input-with-toggle input {
+  flex: 1;
+}
+
+.toggle-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.toggle-btn {
+  padding: 15px 20px;
+  border: 1px solid #333;
+  background: #1a1a1a;
+  color: #a0a0a0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.toggle-btn:hover {
+  border-color: #667eea;
+  color: #ffffff;
+}
+
+.toggle-btn.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-color: #667eea;
+  color: #ffffff;
+}
+
+.resultado-card {
+  background: rgba(102, 126, 234, 0.1);
+  border: 1px solid rgba(102, 126, 234, 0.3);
+  border-radius: 12px;
+  padding: 25px;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.resultado-label {
+  display: block;
+  font-size: 0.9rem;
+  color: #a0a0a0;
+  margin-bottom: 10px;
+}
+
+.resultado-valor {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #667eea;
+}
+
+.resultado-detalhado {
+  background: rgba(102, 126, 234, 0.1);
+  border: 1px solid rgba(102, 126, 234, 0.3);
+  border-radius: 12px;
+  padding: 25px;
+  margin-top: 20px;
+}
+
+.resultado-linha {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.resultado-linha:last-child {
+  border-bottom: none;
+}
+
+.resultado-linha.total {
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: #667eea;
+  border-top: 2px solid rgba(102, 126, 234, 0.3);
+  margin-top: 10px;
+  padding-top: 15px;
+}
+
+/* ==========================================================================
+   Que % é de
+   ========================================================================== */
+
+.proporcao-calc {
+  margin: 30px 0;
+}
+
+.input-group-horizontal {
+  display: flex;
+  align-items: flex-end;
+  gap: 20px;
+  background: rgba(102, 126, 234, 0.05);
+  border: 1px solid rgba(102, 126, 234, 0.2);
+  border-radius: 12px;
+  padding: 30px;
+  margin-bottom: 30px;
+}
+
+.input-group-horizontal .input-group {
+  margin-bottom: 0;
+  flex: 1;
+}
+
+.operador {
+  color: #667eea;
+  font-weight: bold;
+  font-size: 1.1rem;
+  white-space: nowrap;
+  background: rgba(102, 126, 234, 0.1);
+  padding: 15px 20px;
+  border-radius: 8px;
+  border: 1px solid rgba(102, 126, 234, 0.3);
+  margin-bottom: 0;
+  align-self: flex-end;
+  height: fit-content;
+}
+
+.resultado-proporcao {
+  text-align: center;
+  margin: 30px 0;
+}
+
+.resultado-principal {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 16px;
+  padding: 40px;
+  margin-bottom: 20px;
+  box-shadow: 0 8px 30px rgba(102, 126, 234, 0.3);
+}
+
+.resultado-principal span {
+  font-size: 3.5rem;
+  font-weight: bold;
+  color: #ffffff;
+  display: block;
+}
+
+.resultado-explicacao {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.2rem;
+  margin-top: 15px;
+  font-style: italic;
+}
+
+.exemplos-praticos {
+  background: rgba(102, 126, 234, 0.05);
+  border: 1px solid rgba(102, 126, 234, 0.2);
+  border-radius: 12px;
+  padding: 25px;
+  margin-top: 30px;
+}
+
+.exemplos-praticos h3 {
+  color: #667eea;
+  margin-bottom: 20px;
+  font-size: 1.3rem;
+}
+
+.exemplos-praticos ul {
+  list-style: none;
+  padding: 0;
+}
+
+.exemplos-praticos li {
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: #e0e0e0;
+  line-height: 1.6;
+}
+
+.exemplos-praticos li:last-child {
+  border-bottom: none;
+}
+
+.exemplos-praticos strong {
+  color: #667eea;
+}
+
+/* ==========================================================================
+   Seção de Informações
+   ========================================================================== */
+
+.calculation-info {
+  background: rgba(102, 126, 234, 0.05);
+  border: 1px solid rgba(102, 126, 234, 0.2);
+  border-radius: 12px;
+  padding: 25px;
+  margin-top: 30px;
+}
+
+.calculation-info h3 {
+  color: #667eea;
+  margin-bottom: 15px;
+  font-size: 1.3rem;
+}
+
+.calculation-info p {
+  color: #e0e0e0;
+  margin-bottom: 15px;
+  line-height: 1.6;
+}
+
+.formula {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 20px;
+  font-family: 'Courier New', monospace;
+  border-left: 4px solid #667eea;
+  margin-top: 15px;
+}
+
+.formula strong {
+  color: #667eea;
+}
+
+/* ==========================================================================
+   Responsividade
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .tabs-container {
+    margin: 0 -1rem 30px;
+    border-radius: 0;
+  }
+
+  .calculator-section {
+    padding: 20px;
+  }
+
+  .proporcao {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    text-align: center;
+  }
+
+  .proporcao-centro {
+    order: 2;
+  }
+
+  .equals {
+    transform: rotate(90deg);
+  }
+
+  .input-group-horizontal {
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px;
+  }
+
+  .input-with-toggle {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .toggle-buttons {
+    justify-content: center;
+  }
+
+  .resultado-principal span {
+    font-size: 2.5rem;
+  }
+
+  .operador {
+    order: 2;
+    margin: 15px 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .regra-tres-visual,
+  .opcao-card,
+  .input-group-horizontal {
+    padding: 20px;
+  }
+
+  .tab-button {
+    min-width: 120px;
+    padding: 10px 12px;
+    font-size: 0.9rem;
+  }
+
+  .resultado-principal {
+    padding: 30px;
+  }
+
+  .resultado-principal span {
+    font-size: 2rem;
+  }
+}
