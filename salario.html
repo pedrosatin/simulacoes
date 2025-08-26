@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- SEO Meta Tags -->
+    <title>Calculadora de Salário Líquido 2025 - Desconto INSS e IRRF</title>
+    <meta
+      name="description"
+      content="Calculadora online gratuita de salário líquido. Calcule o valor líquido considerando INSS, IRRF e outros descontos. Atualizada com as tabelas de 2025."
+    />
+    <meta
+      name="keywords"
+      content="calculadora salário líquido, INSS, IRRF, desconto folha pagamento, salário bruto líquido, tabela imposto renda 2025"
+    />
+    <meta name="author" content="satinP" />
+    <meta name="robots" content="index, follow" />
+    <meta name="language" content="Portuguese" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="https://satinp.github.io/simulacoes/salario.html"
+    />
+    <meta property="og:title" content="Calculadora de Salário Líquido 2025" />
+    <meta
+      property="og:description"
+      content="Calculadora online gratuita de salário líquido. Calcule o valor líquido considerando INSS, IRRF e outros descontos."
+    />
+    <meta
+      property="og:image"
+      content="https://satinp.github.io/simulacoes/favicon.svg"
+    />
+    <meta property="og:site_name" content="Simulações Financeiras" />
+    <meta property="og:locale" content="pt_BR" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta
+      property="twitter:url"
+      content="https://satinp.github.io/simulacoes/salario.html"
+    />
+    <meta
+      property="twitter:title"
+      content="Calculadora de Salário Líquido 2025"
+    />
+    <meta
+      property="twitter:description"
+      content="Calculadora online gratuita de salário líquido. Calcule o valor líquido considerando INSS, IRRF e outros descontos."
+    />
+    <meta
+      property="twitter:image"
+      content="https://satinp.github.io/simulacoes/favicon.svg"
+    />
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iYmdHcmFkaWVudCIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiMxYTFhMmUiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojMTYyMTNlIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJpY29uR3JhZGllbnQiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdHlsZT0ic3RvcC1jb2xvcjojMDBkNGFhIi8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3R5bGU9InN0b3AtY29sb3I6IzdjM2FlZCIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CiAgCiAgPCEtLSBCYWNrZ3JvdW5kIGNpcmNsZSAtLT4KICA8Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSI0OCIgZmlsbD0idXJsKCNiZ0dyYWRpZW50KSIgc3Ryb2tlPSIjMDBkNGFhIiBzdHJva2Utd2lkdGg9IjIiLz4KICA8IS0tIENhbGN1bGF0b3IgaWNvbiAtLT4KICA8cmVjdCB4PSIyNSIgeT0iMjAiIHdpZHRoPSI1MCIgaGVpZ2h0PSI2MCIgcng9IjQiIGZpbGw9InVybCgjaWNvbkdyYWRpZW50KSIgb3BhY2l0eT0iMC45Ii8+CiAgPHJlY3QgeD0iMjgiIHk9IjI1IiB3aWR0aD0iNDQiIGhlaWdodD0iMTIiIHJ4PSIyIiBmaWxsPSIjMWExYTJlIi8+CiAgPCEtLSBEb2xsYXIgc2lnbiAtLT4KICA8dGV4dCB4PSI1MCIgeT0iMzMiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSI4IiBmb250LXdlaWdodD0iYm9sZCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzAwZDRhYSI+UiQ8L3RleHQ+CiAgPCEtLSBDYWxjdWxhdG9yIGJ1dHRvbnMgLS0+CiAgPGNpcmNsZSBjeD0iMzIiIGN5PSI0NSIgcj0iMyIgZmlsbD0iIzAwZDRhYSIvPgogIDxjaXJjbGUgY3g9IjQxIiBjeT0iNDUiIHI9IjMiIGZpbGw9IiMwMGQ0YWEiLz4KICA8Y2lyY2xlIGN4PSI1MCIgY3k9IjQ1IiByPSIzIiBmaWxsPSIjMDBkNGFhIi8+CiAgPGNpcmNsZSBjeD0iNTkiIGN5PSI0NSIgcj0iMyIgZmlsbD0iIzAwZDRhYSIvPgogIDxjaXJjbGUgY3g9IjY4IiBjeT0iNDUiIHI9IjMiIGZpbGw9IiMwMGQ0YWEiLz4KICA8Y2lyY2xlIGN4PSIzMiIgY3k9IjU1IiByPSIzIiBmaWxsPSIjMDBkNGFhIi8+CiAgPGNpcmNsZSBjeD0iNDEiIGN5PSI1NSIgcj0iMyIgZmlsbD0iIzAwZDRhYSIvPgogIDxjaXJjbGUgY3g9IjUwIiBjeT0iNTUiIHI9IjMiIGZpbGw9IiMwMGQ0YWEiLz4KICA8Y2lyY2xlIGN4PSI1OSIgY3k9IjU1IiByPSIzIiBmaWxsPSIjMDBkNGFhIi8+CiAgPGNpcmNsZSBjeD0iNjgiIGN5PSI1NSIgcj0iMyIgZmlsbD0iIzAwZDRhYSIvPgogIDxjaXJjbGUgY3g9IjMyIiBjeT0iNjUiIHI9IjMiIGZpbGw9IiMwMGQ0YWEiLz4KICA8Y2lyY2xlIGN4PSI0MSIgY3k9IjY1IiByPSIzIiBmaWxsPSIjMDBkNGFhIi8+CiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI2NSIgcj0iMyIgZmlsbD0iIzAwZDRhYSIvPgogIDxjaXJjbGUgY3g9IjU5IiBjeT0iNjUiIHI9IjMiIGZpbGw9IiMwMGQ0YWEiLz4KICA8Y2lyY2xlIGN4PSI2OCIgY3k9IjY1IiByPSIzIiBmaWxsPSIjMDBkNGFhIi8+Cjwvc3ZnPg=="
+    />
+    <link rel="apple-touch-icon" href="favicon.svg" />
+
+    <!-- Canonical URL -->
+    <link
+      rel="canonical"
+      href="https://satinp.github.io/simulacoes/salario.html"
+    />
+
+    <!-- Additional SEO -->
+    <meta name="theme-color" content="#1a1a2e" />
+    <meta name="msapplication-TileColor" content="#1a1a2e" />
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json" />
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Calculadora de Salário Líquido 2025",
+        "description": "Calculadora online gratuita de salário líquido. Calcule o valor líquido considerando INSS, IRRF e outros descontos",
+        "url": "https://satinp.github.io/simulacoes/salario.html",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "Web",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "BRL"
+        },
+        "author": {
+          "@type": "Person",
+          "name": "satinP"
+        },
+        "inLanguage": "pt-BR",
+        "isAccessibleForFree": true
+      }
+    </script>
+
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <nav class="navigation">
+        <div class="nav-brand">
+          <span class="nav-logo">💰</span>
+          <span class="nav-title">Simulações Financeiras</span>
+        </div>
+        <ul class="nav-menu">
+          <li>
+            <a href="index.html" class="nav-link">À Vista vs Parcelado</a>
+          </li>
+          <li>
+            <a href="salario.html" class="nav-link active">Salário Líquido</a>
+          </li>
+        </ul>
+      </nav>
+
+      <header>
+        <h1>Calculadora de Salário Líquido</h1>
+        <p class="subtitle">
+          Calcule seu salário líquido com descontos de INSS e IRRF atualizados
+        </p>
+        <p class="description">
+          Descubra qual será o valor líquido do seu salário após os descontos
+          obrigatórios. Nossa calculadora utiliza as tabelas oficiais de INSS e
+          Imposto de Renda 2025, considerando também descontos opcionais como
+          vale transporte, vale refeição e plano de saúde.
+        </p>
+      </header>
+
+      <main>
+        <section class="info-cards">
+          <div class="info-card inss-card">
+            <h3>📊 INSS 2025</h3>
+            <p>Contribuição de 7,5% a 14% conforme faixa salarial</p>
+          </div>
+          <div class="info-card irrf-card">
+            <h3>🏛️ IRRF 2025</h3>
+            <p>Isento até R$ 2.259,20. Alíquotas de 7,5% a 27,5%</p>
+          </div>
+        </section>
+
+        <section class="calculator-section">
+          <form id="salaryForm" class="form-container">
+            <div class="input-group">
+              <label for="grossSalary">Salário Bruto (R$)</label>
+              <input
+                type="text"
+                id="grossSalary"
+                placeholder="R$ 5.000,00"
+                required
+                aria-describedby="grossSalary-help"
+              />
+              <small id="grossSalary-help" class="input-help"
+                >Salário bruto mensal antes dos descontos</small
+              >
+            </div>
+
+            <div class="input-group">
+              <label for="dependents">Número de Dependentes</label>
+              <input
+                type="number"
+                id="dependents"
+                placeholder="0"
+                min="0"
+                max="20"
+                value="0"
+                aria-describedby="dependents-help"
+              />
+              <small id="dependents-help" class="input-help"
+                >Dependentes para dedução do IRRF (R$ 189,59 cada)</small
+              >
+            </div>
+
+            <h3 class="section-title">Descontos Opcionais</h3>
+
+            <div class="input-group">
+              <label for="healthPlan">Plano de Saúde (R$)</label>
+              <input
+                type="text"
+                id="healthPlan"
+                placeholder="R$ 0,00"
+                aria-describedby="healthPlan-help"
+              />
+              <small id="healthPlan-help" class="input-help"
+                >Valor descontado do plano de saúde</small
+              >
+            </div>
+
+            <div class="input-group">
+              <label for="mealVoucher">Vale Refeição (R$)</label>
+              <input
+                type="text"
+                id="mealVoucher"
+                placeholder="R$ 0,00"
+                aria-describedby="mealVoucher-help"
+              />
+              <small id="mealVoucher-help" class="input-help"
+                >Desconto do vale refeição (se houver)</small
+              >
+            </div>
+
+            <div class="input-group">
+              <label for="transportVoucher">Vale Transporte (R$)</label>
+              <input
+                type="text"
+                id="transportVoucher"
+                placeholder="R$ 0,00"
+                aria-describedby="transportVoucher-help"
+              />
+              <small id="transportVoucher-help" class="input-help"
+                >Desconto do vale transporte (máximo 6% do salário)</small
+              >
+            </div>
+
+            <div class="input-group">
+              <label for="otherDeductions">Outros Descontos (R$)</label>
+              <input
+                type="text"
+                id="otherDeductions"
+                placeholder="R$ 0,00"
+                aria-describedby="otherDeductions-help"
+              />
+              <small id="otherDeductions-help" class="input-help"
+                >Outros descontos como adiantamentos, empréstimos, etc.</small
+              >
+            </div>
+
+            <button type="submit" class="calculate-btn">
+              <span>Calcular Salário Líquido</span>
+              <span class="btn-icon" aria-hidden="true">💰</span>
+            </button>
+          </form>
+        </section>
+
+        <section
+          id="salaryResults"
+          class="results-container"
+          style="display: none"
+          aria-live="polite"
+        >
+          <h2>💰 Resultado do Cálculo de Salário</h2>
+
+          <div class="salary-summary">
+            <div class="salary-card gross-salary">
+              <h3>💼 Salário Bruto</h3>
+              <div class="value-display">
+                <span id="displayGrossSalary" class="value-amount"></span>
+              </div>
+            </div>
+
+            <div class="salary-card net-salary">
+              <h3>✅ Salário Líquido</h3>
+              <div class="value-display">
+                <span id="displayNetSalary" class="value-amount"></span>
+              </div>
+            </div>
+
+            <div class="salary-card total-deductions">
+              <h3>📉 Total de Descontos</h3>
+              <div class="value-display">
+                <span id="displayTotalDeductions" class="value-amount"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="deductions-breakdown">
+            <h3>📋 Detalhamento dos Descontos</h3>
+
+            <div class="deduction-item">
+              <span class="deduction-label">INSS:</span>
+              <span id="inssDeduction" class="deduction-value"></span>
+              <span id="inssRate" class="deduction-rate"></span>
+            </div>
+
+            <div class="deduction-item">
+              <span class="deduction-label">IRRF:</span>
+              <span id="irrfDeduction" class="deduction-value"></span>
+              <span id="irrfRate" class="deduction-rate"></span>
+            </div>
+
+            <div id="optionalDeductionsSection" style="display: none">
+              <h4 class="subsection-title">Descontos Opcionais</h4>
+
+              <div
+                id="healthPlanDeduction"
+                class="deduction-item optional"
+                style="display: none"
+              >
+                <span class="deduction-label">Plano de Saúde:</span>
+                <span class="deduction-value"></span>
+              </div>
+
+              <div
+                id="mealVoucherDeduction"
+                class="deduction-item optional"
+                style="display: none"
+              >
+                <span class="deduction-label">Vale Refeição:</span>
+                <span class="deduction-value"></span>
+              </div>
+
+              <div
+                id="transportVoucherDeduction"
+                class="deduction-item optional"
+                style="display: none"
+              >
+                <span class="deduction-label">Vale Transporte:</span>
+                <span class="deduction-value"></span>
+              </div>
+
+              <div
+                id="otherDeductionsDeduction"
+                class="deduction-item optional"
+                style="display: none"
+              >
+                <span class="deduction-label">Outros Descontos:</span>
+                <span class="deduction-value"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="tax-info">
+            <h3>📚 Informações das Tabelas 2025</h3>
+            <div class="tax-table">
+              <h4>Faixas de INSS 2025</h4>
+              <div class="tax-bracket">
+                <span>Até R$ 1.412,00: 7,5%</span>
+              </div>
+              <div class="tax-bracket">
+                <span>De R$ 1.412,01 a R$ 2.666,68: 9%</span>
+              </div>
+              <div class="tax-bracket">
+                <span>De R$ 2.666,69 a R$ 4.000,03: 12%</span>
+              </div>
+              <div class="tax-bracket">
+                <span>De R$ 4.000,04 a R$ 7.786,02: 14%</span>
+              </div>
+            </div>
+
+            <div class="tax-table">
+              <h4>Faixas de IRRF 2025</h4>
+              <div class="tax-bracket">
+                <span>Até R$ 2.259,20: Isento</span>
+              </div>
+              <div class="tax-bracket">
+                <span>De R$ 2.259,21 a R$ 2.826,65: 7,5%</span>
+              </div>
+              <div class="tax-bracket">
+                <span>De R$ 2.826,66 a R$ 3.751,05: 15%</span>
+              </div>
+              <div class="tax-bracket">
+                <span>De R$ 3.751,06 a R$ 4.664,68: 22,5%</span>
+              </div>
+              <div class="tax-bracket">
+                <span>Acima de R$ 4.664,68: 27,5%</span>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer>
+        <section class="info-section">
+          <h2>💡 Como Funciona o Cálculo de Salário Líquido</h2>
+          <p>
+            O cálculo do salário líquido considera todos os descontos
+            obrigatórios e opcionais. Primeiro é calculado o
+            <strong>INSS</strong> sobre o salário bruto, depois o
+            <strong>IRRF</strong>
+            é calculado sobre a base de cálculo (salário bruto - INSS -
+            dependentes - outras deduções). Por fim, são subtraídos os descontos
+            opcionais para chegar ao valor líquido final.
+          </p>
+
+          <h3>🎯 Características da Calculadora</h3>
+          <ul>
+            <li>
+              <strong>Tabelas atualizadas 2025</strong>: INSS e IRRF com valores
+              oficiais
+            </li>
+            <li>
+              <strong>Cálculo progressivo</strong>: Aplicação correta das
+              alíquotas por faixas
+            </li>
+            <li>
+              <strong>Descontos opcionais</strong>: Considera todos os tipos de
+              desconto
+            </li>
+            <li>
+              <strong>Dependentes</strong>: Dedução de R$ 189,59 por dependente
+              no IRRF
+            </li>
+          </ul>
+        </section>
+
+        <div class="footer-disclaimer">
+          <p>📊 Cálculo baseado nas tabelas oficiais de INSS e IRRF de 2025</p>
+          <p class="disclaimer">
+            Esta é uma ferramenta educativa para cálculo de salário líquido. Os
+            valores são aproximados e podem variar conforme situações
+            específicas. Para informações oficiais, consulte a Receita Federal e
+            Previdência Social.
+          </p>
+        </div>
+      </footer>
+    </div>
+
+    <script src="salario.js"></script>
+  </body>
+</html>
