@@ -31,6 +31,7 @@ simulacoes/
 ## 🚀 Calculadoras Disponíveis
 
 ### 💰 À Vista vs Parcelado
+
 - **URL**: `/a-vista-vs-parcelado/`
 - **Descrição**: Compare qual opção é mais vantajosa financeiramente
 - **Recursos**:
@@ -40,6 +41,7 @@ simulacoes/
   - Simulação detalhada
 
 ### 💸 Salário Líquido
+
 - **URL**: `/salario-liquido/`
 - **Descrição**: Calcule seu salário líquido com todos os descontos
 - **Recursos**:
@@ -49,6 +51,7 @@ simulacoes/
   - Tabelas atualizadas para 2025
 
 ### 📋 Rescisão Trabalhista
+
 - **URL**: `/rescisao-trabalhista/`
 - **Descrição**: Calcule valores de rescisão para todos os tipos de demissão
 - **Recursos**:
@@ -60,12 +63,14 @@ simulacoes/
 ## 🎨 Arquitetura CSS
 
 ### Abordagem Modular
+
 O projeto utiliza uma arquitetura CSS modular com:
 
 - **`assets/global.css`**: Estilos base, componentes reutilizáveis, navegação, formulários, botões e responsividade
 - **`[calculadora]/[calculadora].css`**: Estilos específicos para cada calculadora
 
 ### Benefícios
+
 - ✅ **Manutenibilidade**: Cada calculadora tem seus próprios estilos
 - ✅ **Performance**: Carregamento otimizado de CSS
 - ✅ **Escalabilidade**: Fácil adição de novas calculadoras
@@ -82,6 +87,7 @@ O projeto utiliza uma arquitetura CSS modular com:
 ## 📱 Responsividade
 
 Todas as calculadoras são totalmente responsivas e otimizadas para:
+
 - 📱 **Mobile**: 320px+
 - 📱 **Tablet**: 768px+
 - 💻 **Desktop**: 1024px+
@@ -89,7 +95,9 @@ Todas as calculadoras são totalmente responsivas e otimizadas para:
 ## 🛠️ Desenvolvimento
 
 ### Estrutura de Arquivos
+
 Cada calculadora segue o padrão:
+
 ```
 calculadora-nome/
 ├── index.html              # Interface principal
@@ -98,6 +106,7 @@ calculadora-nome/
 ```
 
 ### Adicionando Nova Calculadora
+
 1. Criar pasta com nome da calculadora
 2. Criar `index.html` com estrutura base
 3. Criar CSS específico seguindo padrões
@@ -116,6 +125,7 @@ calculadora-nome/
 ## 🎯 Objetivos
 
 Estas calculadoras são ferramentas **educativas** desenvolvidas para:
+
 - Auxiliar em decisões financeiras
 - Demonstrar cálculos baseados em legislação brasileira
 - Promover educação financeira

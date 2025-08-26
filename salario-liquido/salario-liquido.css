@@ -226,23 +226,23 @@
   .deduction-value {
     align-self: flex-end;
   }
-  
+
   .info-card {
     padding: 15px;
   }
-  
+
   .salary-card {
     padding: 15px;
   }
-  
+
   .salary-card .value-amount {
     font-size: 1.5rem;
   }
-  
+
   .deductions-breakdown {
     padding: 20px;
   }
-  
+
   .tax-info {
     padding: 20px;
   }
@@ -252,23 +252,23 @@
   .info-cards {
     gap: 15px;
   }
-  
+
   .salary-summary {
     gap: 15px;
   }
-  
+
   .salary-card .value-amount {
     font-size: 1.3rem;
   }
-  
+
   .deduction-value {
     font-size: 1rem;
   }
-  
+
   .info-card h3 {
     font-size: 1rem;
   }
-  
+
   .tax-info h3 {
     font-size: 1.1rem;
   }

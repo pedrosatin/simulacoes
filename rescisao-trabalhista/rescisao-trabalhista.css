@@ -296,11 +296,11 @@ select option {
   .legal-item {
     padding: 16px;
   }
-  
+
   .work-period {
     padding: 12px;
   }
-  
+
   .calculation-details {
     padding: 12px;
   }
@@ -310,37 +310,37 @@ select option {
   .breakdown-grid {
     gap: 8px;
   }
-  
+
   .breakdown-item {
     padding: 10px 12px;
   }
-  
+
   .item-value {
     font-size: 1rem;
   }
-  
+
   .checkbox-container input[type='checkbox'] {
     width: 18px;
     height: 18px;
   }
-  
+
   .checkbox-container label {
     font-size: 0.9rem;
     gap: 8px;
   }
-  
+
   .legal-grid {
     gap: 12px;
   }
-  
+
   .legal-item {
     padding: 12px;
   }
-  
+
   .legal-item h4 {
     font-size: 1rem;
   }
-  
+
   .legal-item li {
     font-size: 0.85rem;
     padding-left: 16px;
