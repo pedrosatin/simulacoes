@@ -3,249 +3,223 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
+
     <!-- SEO Meta Tags -->
-    <title>Calculadora Finan        <div class="footer-disclaimer">
-          <p>📈 Simulação baseada na taxa Selic atual do Banco Central do Brasil</p>
-          <p class="disclaimer">
-            Esta é uma ferramenta educativa para auxiliar em decisões financeiras. 
-            Os resultados são baseados em cálculos matemáticos e na taxa Selic vigente. 
-            Para decisões financeiras importantes, consulte um consultor financeiro qualificado.
-          </p>
-        </div> Vista vs Parcelado com Taxa Selic - Simulação Gratuita</title>
-    <meta name="description" content="Calculadora online gratuita para comparar pagamento à vista vs parcelado considerando a taxa Selic atual. Descubra qual opção é mais vantajosa financeiramente." />
-    <meta name="keywords" content="calculadora financeira, à vista vs parcelado, taxa selic, simulação financeira, investimento, valor presente, economia, finanças pessoais, calculadora selic" />
+    <title>Simulações Financeiras - Calculadoras Online Gratuitas</title>
+    <meta
+      name="description"
+      content="Suite completa de calculadoras financeiras online gratuitas: À Vista vs Parcelado, Salário Líquido e Rescisão Trabalhista. Ferramentas educativas para decisões financeiras inteligentes."
+    />
+    <meta
+      name="keywords"
+      content="calculadoras financeiras, à vista vs parcelado, salário líquido, rescisão trabalhista, simulação financeira, ferramentas financeiras, economia, finanças pessoais"
+    />
     <meta name="author" content="satinP" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="Portuguese" />
-    
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://satinp.github.io/simulacoes/" />
-    <meta property="og:title" content="Calculadora Financeira: À Vista vs Parcelado com Taxa Selic" />
-    <meta property="og:description" content="Calculadora online gratuita para comparar pagamento à vista vs parcelado considerando a taxa Selic atual. Descubra qual opção é mais vantajosa financeiramente." />
-    <meta property="og:image" content="https://satinp.github.io/simulacoes/favicon.svg" />
+    <meta
+      property="og:title"
+      content="Simulações Financeiras - Calculadoras Online Gratuitas"
+    />
+    <meta
+      property="og:description"
+      content="Suite completa de calculadoras financeiras online gratuitas: À Vista vs Parcelado, Salário Líquido e Rescisão Trabalhista."
+    />
+    <meta
+      property="og:image"
+      content="https://satinp.github.io/simulacoes/favicon.svg"
+    />
     <meta property="og:site_name" content="Simulações Financeiras" />
     <meta property="og:locale" content="pt_BR" />
-    
+
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content="https://satinp.github.io/simulacoes/" />
-    <meta property="twitter:title" content="Calculadora Financeira: À Vista vs Parcelado com Taxa Selic" />
-    <meta property="twitter:description" content="Calculadora online gratuita para comparar pagamento à vista vs parcelado considerando a taxa Selic atual." />
-    <meta property="twitter:image" content="https://satinp.github.io/simulacoes/favicon.svg" />
-    
-    <!-- Favicons -->
+    <meta
+      property="twitter:url"
+      content="https://satinp.github.io/simulacoes/"
+    />
+    <meta
+      property="twitter:title"
+      content="Simulações Financeiras - Calculadoras Online Gratuitas"
+    />
+    <meta
+      property="twitter:description"
+      content="Suite completa de calculadoras financeiras online gratuitas: À Vista vs Parcelado, Salário Líquido e Rescisão Trabalhista."
+    />
+    <meta
+      property="twitter:image"
+      content="https://satinp.github.io/simulacoes/favicon.svg"
+    />
+
+    <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-    <link rel="icon" type="image/png" sizes="32x32" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iYmdHcmFkaWVudCIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiMxYTFhMmUiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojMTYyMTNlIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJpY29uR3JhZGllbnQiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdHlsZT0ic3RvcC1jb2xvcjojMDBkNGFhIi8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3R5bGU9InN0b3AtY29sb3I6IzdjM2FlZCIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CiAgCiAgPCEtLSBCYWNrZ3JvdW5kIGNpcmNsZSAtLT4KICA8Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSI0OCIgZmlsbD0idXJsKCNiZ0dyYWRpZW50KSIgc3Ryb2tlPSIjMDBkNGFhIiBzdHJva2Utd2lkdGg9IjIiLz4KICA8IS0tIENhbGN1bGF0b3IgaWNvbiAtLT4KICA8cmVjdCB4PSIyNSIgeT0iMjAiIHdpZHRoPSI1MCIgaGVpZ2h0PSI2MCIgcng9IjQiIGZpbGw9InVybCgjaWNvbkdyYWRpZW50KSIgb3BhY2l0eT0iMC45Ii8+CiAgPHJlY3QgeD0iMjgiIHk9IjI1IiB3aWR0aD0iNDQiIGhlaWdodD0iMTIiIHJ4PSIyIiBmaWxsPSIjMWExYTJlIi8+CiAgPCEtLSBEb2xsYXIgc2lnbiAtLT4KICA8dGV4dCB4PSI1MCIgeT0iMzMiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSI4IiBmb250LXdlaWdodD0iYm9sZCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzAwZDRhYSI+UiQ8L3RleHQ+CiAgPCEtLSBDYWxjdWxhdG9yIGJ1dHRvbnMgLS0+CiAgPGNpcmNsZSBjeD0iMzIiIGN5PSI0NSIgcj0iMyIgZmlsbD0iIzAwZDRhYSIvPgogIDxjaXJjbGUgY3g9IjQxIiBjeT0iNDUiIHI9IjMiIGZpbGw9IiMwMGQ0YWEiLz4KICA8Y2lyY2xlIGN4PSI1MCIgY3k9IjQ1IiByPSIzIiBmaWxsPSIjMDBkNGFhIi8+CiAgPGNpcmNsZSBjeD0iNTkiIGN5PSI0NSIgcj0iMyIgZmlsbD0iIzAwZDRhYSIvPgogIDxjaXJjbGUgY3g9IjY4IiBjeT0iNDUiIHI9IjMiIGZpbGw9IiMwMGQ0YWEiLz4KICA8Y2lyY2xlIGN4PSIzMiIgY3k9IjU1IiByPSIzIiBmaWxsPSIjMDBkNGFhIi8+CiAgPGNpcmNsZSBjeD0iNDEiIGN5PSI1NSIgcj0iMyIgZmlsbD0iIzAwZDRhYSIvPgogIDxjaXJjbGUgY3g9IjUwIiBjeT0iNTUiIHI9IjMiIGZpbGw9IiMwMGQ0YWEiLz4KICA8Y2lyY2xlIGN4PSI1OSIgY3k9IjU1IiByPSIzIiBmaWxsPSIjMDBkNGFhIi8+CiAgPGNpcmNsZSBjeD0iNjgiIGN5PSI1NSIgcj0iMyIgZmlsbD0iIzAwZDRhYSIvPgogIDxjaXJjbGUgY3g9IjMyIiBjeT0iNjUiIHI9IjMiIGZpbGw9IiMwMGQ0YWEiLz4KICA8Y2lyY2xlIGN4PSI0MSIgY3k9IjY1IiByPSIzIiBmaWxsPSIjMDBkNGFhIi8+CiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI2NSIgcj0iMyIgZmlsbD0iIzAwZDRhYSIvPgogIDxjaXJjbGUgY3g9IjU5IiBjeT0iNjUiIHI9IjMiIGZpbGw9IiMwMGQ0YWEiLz4KICA8Y2lyY2xlIGN4PSI2OCIgY3k9IjY1IiByPSIzIiBmaWxsPSIjMDBkNGFhIi8+Cjwvc3ZnPg==" />
-    <link rel="apple-touch-icon" href="favicon.svg" />
-    
-    <!-- Canonical URL -->
-    <link rel="canonical" href="https://satinp.github.io/simulacoes/" />
-    
-    <!-- Additional SEO -->
-    <meta name="theme-color" content="#1a1a2e" />
-    <meta name="msapplication-TileColor" content="#1a1a2e" />
-    
-    <!-- PWA Manifest -->
+
+    <!-- PWA -->
     <link rel="manifest" href="manifest.json" />
-    
+    <meta name="theme-color" content="#1a1a1a" />
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="assets/global.css" />
+
     <!-- JSON-LD Structured Data -->
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "Calculadora Financeira: À Vista vs Parcelado",
-      "description": "Calculadora online gratuita para comparar pagamento à vista vs parcelado considerando a taxa Selic atual",
-      "url": "https://satinp.github.io/simulacoes/",
-      "applicationCategory": "FinanceApplication",
-      "operatingSystem": "Web",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "BRL"
-      },
-      "author": {
-        "@type": "Person",
-        "name": "satinP"
-      },
-      "inLanguage": "pt-BR",
-      "isAccessibleForFree": true
-    }
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Simulações Financeiras",
+        "url": "https://satinp.github.io/simulacoes/",
+        "description": "Suite completa de calculadoras financeiras online gratuitas",
+        "author": {
+          "@type": "Person",
+          "name": "satinP"
+        },
+        "mainEntity": [
+          {
+            "@type": "SoftwareApplication",
+            "name": "Calculadora À Vista vs Parcelado",
+            "url": "https://satinp.github.io/simulacoes/a-vista-vs-parcelado/",
+            "description": "Compare pagamento à vista vs parcelado com taxa Selic"
+          },
+          {
+            "@type": "SoftwareApplication",
+            "name": "Calculadora de Salário Líquido",
+            "url": "https://satinp.github.io/simulacoes/salario-liquido/",
+            "description": "Calcule seu salário líquido com descontos de INSS e IRRF"
+          },
+          {
+            "@type": "SoftwareApplication",
+            "name": "Calculadora de Rescisão Trabalhista",
+            "url": "https://satinp.github.io/simulacoes/rescisao-trabalhista/",
+            "description": "Calcule valores de rescisão trabalhista para todos os tipos de demissão"
+          }
+        ]
+      }
     </script>
-    
-    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <div class="container">
-      <nav class="navigation">
-        <div class="nav-brand">
-          <span class="nav-logo">💰</span>
-          <span class="nav-title">Simulações Financeiras</span>
-        </div>
-        <ul class="nav-menu">
-          <li><a href="index.html" class="nav-link active">À Vista vs Parcelado</a></li>
-          <li><a href="salario.html" class="nav-link">Salário Líquido</a></li>
-          <li><a href="rescisao.html" class="nav-link">Rescisão Trabalhista</a></li>
-        </ul>
-      </nav>
-      
+      <!-- Header Principal -->
       <header>
-        <h1>À Vista vs Parcelado</h1>
-        <p class="subtitle">Compare opções de pagamento considerando a Taxa Selic atual</p>
-        <p class="description">
-          Descubra qual forma de pagamento é mais vantajosa: pagar à vista ou parcelar suas compras. 
-          Nossa calculadora utiliza a taxa Selic em tempo real para calcular o valor presente das parcelas 
-          e determinar qual opção oferece maior economia financeira.
+        <h1>🧮 Simulações Financeiras</h1>
+        <p class="subtitle">
+          Calculadoras online gratuitas para decisões financeiras inteligentes
         </p>
       </header>
 
+      <!-- Calculadoras Disponíveis -->
       <main>
-        <section class="selic-info">
-          <div class="selic-card">
-            <span class="selic-label">Taxa Selic Atual:</span>
-            <span id="selicRate" class="selic-value">Carregando...</span>
-            <span id="selicDate" class="selic-date"></span>
+        <section class="calculators-grid">
+          <!-- À Vista vs Parcelado -->
+          <div class="calculator-card">
+            <div class="card-icon">💰</div>
+            <h2>À Vista vs Parcelado</h2>
+            <p>
+              Compare qual opção é mais vantajosa financeiramente considerando a
+              taxa Selic atual do Banco Central.
+            </p>
+            <ul class="features-list">
+              <li>Taxa Selic em tempo real</li>
+              <li>Cálculo de valor presente</li>
+              <li>Recomendação inteligente</li>
+              <li>Simulação detalhada</li>
+            </ul>
+            <a href="a-vista-vs-parcelado/" class="btn-primary"
+              >Calcular Agora</a
+            >
+          </div>
+
+          <!-- Salário Líquido -->
+          <div class="calculator-card">
+            <div class="card-icon">💸</div>
+            <h2>Salário Líquido</h2>
+            <p>
+              Calcule seu salário líquido com todos os descontos obrigatórios:
+              INSS, IRRF e contribuições opcionais.
+            </p>
+            <ul class="features-list">
+              <li>Cálculo preciso de INSS</li>
+              <li>Imposto de Renda detalhado</li>
+              <li>Descontos opcionais</li>
+              <li>Tabelas atualizadas</li>
+            </ul>
+            <a href="salario-liquido/" class="btn-primary">Calcular Agora</a>
+          </div>
+
+          <!-- Rescisão Trabalhista -->
+          <div class="calculator-card">
+            <div class="card-icon">📋</div>
+            <h2>Rescisão Trabalhista</h2>
+            <p>
+              Calcule o valor total da rescisão considerando todos os tipos de
+              demissão e verbas trabalhistas.
+            </p>
+            <ul class="features-list">
+              <li>Todos os tipos de demissão</li>
+              <li>Aviso prévio completo</li>
+              <li>13º e férias proporcionais</li>
+              <li>FGTS e multa rescisória</li>
+            </ul>
+            <a href="rescisao-trabalhista/" class="btn-primary"
+              >Calcular Agora</a
+            >
           </div>
         </section>
 
-        <section class="calculator-section">
-          <form id="simulationForm" class="form-container">
-            <div class="input-group">
-              <label for="productValue">Valor do Produto (R$)</label>
-              <input
-                type="text"
-                id="productValue"
-                placeholder="R$ 1.000,00"
-                required
-                aria-describedby="productValue-help"
-              />
-              <small id="productValue-help" class="input-help">Valor total do produto sem desconto</small>
-            </div>
-
-            <div class="input-group">
-              <label for="cashValue">Valor à Vista (R$)</label>
-              <input 
-                type="text" 
-                id="cashValue" 
-                placeholder="R$ 950,00" 
-                required 
-                aria-describedby="cashValue-help"
-              />
-              <small id="cashValue-help" class="input-help">Valor com desconto para pagamento à vista</small>
-            </div>
-
-            <div class="input-group">
-              <label for="installments">Número de Parcelas</label>
-              <input
-                type="number"
-                id="installments"
-                placeholder="Ex: 12"
-                min="1"
-                max="60"
-                required
-                aria-describedby="installments-help"
-              />
-              <small id="installments-help" class="input-help">Quantidade de parcelas (máximo 60)</small>
-            </div>
-
-            <button type="submit" class="calculate-btn">
-              <span>Calcular Simulação</span>
-              <span class="btn-icon" aria-hidden="true">📊</span>
-            </button>
-          </form>
-        </section>
-
-        <section id="results" class="results-container" style="display: none" aria-live="polite">
-        <h2>📊 Resultado da Simulação Financeira</h2>
-
-        <div class="comparison-cards">
-          <div class="option-card cash-option">
-            <h3>💰 Pagamento à Vista</h3>
-            <div class="value-display">
-              <span class="value-label">Valor pago:</span>
-              <span id="cashPayment" class="value-amount"></span>
-            </div>
-            <div class="value-display total">
-              <span class="value-label">Custo total:</span>
-              <span id="cashTotalCost" class="value-amount"></span>
-            </div>
+        <!-- Informações Gerais -->
+        <section class="info-section">
+          <div class="info-card">
+            <h3>🎯 Sobre as Calculadoras</h3>
+            <p>
+              Todas as nossas calculadoras são ferramentas educativas
+              desenvolvidas para auxiliar em decisões financeiras. Os cálculos
+              são baseados em legislação vigente e dados oficiais do governo
+              brasileiro.
+            </p>
           </div>
 
-          <div class="option-card installment-option">
-            <h3>📅 Pagamento Parcelado</h3>
-            <div class="value-display">
-              <span class="value-label">Valor da parcela:</span>
-              <span id="installmentValue" class="value-amount"></span>
-            </div>
-            <div class="value-display">
-              <span class="value-label">Total nominal:</span>
-              <span id="installmentTotal" class="value-amount"></span>
-            </div>
-            <div class="value-display total">
-              <span class="value-label">Custo efetivo (valor presente):</span>
-              <span id="installmentTotalCost" class="value-amount"></span>
-            </div>
+          <div class="info-card">
+            <h3>📊 Dados Atualizados</h3>
+            <p>
+              Utilizamos informações sempre atualizadas do Banco Central,
+              Receita Federal e Ministério do Trabalho para garantir a precisão
+              dos cálculos realizados.
+            </p>
           </div>
-        </div>
 
-        <div class="recommendation-card">
-          <h3 id="recommendationTitle">Recomendação</h3>
-          <p id="recommendationText"></p>
-          <div class="savings-display">
-            <span id="savingsLabel" class="savings-label"></span>
-            <span id="savingsValue" class="savings-value"></span>
-            <span id="savingsPercent" class="savings-percent"></span>
-          </div>
-        </div>
-
-        <div class="details-section">
-          <h3>📋 Metodologia e Detalhes do Cálculo</h3>
-          <div class="detail-item">
-            <span>Taxa Selic mensal utilizada:</span>
-            <span id="monthlySelicRate"></span>
-          </div>
-          <div class="detail-item">
-            <span>Período de análise:</span>
-            <span id="investmentPeriod"></span>
-          </div>
-          <div class="detail-item">
-            <span>Conceito: Valor presente das parcelas vs pagamento à vista</span>
-            <span id="grossReturn"></span>
+          <div class="info-card">
+            <h3>🔒 Privacidade</h3>
+            <p>
+              Nenhum dado pessoal é armazenado. Todos os cálculos são realizados
+              localmente no seu dispositivo, garantindo total privacidade das
+              suas informações.
+            </p>
           </div>
         </section>
       </main>
 
+      <!-- Footer -->
       <footer>
-        <section class="info-section">
-          <h2>💡 Como Funciona a Calculadora Financeira</h2>
+        <div class="footer-content">
           <p>
-            Nossa calculadora utiliza os conceitos de <strong>valor presente</strong> e <strong>custo de oportunidade</strong> 
-            para comparar as opções de pagamento. Quando você paga parcelado, o dinheiro que não foi gasto à vista 
-            pode render na taxa Selic. A calculadora desconta cada parcela futura pela taxa Selic para chegar ao 
-            valor presente real do parcelamento.
+            <strong>Simulações Financeiras</strong> - Ferramentas educativas
+            para decisões financeiras
           </p>
-          
-          <h3>🎯 Benefícios da Ferramenta</h3>
-          <ul>
-            <li><strong>Taxa Selic em tempo real</strong>: Dados atualizados do Banco Central</li>
-            <li><strong>Cálculo preciso</strong>: Metodologia financeira profissional</li>
-            <li><strong>Decisões inteligentes</strong>: Compare objetivamente suas opções</li>
-            <li><strong>Gratuito e acessível</strong>: Use quantas vezes precisar</li>
-          </ul>
-        </section>
-        
-        <div class="footer-disclaimer">
-          <p>Simulação baseada na taxa Selic atual do Banco Central do Brasil</p>
           <p class="disclaimer">
-            Esta é uma ferramenta educativa para auxiliar em decisões financeiras. 
-            Os resultados são baseados em cálculos matemáticos e na taxa Selic vigente. 
-            Para decisões financeiras importantes, consulte um consultor financeiro qualificado.
+            ⚠️ <strong>Aviso Legal:</strong> Estas são ferramentas educativas
+            para auxiliar em decisões financeiras. Os resultados são baseados em
+            cálculos matemáticos e legislação vigente. Para decisões
+            importantes, consulte sempre um profissional qualificado.
+          </p>
+          <p class="footer-links">
+            <a href="robots.txt">Robots</a> |
+            <a href="sitemap.xml">Sitemap</a>
           </p>
         </div>
       </footer>
     </div>
-
-    <script src="script.js"></script>
   </body>
 </html>

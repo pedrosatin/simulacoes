@@ -1,0 +1,275 @@
+/* Calculadora de Salário Líquido - Estilos Específicos */
+
+/* Cards Informativos INSS e IRRF */
+.info-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.info-card {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.info-card h3 {
+  color: #ffffff;
+  margin-bottom: 8px;
+  font-size: 1.1rem;
+  text-align: center;
+}
+
+.info-card p {
+  color: #a0a0a0;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+/* Estilos específicos para listas dentro dos info-cards */
+.info-card ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 12px 0;
+  text-align: left;
+}
+
+.info-card li {
+  color: #c0c0c0;
+  margin-bottom: 8px;
+  line-height: 1.4;
+  font-size: 0.9rem;
+  position: relative;
+  padding-left: 20px;
+}
+
+.info-card li::before {
+  content: '•';
+  color: #667eea;
+  font-weight: bold;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.inss-card {
+  border-left: 4px solid #4caf50;
+}
+
+.irrf-card {
+  border-left: 4px solid #2196f3;
+}
+
+.section-title {
+  color: #ffffff;
+  font-size: 1.2rem;
+  margin: 25px 0 15px 0;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #333;
+}
+
+/* Resultado Resumo do Salário */
+.salary-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.salary-card {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.salary-card h3 {
+  color: #ffffff;
+  margin-bottom: 15px;
+  font-size: 1.1rem;
+}
+
+.salary-card .value-amount {
+  font-size: 1.8rem;
+  font-weight: 700;
+  display: block;
+}
+
+.gross-salary .value-amount {
+  color: #2196f3;
+}
+
+.net-salary .value-amount {
+  color: #4caf50;
+}
+
+.total-deductions .value-amount {
+  color: #ff5722;
+}
+
+/* Breakdown dos Descontos */
+.deductions-breakdown {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 25px;
+  margin-bottom: 25px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.deductions-breakdown h3 {
+  color: #ffffff;
+  margin-bottom: 20px;
+  font-size: 1.2rem;
+}
+
+.deduction-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #333;
+}
+
+.deduction-item:last-child {
+  border-bottom: none;
+}
+
+.deduction-label {
+  color: #a0a0a0;
+  font-weight: 500;
+}
+
+.deduction-value {
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.deduction-rate {
+  color: #888;
+  font-size: 0.9rem;
+  margin-left: 8px;
+}
+
+.subsection-title {
+  color: #ffffff;
+  font-size: 1rem;
+  margin: 20px 0 10px 0;
+  padding-top: 15px;
+  border-top: 1px solid #444;
+}
+
+.deduction-item.optional .deduction-label {
+  color: #888;
+}
+
+/* Informações Tributárias */
+.tax-info {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.tax-info h3 {
+  color: #ffffff;
+  margin-bottom: 20px;
+  font-size: 1.2rem;
+}
+
+.tax-table {
+  margin-bottom: 20px;
+}
+
+.tax-table h4 {
+  color: #4caf50;
+  margin-bottom: 10px;
+  font-size: 1rem;
+}
+
+.tax-bracket {
+  padding: 8px 12px;
+  background: rgba(76, 175, 80, 0.1);
+  border-left: 3px solid #4caf50;
+  margin-bottom: 5px;
+  border-radius: 4px;
+}
+
+.tax-bracket span {
+  color: #e1e1e1;
+  font-size: 0.9rem;
+}
+
+/* Responsividade específica */
+@media (max-width: 768px) {
+  .salary-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .info-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .deduction-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+
+  .deduction-value {
+    align-self: flex-end;
+  }
+  
+  .info-card {
+    padding: 15px;
+  }
+  
+  .salary-card {
+    padding: 15px;
+  }
+  
+  .salary-card .value-amount {
+    font-size: 1.5rem;
+  }
+  
+  .deductions-breakdown {
+    padding: 20px;
+  }
+  
+  .tax-info {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .info-cards {
+    gap: 15px;
+  }
+  
+  .salary-summary {
+    gap: 15px;
+  }
+  
+  .salary-card .value-amount {
+    font-size: 1.3rem;
+  }
+  
+  .deduction-value {
+    font-size: 1rem;
+  }
+  
+  .info-card h3 {
+    font-size: 1rem;
+  }
+  
+  .tax-info h3 {
+    font-size: 1.1rem;
+  }
+}

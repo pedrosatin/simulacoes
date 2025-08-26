@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!-- SEO Meta Tags -->
-    <title>Calculadora de Rescisão Trabalhista 2025 - Demissão sem Justa Causa</title>
+    <title>
+      Calculadora de Rescisão Trabalhista 2025 - Demissão sem Justa Causa
+    </title>
     <meta
       name="description"
       content="Calculadora online gratuita de rescisão trabalhista. Calcule o valor da rescisão considerando aviso prévio, 13º salário, férias vencidas, FGTS e multa rescisória. Atualizada com as regras de 2025."
@@ -24,7 +26,10 @@
       property="og:url"
       content="https://satinp.github.io/simulacoes/rescisao.html"
     />
-    <meta property="og:title" content="Calculadora de Rescisão Trabalhista 2025" />
+    <meta
+      property="og:title"
+      content="Calculadora de Rescisão Trabalhista 2025"
+    />
     <meta
       property="og:description"
       content="Calculadora online gratuita de rescisão trabalhista. Calcule o valor da rescisão considerando todas as verbas rescisórias."
@@ -104,7 +109,8 @@
     </script>
 
     <!-- CSS -->
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="../assets/global.css" />
+    <link rel="stylesheet" href="rescisao-trabalhista.css" />
   </head>
   <body>
     <div class="container">
@@ -115,13 +121,18 @@
         </div>
         <ul class="nav-menu">
           <li>
-            <a href="index.html" class="nav-link">À Vista vs Parcelado</a>
+            <a href="../" class="nav-link">🏠 Início</a>
           </li>
           <li>
-            <a href="salario.html" class="nav-link">Salário Líquido</a>
+            <a href="../a-vista-vs-parcelado/" class="nav-link">À Vista vs Parcelado</a>
           </li>
           <li>
-            <a href="rescisao.html" class="nav-link active">Rescisão Trabalhista</a>
+            <a href="../salario-liquido/" class="nav-link">Salário Líquido</a>
+          </li>
+          <li>
+            <a href="../rescisao-trabalhista/" class="nav-link active"
+              >Rescisão Trabalhista</a
+            >
           </li>
         </ul>
       </nav>
@@ -142,21 +153,39 @@
           <div class="card info-card">
             <h3>💼 Tipos de Rescisão</h3>
             <ul>
-              <li><strong>Demissão sem justa causa:</strong> Direito a todas as verbas</li>
-              <li><strong>Demissão por justa causa:</strong> Verbas limitadas</li>
-              <li><strong>Pedido de demissão:</strong> Sem multa de 40% do FGTS</li>
-              <li><strong>Acordo:</strong> 20% de multa e saque parcial do FGTS</li>
+              <li>
+                <strong>Demissão sem justa causa:</strong> Direito a todas as
+                verbas
+              </li>
+              <li>
+                <strong>Demissão por justa causa:</strong> Verbas limitadas
+              </li>
+              <li>
+                <strong>Pedido de demissão:</strong> Sem multa de 40% do FGTS
+              </li>
+              <li>
+                <strong>Acordo:</strong> 20% de multa e saque parcial do FGTS
+              </li>
             </ul>
           </div>
 
           <div class="card info-card">
             <h3>📋 Verbas Rescisórias</h3>
             <ul>
-              <li><strong>Saldo de salário:</strong> Dias trabalhados no mês</li>
-              <li><strong>Aviso prévio:</strong> 30 dias + 3 dias por ano trabalhado</li>
-              <li><strong>13º salário:</strong> Proporcional aos meses trabalhados</li>
+              <li>
+                <strong>Saldo de salário:</strong> Dias trabalhados no mês
+              </li>
+              <li>
+                <strong>Aviso prévio:</strong> 30 dias + 3 dias por ano
+                trabalhado
+              </li>
+              <li>
+                <strong>13º salário:</strong> Proporcional aos meses trabalhados
+              </li>
               <li><strong>Férias vencidas:</strong> + 1/3 constitucional</li>
-              <li><strong>Férias proporcionais:</strong> + 1/3 constitucional</li>
+              <li>
+                <strong>Férias proporcionais:</strong> + 1/3 constitucional
+              </li>
               <li><strong>FGTS:</strong> Saldo + multa (se aplicável)</li>
             </ul>
           </div>
@@ -170,7 +199,7 @@
             <!-- Informações básicas -->
             <div class="input-group">
               <h3>Informações Básicas</h3>
-              
+
               <div class="form-row">
                 <div class="input-container">
                   <label for="salario">Salário Mensal (R$)</label>
@@ -184,27 +213,25 @@
 
                 <div class="input-container">
                   <label for="dataAdmissao">Data de Admissão</label>
-                  <input
-                    type="date"
-                    id="dataAdmissao"
-                  />
+                  <input type="date" id="dataAdmissao" />
                 </div>
               </div>
 
               <div class="form-row">
                 <div class="input-container">
                   <label for="dataRescisao">Data da Rescisão</label>
-                  <input
-                    type="date"
-                    id="dataRescisao"
-                  />
+                  <input type="date" id="dataRescisao" />
                 </div>
 
                 <div class="input-container">
                   <label for="tipoRescisao">Tipo de Rescisão</label>
                   <select id="tipoRescisao">
-                    <option value="demissao-sem-justa-causa">Demissão sem justa causa</option>
-                    <option value="demissao-justa-causa">Demissão por justa causa</option>
+                    <option value="demissao-sem-justa-causa">
+                      Demissão sem justa causa
+                    </option>
+                    <option value="demissao-justa-causa">
+                      Demissão por justa causa
+                    </option>
                     <option value="pedido-demissao">Pedido de demissão</option>
                     <option value="acordo">Acordo (Reforma Trabalhista)</option>
                   </select>
@@ -215,7 +242,7 @@
             <!-- Informações adicionais -->
             <div class="input-group">
               <h3>Informações Adicionais</h3>
-              
+
               <div class="form-row">
                 <div class="input-container">
                   <label for="diasAviso">Aviso Prévio Trabalhado (dias)</label>
@@ -273,10 +300,10 @@
         </section>
 
         <!-- Resultado -->
-        <section id="resultado" class="result-section" style="display: none;">
+        <section id="resultado" class="result-section" style="display: none">
           <div class="card result-card">
             <h2>💰 Resultado da Rescisão</h2>
-            
+
             <div class="result-summary">
               <div class="total-value">
                 <span class="label">Total da Rescisão:</span>
@@ -286,33 +313,37 @@
 
             <div class="result-breakdown">
               <h3>Detalhamento das Verbas</h3>
-              
+
               <div class="breakdown-grid">
                 <div class="breakdown-item">
                   <span class="item-label">Saldo de Salário:</span>
                   <span id="saldoSalario" class="item-value">R$ 0,00</span>
                 </div>
-                
+
                 <div class="breakdown-item">
                   <span class="item-label">Aviso Prévio:</span>
                   <span id="avisoPrevio" class="item-value">R$ 0,00</span>
                 </div>
-                
+
                 <div class="breakdown-item">
                   <span class="item-label">13º Salário:</span>
                   <span id="decimoTerceiro" class="item-value">R$ 0,00</span>
                 </div>
-                
+
                 <div class="breakdown-item">
                   <span class="item-label">Férias Vencidas + 1/3:</span>
-                  <span id="feriasVencidasValor" class="item-value">R$ 0,00</span>
+                  <span id="feriasVencidasValor" class="item-value"
+                    >R$ 0,00</span
+                  >
                 </div>
-                
+
                 <div class="breakdown-item">
                   <span class="item-label">Férias Proporcionais + 1/3:</span>
-                  <span id="feriasProporcionais" class="item-value">R$ 0,00</span>
+                  <span id="feriasProporcionais" class="item-value"
+                    >R$ 0,00</span
+                  >
                 </div>
-                
+
                 <div class="breakdown-item">
                   <span class="item-label">Multa FGTS:</span>
                   <span id="multaFGTS" class="item-value">R$ 0,00</span>
@@ -327,7 +358,9 @@
               <div class="calculation-details">
                 <h4>Observações</h4>
                 <ul id="observacoes">
-                  <li>Os valores são brutos, antes dos descontos de INSS e IRRF</li>
+                  <li>
+                    Os valores são brutos, antes dos descontos de INSS e IRRF
+                  </li>
                   <li>FGTS será depositado na conta vinculada</li>
                 </ul>
               </div>
@@ -396,15 +429,16 @@
         <div class="footer-disclaimer">
           <p>⚖️ Cálculo baseado na legislação trabalhista brasileira vigente</p>
           <p class="disclaimer">
-            Esta é uma ferramenta educativa para auxiliar no cálculo de rescisão trabalhista. 
-            Os resultados são aproximados e podem variar conforme convenções coletivas e 
-            particularidades do contrato de trabalho. Para casos específicos, consulte um 
-            advogado trabalhista ou departamento pessoal qualificado.
+            Esta é uma ferramenta educativa para auxiliar no cálculo de rescisão
+            trabalhista. Os resultados são aproximados e podem variar conforme
+            convenções coletivas e particularidades do contrato de trabalho.
+            Para casos específicos, consulte um advogado trabalhista ou
+            departamento pessoal qualificado.
           </p>
         </div>
       </footer>
     </div>
 
-    <script src="rescisao.js"></script>
+    <script src="rescisao-trabalhista.js"></script>
   </body>
 </html>
