@@ -192,23 +192,23 @@
     grid-template-columns: 1fr;
     gap: 15px;
   }
-  
+
   .selic-value {
     font-size: 1.6rem;
   }
-  
+
   .savings-value {
     font-size: 1.5rem;
   }
-  
+
   .option-card {
     padding: 20px;
   }
-  
+
   .recommendation-card {
     padding: 20px;
   }
-  
+
   .details-grid {
     grid-template-columns: 1fr;
   }
@@ -218,27 +218,27 @@
   .selic-info {
     margin-bottom: 20px;
   }
-  
+
   .selic-card {
     padding: 15px;
   }
-  
+
   .savings-display {
     gap: 4px;
   }
-  
+
   .savings-value {
     font-size: 1.3rem;
   }
-  
+
   .savings-percent {
     font-size: 1rem;
   }
-  
+
   .option-card h3 {
     font-size: 1.1rem;
   }
-  
+
   .recommendation-card h3 {
     font-size: 1.2rem;
   }
