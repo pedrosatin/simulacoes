@@ -83,6 +83,22 @@ body {
   background: rgba(102, 126, 234, 0.1);
 }
 
+/* ===== BREADCRUMB NAVIGATION ===== */
+.nav-breadcrumb {
+  margin-bottom: 20px;
+}
+
+.nav-breadcrumb a {
+  color: #a0a0a0;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.3s ease;
+}
+
+.nav-breadcrumb a:hover {
+  color: #667eea;
+}
+
 /* ===== HEADER ===== */
 header {
   text-align: center;
