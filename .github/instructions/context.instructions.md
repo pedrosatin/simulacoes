@@ -76,18 +76,25 @@ Este é um projeto web que oferece calculadoras financeiras para auxiliar em dec
 
 ```
 simulacoes/
-├── index.html           # Página principal da calculadora À Vista vs Parcelado
-├── salario.html         # Página da calculadora de Salário Líquido
-├── rescisao.html        # Página da calculadora de Rescisão Trabalhista
-├── styles.css           # Estilos CSS com tema dark (compartilhado)
-├── script.js           # Lógica JavaScript da calculadora À Vista vs Parcelado
-├── salario.js          # Lógica JavaScript da calculadora de Salário Líquido
-├── rescisao.js         # Lógica JavaScript da calculadora de Rescisão Trabalhista
+├── index.html           # Página principal (redirecionamento)
 ├── favicon.svg         # Ícone escalável da aplicação
 ├── manifest.json       # Configuração PWA
 ├── sitemap.xml         # Mapa do site para SEO (inclui todas as páginas)
 ├── robots.txt          # Instruções para crawlers
-├── RESCISAO.md         # Documentação específica da calculadora de rescisão
+├── a-vista-vs-parcelado/
+│   ├── index.html      # Página da calculadora À Vista vs Parcelado
+│   ├── a-vista-vs-parcelado.css
+│   └── a-vista-vs-parcelado.js
+├── salario-liquido/
+│   ├── index.html      # Página da calculadora de Salário Líquido
+│   ├── salario-liquido.css
+│   └── salario-liquido.js
+├── rescisao-trabalhista/
+│   ├── index.html      # Página da calculadora de Rescisão Trabalhista
+│   ├── rescisao-trabalhista.css
+│   └── rescisao-trabalhista.js
+├── assets/
+│   └── global.css      # Estilos CSS globais com tema dark
 └── .github/
     └── instructions/
         └── context.instructions.md
