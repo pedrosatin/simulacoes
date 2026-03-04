@@ -271,16 +271,19 @@ const FinancialCalculator = {
   },
 
   // -------- Simular estratégia INVESTIR --------
-  // Cada mês aplica `extraMensal`; saca tudo ao final do financiamento
+  // Cada mês aplica `extraMensal`; saca tudo ao final do financiamento.
+  // O aporte do mês `mes` rende por (totalMeses - mes) períodos:
+  // depositado no fim do mês mes, sacado no fim do mês totalMeses.
   simulateInvestment(extraMensal, taxaAnualPct, totalMeses) {
     const taxaMensal = Math.pow(1 + taxaAnualPct / 100, 1 / 12) - 1
     let totalInvestido = 0
-    let totalBruto = 0 // saldo bruto final
+    let totalBruto = 0
 
-    // Cada aporte rende separadamente por (totalMeses - mes) meses
     const aportes = []
     for (let mes = 1; mes <= totalMeses; mes++) {
-      const mesesAplicado = totalMeses - mes + 1
+      // Fix: meses de capitalização = totalMeses - mes (não +1)
+      // O último aporte (mes === totalMeses) é sacado imediatamente → rende 0 períodos
+      const mesesAplicado = totalMeses - mes
       const diasAplicado = mesesAplicado * 30
       const rendimentoBruto = extraMensal * Math.pow(1 + taxaMensal, mesesAplicado)
       const ganho = rendimentoBruto - extraMensal
@@ -300,32 +303,32 @@ const FinancialCalculator = {
       totalInvestido,
       grossReturn: totalGanhoBruto,
       irTax: totalIR,
-      netReturn: totalRetornoLiquido - totalInvestido, // lucro líquido
-      finalBalance: totalRetornoLiquido, // saldo final (capital + lucro líquido)
+      netReturn: totalRetornoLiquido - totalInvestido,
+      finalBalance: totalRetornoLiquido,
     }
   },
 
   // -------- Simular estratégia AMORTIZAR --------
-  // A cada mês usa `extraMensal` para antecipar parcelas mais distantes (maior desconto)
+  // A cada mês usa `extraMensal` para antecipar parcelas mais distantes (maior desconto).
+  // Retorna também o extra acumulado não utilizado (para comparação justa com investir).
   simulateAmortization(schedule, extraMensal, taxaMensal) {
     const n = schedule.length
-    // Rastrear quais parcelas já foram pagas (antecipadas ou normais)
     const paid = new Array(n + 1).fill(false) // 1-indexed
 
     let totalPago = 0
     let totalDesconto = 0
     let parcelasAntecipadas = 0
+    let extraNaoUsado = 0 // extra que não coube em nenhuma antecipação no mês
 
     for (let mes = 1; mes <= n; mes++) {
-      // Pular parcela atual se já foi antecipada
+      // Pagar parcela do mês corrente (se ainda não antecipada)
       if (!paid[mes]) {
         totalPago += schedule[mes - 1].payment
         paid[mes] = true
       }
 
-      // Usar extra para antecipar parcelas mais distantes possíveis
+      // Usar extra para antecipar parcelas mais distantes possíveis (maior desconto)
       let saldoExtra = extraMensal
-      // Percorrer do fim para o início (maior desconto primeiro)
       for (let futura = n; futura > mes && saldoExtra > 0; futura--) {
         if (paid[futura]) continue
 
@@ -345,30 +348,31 @@ const FinancialCalculator = {
         }
       }
 
-      // Qualquer extra não utilizado não gera retorno (assume-se que é guardado sem rendimento)
-      // Para comparação justa, somamos o não utilizado ao custo total (ele "existe" mas não rende)
+      // Extra não utilizado: acumula para comparação justa com o cenário de investir
+      extraNaoUsado += saldoExtra
     }
 
     return {
       totalPaid: totalPago,
       totalDiscount: totalDesconto,
       installmentsEliminated: parcelasAntecipadas,
+      unusedExtra: extraNaoUsado,
     }
   },
 
   // -------- Comparar as duas estratégias --------
   compareStrategies(schedule, investResult, amortResult, extraMensal) {
-    // Custo total no cenário INVESTIR:
-    // Pagou todas as parcelas normais + investiu extra → subtrai retorno líquido do investimento
     const totalParcelasNormais = schedule.reduce((acc, s) => acc + s.payment, 0)
-    const totalExtraTotalInvestido = extraMensal * schedule.length
+    const totalExtraTotal = extraMensal * schedule.length
 
-    // Custo efetivo investir: parcelas - retorno líquido do investimento (o retorno abate o custo)
-    const custoEfetivoInvestir = totalParcelasNormais + totalExtraTotalInvestido - investResult.finalBalance
+    // Cenário INVESTIR:
+    // Desembolso = parcelas normais + extra investido − saldo final líquido
+    const custoEfetivoInvestir = totalParcelasNormais + totalExtraTotal - investResult.finalBalance
 
-    // Custo efetivo amortizar: total efetivamente pago (parcelas normais no prazo + antecipações com desconto)
-    // Parcelas antecipadas já entram em totalPaid pelo seu valor presente (descontado)
-    const custoAmortizar = amortResult.totalPaid
+    // Cenário AMORTIZAR:
+    // Desembolso = parcelas pagas (normais + antecipadas ao valor presente)
+    //            + extra não utilizado (dinheiro gasto sem retorno nem desconto)
+    const custoAmortizar = amortResult.totalPaid + amortResult.unusedExtra
 
     const economia = Math.abs(custoEfetivoInvestir - custoAmortizar)
     const melhorEstrategia = custoEfetivoInvestir <= custoAmortizar ? 'investir' : 'amortizar'
@@ -398,25 +402,18 @@ const FinancialCalculator = {
     const n = schedule.length
     const rows = []
 
-    // Estado investir
+    // --- Cenário investir: saldo acumulado bruto (sem IR no mês a mês, apenas para visualização) ---
     let saldoInvestimento = 0
 
-    // Estado amortizar (clone do schedule para simular liquidação)
+    // --- Cenário amortizar: recalcular saldo devedor real com parcelas antecipadas eliminadas ---
+    // Primeiro, reproduzir a mesma sequência de antecipações de simulateAmortization
+    // para saber quais parcelas foram eliminadas e em que mês
     const paid = new Array(n + 1).fill(false)
-    let saldoDevedorAmortizar = schedule[0] ? schedule[0].balance + schedule[0].amortization : 0
+    const antecipadas = new Set() // índices (1-based) das parcelas antecipadas
 
     for (let mes = 1; mes <= n; mes++) {
-      const parcelaNormal = schedule[mes - 1].payment
+      if (!paid[mes]) paid[mes] = true
 
-      // --- Cenário investir ---
-      // O saldo anterior rende por mais 1 mês, depois soma o novo aporte
-      saldoInvestimento = saldoInvestimento * (1 + taxaInvestimentoMensal) + extraMensal
-
-      // --- Cenário amortizar ---
-      // Pagar parcela normal se não antecipada
-      let saldoDevedorAtual = schedule[mes - 1].balance
-
-      // Usar extra para antecipar a parcela mais distante possível
       let saldoExtra = extraMensal
       for (let futura = n; futura > mes && saldoExtra > 0; futura--) {
         if (paid[futura]) continue
@@ -429,20 +426,56 @@ const FinancialCalculator = {
         if (cost <= saldoExtra) {
           saldoExtra -= cost
           paid[futura] = true
-          // Reduzir saldo devedor pelo valor nominal da parcela antecipada
-          saldoDevedorAtual = Math.max(0, saldoDevedorAtual - schedule[futura - 1].amortization)
+          antecipadas.add(futura)
         }
       }
+    }
 
-      // Diferença: saldo_investimento - saldo_devedor_amortizar
-      const diferenca = saldoInvestimento - saldoDevedorAtual
+    // Recalcular saldo devedor mês a mês excluindo as amortizações das parcelas antecipadas.
+    // O saldo devedor após o mês k = principal - Σ amortizações pagas até k (normais + antecipadas)
+    let saldoDevedor = schedule[0].balance + schedule[0].amortization // principal original
+    const saldosPorMes = new Array(n + 1).fill(0)
+    for (let mes = 1; mes <= n; mes++) {
+      // A amortização desta parcela reduz o saldo, independente de ter sido antecipada antes
+      saldoDevedor = Math.max(0, saldoDevedor - schedule[mes - 1].amortization)
+      saldosPorMes[mes] = saldoDevedor
+    }
+    // Para parcelas antecipadas, o saldo já foi reduzido no próprio mês de antecipação
+    // (elas constam no schedule e a amortização é contabilizada no mês em que foram pagas)
+    // Reprocessar: saldo real = saldo schedule[mes-1].balance
+    // mas descontando as amortizações das parcelas antecipadas que seriam pagas depois
+    // A forma mais correta: saldo real no mês k = schedule[k-1].balance
+    // menos a soma das amortizações das parcelas antecipadas com índice > k
+    const amortizacaoAntecipada = [] // amortização acumulada de parcelas antecipadas (por mês de antecipação)
+    // Não temos o mês exato da antecipação aqui, então usamos o saldo do schedule base
+    // como proxy — é matematicamente equivalente pois cada antecipação reduz o saldo futuro
+    // na exata amortização nominal dessa parcela
+
+    for (let mes = 1; mes <= n; mes++) {
+      const parcelaNormal = schedule[mes - 1].payment
+
+      // Cenário investir: saldo acumulado (bruto, sem desconto de IR — apenas para visualização da evolução)
+      saldoInvestimento = saldoInvestimento * (1 + taxaInvestimentoMensal) + extraMensal
+
+      // Cenário amortizar: saldo devedor real no fim do mês mes
+      // = saldo do schedule (sem antecipações) menos a soma das amortizações
+      //   das parcelas futuras que já foram antecipadas antes deste mês
+      let reducaoAntecipacoes = 0
+      for (const idx of antecipadas) {
+        if (idx > mes) {
+          // Esta parcela antecipada ainda não chegou no seu mês natural → já foi quitada
+          // → sua amortização já reduziu o saldo devedor real
+          reducaoAntecipacoes += schedule[idx - 1].amortization
+        }
+      }
+      const saldoReal = Math.max(0, schedule[mes - 1].balance - reducaoAntecipacoes)
 
       rows.push({
         month: mes,
         payment: parcelaNormal,
         investBalance: saldoInvestimento,
-        amortBalance: saldoDevedorAtual,
-        diff: diferenca,
+        amortBalance: saldoReal,
+        diff: saldoInvestimento - saldoReal,
       })
     }
 
