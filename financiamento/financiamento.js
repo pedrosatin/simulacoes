@@ -281,8 +281,8 @@ const FinancialCalculator = {
 
     const aportes = []
     for (let mes = 1; mes <= totalMeses; mes++) {
-      // Fix: meses de capitalização = totalMeses - mes (não +1)
-      // O último aporte (mes === totalMeses) é sacado imediatamente → rende 0 períodos
+      // Aporte do mês `mes` fica aplicado até o fim do financiamento → rende (totalMeses - mes) períodos
+      // O último aporte é sacado imediatamente e não rende nada
       const mesesAplicado = totalMeses - mes
       const diasAplicado = mesesAplicado * 30
       const rendimentoBruto = extraMensal * Math.pow(1 + taxaMensal, mesesAplicado)
