@@ -18,6 +18,43 @@
   "categories": ["finance", "productivity", "utilities"],
   "lang": "pt-BR",
   "scope": "/",
+  "shortcuts": [
+    {
+      "name": "À Vista vs Parcelado",
+      "short_name": "À Vista",
+      "description": "Compare pagamento à vista vs parcelado",
+      "url": "/simulacoes/a-vista-vs-parcelado/",
+      "icons": [{ "src": "/simulacoes/favicon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "Salário Líquido",
+      "short_name": "Salário",
+      "description": "Calcule seu salário líquido",
+      "url": "/simulacoes/salario-liquido/",
+      "icons": [{ "src": "/simulacoes/favicon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "Rescisão Trabalhista",
+      "short_name": "Rescisão",
+      "description": "Calcule verbas rescisórias",
+      "url": "/simulacoes/rescisao-trabalhista/",
+      "icons": [{ "src": "/simulacoes/favicon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "Regra de Três",
+      "short_name": "Regra 3",
+      "description": "Regra de três e porcentagens",
+      "url": "/simulacoes/regra-de-tres/",
+      "icons": [{ "src": "/simulacoes/favicon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "Financiamento",
+      "short_name": "Financiamento",
+      "description": "Investir vs Amortizar",
+      "url": "/simulacoes/financiamento/",
+      "icons": [{ "src": "/simulacoes/favicon.svg", "sizes": "any" }]
+    }
+  ],
   "related_applications": [],
   "prefer_related_applications": false
 }

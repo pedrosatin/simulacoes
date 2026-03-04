@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- SEO Meta Tags -->
+    <title>Simulador de Financiamento: Investir vs Amortizar — Calculadora Gratuita</title>
+    <meta
+      name="description"
+      content="Descubra se vale mais a pena investir o dinheiro extra ou amortizar seu financiamento. Calcule descontos de parcelas antecipadas, IR regressivo e compare as estratégias com Tabela Price e SAC."
+    />
+    <meta
+      name="keywords"
+      content="simulador financiamento, amortizar ou investir, tabela price, SAC, amortização antecipada, desconto parcela, IR regressivo, taxa selic, calcular financiamento, custo efetivo total"
+    />
+    <meta name="author" content="satinP" />
+    <meta name="robots" content="index, follow" />
+    <meta name="language" content="Portuguese" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://satinp.github.io/simulacoes/financiamento/" />
+    <meta property="og:title" content="Simulador de Financiamento: Investir vs Amortizar" />
+    <meta
+      property="og:description"
+      content="Compare as estratégias: investir o dinheiro extra com retorno da Selic ou amortizar o financiamento antecipando parcelas com desconto."
+    />
+    <meta property="og:image" content="https://satinp.github.io/simulacoes/favicon.svg" />
+    <meta property="og:site_name" content="Simulações Online" />
+    <meta property="og:locale" content="pt_BR" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://satinp.github.io/simulacoes/financiamento/" />
+    <meta property="twitter:title" content="Simulador de Financiamento: Investir vs Amortizar" />
+    <meta
+      property="twitter:description"
+      content="Compare as estratégias: investir o dinheiro extra ou amortizar o financiamento antecipando parcelas com desconto."
+    />
+    <meta property="twitter:image" content="https://satinp.github.io/simulacoes/favicon.svg" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+
+    <!-- PWA -->
+    <link rel="manifest" href="../manifest.json" />
+    <meta name="theme-color" content="#1a1a1a" />
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../assets/global.css" />
+    <link rel="stylesheet" href="./financiamento.css" />
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Simulador de Financiamento: Investir vs Amortizar",
+        "url": "https://satinp.github.io/simulacoes/financiamento/",
+        "description": "Calcule se é melhor investir o dinheiro extra ou amortizar seu financiamento antecipando parcelas com desconto. Suporte a Tabela Price, SAC e IR regressivo.",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "Web",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "BRL" },
+        "author": { "@type": "Person", "name": "satinP" }
+      }
+    </script>
+  </head>
+  <body>
+    <div class="container">
+
+      <!-- Navegação -->
+      <nav class="navigation">
+        <div class="nav-brand">
+          <a href="../" class="nav-home">🏠 Início</a>
+          <span class="nav-title">Simulações Online</span>
+        </div>
+        <ul class="nav-menu">
+          <li><a href="../a-vista-vs-parcelado/" class="nav-link">À Vista vs Parcelado</a></li>
+          <li><a href="../salario-liquido/" class="nav-link">Salário Líquido</a></li>
+          <li><a href="../rescisao-trabalhista/" class="nav-link">Rescisão Trabalhista</a></li>
+          <li><a href="../regra-de-tres/" class="nav-link">Regra de Três</a></li>
+          <li><a href="../financiamento/" class="nav-link active">Financiamento</a></li>
+        </ul>
+      </nav>
+
+      <!-- Cabeçalho -->
+      <header>
+        <h1>Simulador de Financiamento</h1>
+        <p class="subtitle">Compare as estratégias: investir o dinheiro extra ou amortizar o financiamento</p>
+        <p class="description">
+          Dado um financiamento em andamento, descubra se vale mais a pena investir o valor extra à Selic/CDI
+          ou antecipar parcelas futuras com desconto (amortização). Considera IR regressivo sobre investimentos,
+          Tabela Price e SAC.
+        </p>
+      </header>
+
+      <!-- Selic Info -->
+      <section class="selic-info">
+        <div class="selic-card">
+          <span class="selic-label">Taxa Selic Atual:</span>
+          <span id="selic-display" class="selic-value">Carregando...</span>
+          <span id="selic-date" class="selic-date"></span>
+        </div>
+      </section>
+
+      <main>
+        <!-- Formulário -->
+        <section class="calculator-section">
+          <form id="simulationForm" class="form-container">
+
+            <h2 class="form-section-title">💰 Dados do Financiamento</h2>
+
+            <!-- Sistema de amortização -->
+            <div class="input-group">
+              <label for="sistema">Sistema de Amortização</label>
+              <select id="sistema">
+                <option value="price">Tabela Price — parcelas fixas (crédito pessoal, veículos)</option>
+                <option value="sac">SAC — parcelas decrescentes (imóveis, financiamentos longos)</option>
+              </select>
+              <small class="input-help">A Tabela Price é a mais comum em crédito pessoal e veículos no Brasil</small>
+            </div>
+
+            <!-- Grid principal: Principal, N, PMT, Taxa -->
+            <div class="form-grid-2">
+              <div class="input-group">
+                <label for="principal">Valor Financiado (R$)</label>
+                <input
+                  type="text"
+                  id="principal"
+                  placeholder="R$ 100.000,00"
+                  required
+                  aria-describedby="principal-help"
+                />
+                <small id="principal-help" class="input-help">Valor total do empréstimo ou financiamento</small>
+              </div>
+
+              <div class="input-group">
+                <label for="n-parcelas">Número de Parcelas</label>
+                <input
+                  type="number"
+                  id="n-parcelas"
+                  placeholder="36"
+                  min="1"
+                  max="480"
+                  required
+                  aria-describedby="n-parcelas-help"
+                />
+                <small id="n-parcelas-help" class="input-help">Total de parcelas mensais (ex: 36, 60, 120, 360)</small>
+              </div>
+
+              <div class="input-group">
+                <label for="pmt">
+                  Valor da Parcela (R$)
+                  <span class="label-optional">opcional</span>
+                </label>
+                <input
+                  type="text"
+                  id="pmt"
+                  placeholder="Calculado automaticamente"
+                  aria-describedby="pmt-help"
+                />
+                <small id="pmt-help" class="input-help">Preencha ou será calculado pela taxa de juros</small>
+              </div>
+
+              <div class="input-group">
+                <label for="taxa-anual">
+                  Taxa de Juros (% a.a.)
+                  <span class="label-optional">opcional</span>
+                </label>
+                <input
+                  type="text"
+                  id="taxa-anual"
+                  placeholder="Calculada automaticamente"
+                  aria-describedby="taxa-anual-help"
+                />
+                <small id="taxa-anual-help" class="input-help">Taxa anual do financiamento (ex: 12,50)</small>
+              </div>
+            </div>
+
+            <!-- Preview de cálculo automático -->
+            <div id="calc-preview" class="calc-preview" style="display:none" aria-live="polite"></div>
+
+            <h2 class="form-section-title">📈 Estratégia de Comparação</h2>
+
+            <div class="form-grid-2">
+              <div class="input-group">
+                <label for="extra-mensal">Valor Extra por Mês (R$)</label>
+                <input
+                  type="text"
+                  id="extra-mensal"
+                  placeholder="R$ 500,00"
+                  required
+                  aria-describedby="extra-mensal-help"
+                />
+                <small id="extra-mensal-help" class="input-help">
+                  Valor disponível além da parcela — para investir ou amortizar
+                </small>
+              </div>
+
+              <div class="input-group">
+                <label for="taxa-investimento">
+                  Retorno do Investimento (% a.a.)
+                  <span class="label-optional">opcional</span>
+                </label>
+                <input
+                  type="text"
+                  id="taxa-investimento"
+                  placeholder="Usando Selic automaticamente"
+                  aria-describedby="taxa-inv-help"
+                />
+                <small id="taxa-inv-help" class="input-help">
+                  Deixe vazio para usar a Selic atual do Banco Central
+                </small>
+              </div>
+            </div>
+
+            <button type="submit" class="calculate-btn">
+              <span class="btn-icon" aria-hidden="true">🏦</span>
+              Simular
+            </button>
+          </form>
+        </section>
+
+        <!-- Resultados (ocultos até simular) -->
+        <section id="resultado-section" class="results-section" style="display:none">
+
+          <!-- Card de Recomendação -->
+          <div id="resultado-recomendacao" class="recommendation-card">
+            <h2 id="rec-title">Recomendação</h2>
+            <p id="rec-text" class="rec-text"></p>
+            <div class="savings-highlight">
+              <span class="savings-label" id="rec-label">Economia estimada:</span>
+              <span class="savings-value" id="resultado-economia"></span>
+            </div>
+          </div>
+
+          <!-- Grid de comparação -->
+          <div class="comparison-grid">
+
+            <!-- Estratégia Investir -->
+            <div class="comparison-card invest-card">
+              <h3>📈 Estratégia: Investir</h3>
+              <div class="metric">
+                <span class="metric-label">Total das parcelas normais</span>
+                <span class="metric-value" id="invest-total-parcelas">—</span>
+              </div>
+              <div class="metric">
+                <span class="metric-label">Total investido (extra)</span>
+                <span class="metric-value" id="invest-total-investido">—</span>
+              </div>
+              <div class="metric highlight">
+                <span class="metric-label">Retorno líquido (pós-IR)</span>
+                <span class="metric-value positive" id="invest-retorno-liquido">—</span>
+              </div>
+              <div class="metric total">
+                <span class="metric-label">Custo efetivo total</span>
+                <span class="metric-value" id="resultado-investir-total">—</span>
+              </div>
+            </div>
+
+            <!-- Estratégia Amortizar -->
+            <div class="comparison-card amortize-card">
+              <h3>🏦 Estratégia: Amortizar</h3>
+              <div class="metric">
+                <span class="metric-label">Parcelas pagas normalmente</span>
+                <span class="metric-value" id="amort-parcelas-normais">—</span>
+              </div>
+              <div class="metric highlight">
+                <span class="metric-label">Desconto total obtido</span>
+                <span class="metric-value positive" id="amort-desconto-total">—</span>
+              </div>
+              <div class="metric">
+                <span class="metric-label">Parcelas antecipadas</span>
+                <span class="metric-value" id="amort-meses-eliminados">—</span>
+              </div>
+              <div class="metric total">
+                <span class="metric-label">Custo efetivo total</span>
+                <span class="metric-value" id="resultado-amortizar-total">—</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sistema de Abas -->
+          <div class="tabs-container">
+            <div class="tabs-header" role="tablist">
+              <button class="tab-btn active" data-tab="resumo" role="tab" aria-selected="true" aria-controls="tab-resumo">
+                📊 Resumo
+              </button>
+              <button class="tab-btn" data-tab="tabela" role="tab" aria-selected="false" aria-controls="tab-tabela">
+                📋 Tabela de Amortização
+              </button>
+              <button class="tab-btn" data-tab="comparativo" role="tab" aria-selected="false" aria-controls="tab-comparativo">
+                📅 Mês a Mês
+              </button>
+            </div>
+
+            <!-- Aba Resumo -->
+            <div class="tab-content active" id="tab-resumo" role="tabpanel">
+              <div class="info-grid">
+                <div class="info-item">
+                  <span class="info-label">Taxa mensal do financiamento</span>
+                  <span class="info-value" id="info-taxa-mensal">—</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Taxa anual do financiamento</span>
+                  <span class="info-value" id="info-taxa-anual">—</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Total de juros pagos (sem extra)</span>
+                  <span class="info-value" id="info-total-juros">—</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">IR pago sobre investimento</span>
+                  <span class="info-value" id="info-ir-investimento">—</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Taxa de retorno usada</span>
+                  <span class="info-value" id="info-taxa-investimento">—</span>
+                </div>
+              </div>
+
+              <!-- Card educativo IR -->
+              <div class="edu-card">
+                <h4>📚 IR Regressivo sobre Investimentos (Lei 11.033/2004)</h4>
+                <table class="ir-table">
+                  <thead>
+                    <tr><th>Prazo de aplicação</th><th>Alíquota IR</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>Até 180 dias</td><td>22,5%</td></tr>
+                    <tr><td>181 a 360 dias</td><td>20,0%</td></tr>
+                    <tr><td>361 a 720 dias</td><td>17,5%</td></tr>
+                    <tr><td>Acima de 720 dias</td><td>15,0%</td></tr>
+                  </tbody>
+                </table>
+                <p class="edu-note">
+                  Cada aporte mensal é tratado individualmente e tributado conforme seu prazo de permanência no investimento.
+                </p>
+              </div>
+            </div>
+
+            <!-- Aba Tabela de Amortização -->
+            <div class="tab-content" id="tab-tabela" role="tabpanel" style="display:none">
+              <p class="tab-description">
+                Cronograma completo de pagamentos do financiamento (sem amortização extra).
+                Mostra a composição de cada parcela entre juros e amortização do principal.
+              </p>
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Mês</th>
+                      <th>Parcela</th>
+                      <th>Juros</th>
+                      <th>Amortização</th>
+                      <th>Saldo Devedor</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tabela-amortizacao"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Aba Comparativo Mês a Mês -->
+            <div class="tab-content" id="tab-comparativo" role="tabpanel" style="display:none">
+              <p class="tab-description">
+                Evolução mês a mês comparando o saldo acumulado do investimento
+                com o saldo devedor no cenário de amortização.
+              </p>
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Mês</th>
+                      <th>Parcela</th>
+                      <th>Saldo Invest.</th>
+                      <th>Saldo Devedor (Amort.)</th>
+                      <th>Diferença</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tabela-comparativo"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Cards informativos -->
+        <section class="info-section">
+          <div class="info-card">
+            <h3>📌 Tabela Price vs SAC</h3>
+            <p>
+              Na <strong>Tabela Price</strong>, a parcela é fixa, mas os juros são maiores no início.
+              Antecipar as parcelas finais gera descontos expressivos pois elas representam
+              principalmente amortização de capital. No <strong>SAC</strong>, a amortização é constante
+              e as parcelas diminuem ao longo do tempo.
+            </p>
+          </div>
+          <div class="info-card">
+            <h3>🧮 Como funciona o desconto de antecipação?</h3>
+            <p>
+              Antecipar uma parcela significa pagar seu <strong>valor presente</strong>:
+              divide-se o valor nominal pelo fator <code>(1 + taxa)^meses_antecipados</code>.
+              Antecipar a 36ª parcela no 2º mês com taxa de 1% a.m. gera desconto de
+              aproximadamente <strong>29%</strong> — uma economia significativa.
+            </p>
+          </div>
+          <div class="info-card">
+            <h3>⚖️ Quando investir é melhor?</h3>
+            <p>
+              Quando o <strong>retorno líquido do investimento</strong> (após IR) supera a
+              <strong>taxa do financiamento</strong>. Exemplo: financiamento a 0,9% a.m. e Selic
+              a 13,75% a.a. (≈ 1,08% a.m.) — após IR de 15%, retorno líquido ≈ 0,91% a.m.
+              Neste caso os cenários ficam muito próximos e outros fatores entram em jogo.
+            </p>
+          </div>
+        </section>
+      </main>
+
+      <!-- Footer -->
+      <footer>
+        <div class="footer-content">
+          <p>
+            <strong>Simulações Online</strong> — Ferramentas educativas para decisões inteligentes
+          </p>
+          <p class="disclaimer">
+            ⚠️ <strong>Aviso Legal:</strong> Esta é uma ferramenta educativa para auxiliar em decisões financeiras.
+            Os resultados são baseados em cálculos matemáticos e taxas de referência.
+            Para decisões financeiras importantes, consulte sempre um profissional qualificado.
+            A estratégia de amortização pode variar conforme contrato e instituição financeira.
+          </p>
+        </div>
+      </footer>
+
+    </div>
+
+    <script src="./financiamento.js"></script>
+  </body>
+</html>

@@ -1,0 +1,460 @@
+/* ==============================================
+   SIMULADOR DE FINANCIAMENTO — ESTILOS ESPECÍFICOS
+   Complementa assets/global.css (não duplica)
+   ============================================== */
+
+/* ===== ESPAÇAMENTO ENTRE SEÇÕES ===== */
+.calculator-section {
+  margin-bottom: 0; /* results-section cuida do espaço com margin-top */
+}
+
+.info-section {
+  margin-top: 16px;
+}
+
+
+.form-section-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #a0c4ff;
+  padding-left: 12px;
+  border-left: 3px solid #1e88e5;
+  margin: 24px 0 16px;
+  letter-spacing: 0.02em;
+}
+
+/* ===== GRID DE 2 COLUNAS ===== */
+.form-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 600px) {
+  .form-grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===== BADGE OPCIONAL ===== */
+.label-optional {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: #888;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  padding: 1px 6px;
+  margin-left: 6px;
+  vertical-align: middle;
+  letter-spacing: 0.02em;
+}
+
+/* ===== PREVIEW DE CÁLCULO AUTOMÁTICO ===== */
+.calc-preview {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(30, 136, 229, 0.12);
+  border: 1px solid rgba(30, 136, 229, 0.35);
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-top: 4px;
+  font-size: 0.9rem;
+  color: #a0c4ff;
+  animation: fadeIn 0.25s ease;
+}
+
+.calc-preview .preview-icon {
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.calc-preview strong {
+  color: #e1e1e1;
+}
+
+/* ===== SEÇÃO DE RESULTADOS ===== */
+.results-section {
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  animation: fadeIn 0.3s ease;
+}
+
+/* ===== CARD DE RECOMENDAÇÃO ===== */
+.recommendation-card {
+  background: rgba(26, 26, 46, 0.95);
+  border-radius: 16px;
+  padding: 28px 32px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  transition: border-color 0.3s ease;
+}
+
+.recommendation-card.better-invest {
+  border-color: rgba(76, 175, 80, 0.6);
+  background: rgba(20, 40, 20, 0.7);
+}
+
+.recommendation-card.better-amortize {
+  border-color: rgba(30, 136, 229, 0.6);
+  background: rgba(15, 30, 50, 0.7);
+}
+
+.recommendation-card h2 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #e1e1e1;
+}
+
+.rec-text {
+  color: #b0b0b0;
+  line-height: 1.7;
+  margin-bottom: 18px;
+  font-size: 0.95rem;
+}
+
+.savings-highlight {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.savings-label {
+  font-size: 0.9rem;
+  color: #888;
+}
+
+.savings-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #81c784;
+}
+
+/* ===== GRID DE COMPARAÇÃO ===== */
+.comparison-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 600px) {
+  .comparison-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===== CARDS DE ESTRATÉGIA ===== */
+.comparison-card {
+  background: rgba(26, 26, 46, 0.9);
+  border-radius: 14px;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.comparison-card h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.invest-card {
+  border-top: 3px solid #4caf50;
+}
+
+.amortize-card {
+  border-top: 3px solid #1e88e5;
+}
+
+/* ===== MÉTRICAS ===== */
+.metric {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  gap: 8px;
+}
+
+.metric:last-child {
+  border-bottom: none;
+}
+
+.metric.highlight {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 6px;
+  padding: 8px 10px;
+  margin: 4px -2px;
+}
+
+.metric.total {
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: 8px;
+  padding: 10px 10px;
+  margin-top: 8px;
+  border: none;
+}
+
+.metric.total .metric-label {
+  font-weight: 600;
+  color: #c0c0c0;
+}
+
+.metric.total .metric-value {
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.metric-label {
+  font-size: 0.82rem;
+  color: #888;
+  flex: 1;
+}
+
+.metric-value {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #e1e1e1;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.metric-value.positive {
+  color: #81c784;
+}
+
+/* ===== ABAS ===== */
+.tabs-container {
+  background: rgba(20, 20, 36, 0.8);
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.tabs-header {
+  display: flex;
+  gap: 2px;
+  padding: 12px 16px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.tabs-header::-webkit-scrollbar {
+  display: none;
+}
+
+.tab-btn {
+  background: transparent;
+  border: none;
+  color: #888;
+  padding: 10px 16px;
+  border-radius: 8px 8px 0 0;
+  cursor: pointer;
+  font-size: 0.88rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+}
+
+.tab-btn:hover {
+  color: #c0c0c0;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.tab-btn.active {
+  color: #a0c4ff;
+  background: rgba(30, 136, 229, 0.1);
+  border-bottom-color: #1e88e5;
+}
+
+.tab-content {
+  padding: 20px;
+}
+
+.tab-description {
+  font-size: 0.875rem;
+  color: #888;
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+
+/* ===== INFO GRID (ABA RESUMO) ===== */
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 500px) {
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.info-item {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 10px;
+  padding: 12px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.info-label {
+  font-size: 0.78rem;
+  color: #888;
+  letter-spacing: 0.02em;
+}
+
+.info-value {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #e1e1e1;
+}
+
+/* ===== CARD EDUCATIVO IR ===== */
+.edu-card {
+  background: rgba(255, 167, 38, 0.07);
+  border: 1px solid rgba(255, 167, 38, 0.25);
+  border-radius: 12px;
+  padding: 16px 18px;
+}
+
+.edu-card h4 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #ffa726;
+  margin-bottom: 12px;
+}
+
+.ir-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.ir-table th,
+.ir-table td {
+  text-align: left;
+  padding: 6px 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.ir-table th {
+  color: #b0b0b0;
+  font-weight: 600;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.ir-table td {
+  color: #c0c0c0;
+}
+
+.ir-table tr:last-child td {
+  border-bottom: none;
+}
+
+.edu-note {
+  font-size: 0.78rem;
+  color: #888;
+  margin-top: 10px;
+  line-height: 1.5;
+  font-style: italic;
+}
+
+/* ===== TABELAS DE DADOS ===== */
+.table-responsive {
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: 400px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  min-width: 480px;
+}
+
+.data-table thead th {
+  position: sticky;
+  top: 0;
+  background: rgba(26, 26, 46, 0.98);
+  color: #a0a0a0;
+  font-weight: 600;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 10px 12px;
+  text-align: right;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 1;
+}
+
+.data-table thead th:first-child {
+  text-align: center;
+}
+
+.data-table tbody tr {
+  transition: background 0.15s ease;
+}
+
+.data-table tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.data-table tbody tr:hover {
+  background: rgba(30, 136, 229, 0.07);
+}
+
+.data-table td {
+  padding: 8px 12px;
+  text-align: right;
+  color: #c0c0c0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.data-table td:first-child {
+  text-align: center;
+  color: #888;
+  font-weight: 500;
+}
+
+/* Célula de juros — destaque vermelho suave */
+.interest-cell {
+  color: #ef9a9a !important;
+}
+
+/* Células da tabela comparativa */
+.invest-cell {
+  color: #81c784 !important;
+}
+
+.positive-cell {
+  color: #81c784 !important;
+  font-weight: 500;
+}
+
+.negative-cell {
+  color: #ef9a9a !important;
+  font-weight: 500;
+}
+
+/* ===== ANIMAÇÃO FADE IN ===== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
