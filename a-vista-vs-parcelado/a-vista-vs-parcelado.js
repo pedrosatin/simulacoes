@@ -193,9 +193,11 @@ const FinancialCalculator = {
     // Calcular o valor presente das parcelas descontado pela Selic
     // Cada parcela é paga em um mês diferente, então temos que descontar cada uma
     let presentValueOfInstallments = 0
+    const discountMultiplier = 1 + monthlyRate
+    let currentDiscountFactor = discountMultiplier
     for (let month = 1; month <= installments; month++) {
-      const discountFactor = Math.pow(1 + monthlyRate, month)
-      presentValueOfInstallments += installmentValue / discountFactor
+      presentValueOfInstallments += installmentValue / currentDiscountFactor
+      currentDiscountFactor *= discountMultiplier
     }
 
     // Calcular quanto o valor à vista renderia se investido na Selic
