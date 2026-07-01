@@ -6,6 +6,11 @@
 
 class RegraDeTresCalculadora {
   constructor() {
+    this.currencyFormatter = new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    })
+    this.numberFormattersCache = new Map()
     this.init()
   }
 
@@ -155,20 +160,22 @@ class RegraDeTresCalculadora {
    * Formatar número para exibição monetária
    */
   formatCurrency(value) {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-    }).format(value)
+    return this.currencyFormatter.format(value)
   }
 
   /**
    * Formatar número para exibição simples
    */
   formatNumber(value, decimals = 2) {
-    return new Intl.NumberFormat('pt-BR', {
-      minimumFractionDigits: decimals,
-      maximumFractionDigits: decimals,
-    }).format(value)
+    let formatter = this.numberFormattersCache.get(decimals)
+    if (!formatter) {
+      formatter = new Intl.NumberFormat('pt-BR', {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals,
+      })
+      this.numberFormattersCache.set(decimals, formatter)
+    }
+    return formatter.format(value)
   }
 
   /**
