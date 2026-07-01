@@ -199,6 +199,14 @@ class RegraDeTresCalculadora {
   }
 
   /**
+   * Pura lógica de negócio para calcular o valor de uma porcentagem
+   * Desacoplado do DOM para testes
+   */
+  calcularValorDaPorcentagem(percentual, valor) {
+    return (percentual / 100) * valor
+  }
+
+  /**
    * Calcular quanto é X% de um valor
    */
   calcularPorcentagem1() {
@@ -207,7 +215,7 @@ class RegraDeTresCalculadora {
     )
     const valor = this.parseNumber(document.getElementById('valor1').value)
 
-    const resultado = (percentual / 100) * valor
+    const resultado = this.calcularValorDaPorcentagem(percentual, valor)
 
     document.getElementById('resultado1').textContent = this.formatNumber(
       resultado,
@@ -332,9 +340,11 @@ class RegraDeTresCalculadora {
 }
 
 // Inicializar quando o DOM estiver carregado
-document.addEventListener('DOMContentLoaded', () => {
-  new RegraDeTresCalculadora()
-})
+if (typeof document !== 'undefined') {
+  document.addEventListener('DOMContentLoaded', () => {
+    new RegraDeTresCalculadora()
+  })
+}
 
 // Exportar para uso em outros scripts se necessário
 if (typeof module !== 'undefined' && module.exports) {
