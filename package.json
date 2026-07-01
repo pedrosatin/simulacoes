@@ -1,0 +1,21 @@
+{
+  "name": "app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "refactor.js",
+  "scripts": {
+    "test": "node --test salario-liquido/*.test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pedrosatin/simulacoes.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/pedrosatin/simulacoes/issues"
+  },
+  "homepage": "https://github.com/pedrosatin/simulacoes#readme"
+}

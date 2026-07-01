@@ -1,9 +1,6 @@
 // Calculadora de Salário Líquido
 // Tabelas atualizadas para 2025
 
-document.addEventListener('DOMContentLoaded', function () {
-  const salaryForm = document.getElementById('salaryForm')
-  const resultsSection = document.getElementById('salaryResults')
 
   // Tabelas de INSS 2025
   const inssTable = [
@@ -24,48 +21,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
   const dependentDeduction = 189.59 // Valor por dependente em 2025
 
-  // Formatação monetária
-  function formatCurrency(value) {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-    }).format(value)
-  }
-
-  // Converter string monetária para número
-  function parseCurrency(value) {
-    if (!value) return 0
-    return parseFloat(value.replace(/[^\d,]/g, '').replace(',', '.')) || 0
-  }
-
-  // Aplicar máscara monetária
-  function applyMoneyMask(input) {
-    let value = input.value.replace(/\D/g, '')
-    if (value) {
-      value = (parseInt(value) / 100).toFixed(2)
-      value = value.replace('.', ',')
-      value = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.')
-      input.value = 'R$ ' + value
-    } else {
-      input.value = ''
-    }
-  }
-
-  // Adicionar máscaras monetárias aos inputs
-  const moneyInputs = [
-    'grossSalary',
-    'healthPlan',
-    'mealVoucher',
-    'transportVoucher',
-    'otherDeductions',
-  ]
-  moneyInputs.forEach((inputId) => {
-    const input = document.getElementById(inputId)
-    input.addEventListener('input', () => applyMoneyMask(input))
-    input.addEventListener('blur', () => {
-      if (!input.value) input.value = ''
-    })
-  })
 
   // Calcular INSS progressivo
   function calculateINSS(grossSalary) {
@@ -192,6 +147,67 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
+// Exportação para testes (Node.js)
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = {
+    calculateNetSalary,
+    calculateINSS,
+    calculateIRRF,
+    validateTransportVoucher,
+    getINSSRate,
+    getIRRFRate
+  };
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  const salaryForm = document.getElementById('salaryForm');
+  const resultsSection = document.getElementById('salaryResults');
+
+
+  // Formatação monetária
+  function formatCurrency(value) {
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    }).format(value)
+  }
+
+  // Converter string monetária para número
+  function parseCurrency(value) {
+    if (!value) return 0
+    return parseFloat(value.replace(/[^\d,]/g, '').replace(',', '.')) || 0
+  }
+
+  // Aplicar máscara monetária
+  function applyMoneyMask(input) {
+    let value = input.value.replace(/\D/g, '')
+    if (value) {
+      value = (parseInt(value) / 100).toFixed(2)
+      value = value.replace('.', ',')
+      value = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+      input.value = 'R$ ' + value
+    } else {
+      input.value = ''
+    }
+  }
+
+  // Adicionar máscaras monetárias aos inputs
+  const moneyInputs = [
+    'grossSalary',
+    'healthPlan',
+    'mealVoucher',
+    'transportVoucher',
+    'otherDeductions',
+  ]
+  moneyInputs.forEach((inputId) => {
+    const input = document.getElementById(inputId)
+    input.addEventListener('input', () => applyMoneyMask(input))
+    input.addEventListener('blur', () => {
+      if (!input.value) input.value = ''
+    })
+  })
+
+
   // Exibir resultados
   function displayResults(results) {
     // Salário bruto e líquido
@@ -313,4 +329,4 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Inicializar campos com valores padrão
   document.getElementById('dependents').value = '0'
-})
+});
