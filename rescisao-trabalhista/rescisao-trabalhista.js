@@ -27,12 +27,14 @@ const CONSTANTS = {
 }
 
 // Inicialização da aplicação
-document.addEventListener('DOMContentLoaded', function () {
-  initializeCalculator()
-  setupEventListeners()
-  updateCurrentDate()
-  setDefaultDates()
-})
+if (typeof document !== 'undefined') {
+  document.addEventListener('DOMContentLoaded', function () {
+    initializeCalculator()
+    setupEventListeners()
+    updateCurrentDate()
+    setDefaultDates()
+  })
+}
 
 /**
  * Inicializa a calculadora definindo valores padrão
@@ -671,5 +673,13 @@ function setDefaultDates() {
 
   if (!dataAdmissaoInput.value) {
     dataAdmissaoInput.value = formatDateForInput(oneYearAgo)
+  }
+}
+
+// Exportação para testes
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = {
+    CONSTANTS,
+    calculatePriorNotice,
   }
 }
