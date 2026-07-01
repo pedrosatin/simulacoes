@@ -6,7 +6,9 @@
 
 class RegraDeTresCalculadora {
   constructor() {
-    this.init()
+    if (typeof document !== 'undefined') {
+      this.init()
+    }
   }
 
   init() {
@@ -172,6 +174,16 @@ class RegraDeTresCalculadora {
   }
 
   /**
+   * Lógica principal da regra de três (puramente matemática)
+   */
+  calcularRegraDeTresCore(valorA, valorB, valorC) {
+    if (valorA === 0 || !valorA) {
+      return null
+    }
+    return (valorB * valorC) / valorA
+  }
+
+  /**
    * Calcular regra de três simples
    * A está para B assim como C está para X
    * A/B = C/X → X = (B * C) / A
@@ -183,13 +195,12 @@ class RegraDeTresCalculadora {
 
     const resultadoInput = document.getElementById('valorX')
 
-    if (valorA === 0 || !valorA) {
+    const resultado = this.calcularRegraDeTresCore(valorA, valorB, valorC)
+
+    if (resultado === null) {
       resultadoInput.value = ''
       return
     }
-
-    // Fórmula: X = (B * C) / A
-    const resultado = (valorB * valorC) / valorA
 
     // Exibir resultado formatado
     resultadoInput.value = this.formatNumber(resultado)
@@ -332,9 +343,11 @@ class RegraDeTresCalculadora {
 }
 
 // Inicializar quando o DOM estiver carregado
-document.addEventListener('DOMContentLoaded', () => {
-  new RegraDeTresCalculadora()
-})
+if (typeof document !== 'undefined') {
+  document.addEventListener('DOMContentLoaded', () => {
+    new RegraDeTresCalculadora()
+  })
+}
 
 // Exportar para uso em outros scripts se necessário
 if (typeof module !== 'undefined' && module.exports) {
