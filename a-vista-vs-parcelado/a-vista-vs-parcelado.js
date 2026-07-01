@@ -656,8 +656,19 @@ setInterval(() => {
 }, 30 * 60 * 1000)
 
 // Exportar para uso global (se necessário)
-window.SimulacaoFinanceira = {
-  FinancialCalculator,
-  SelicAPI,
-  Utils,
+if (typeof window !== 'undefined') {
+  window.SimulacaoFinanceira = {
+    FinancialCalculator,
+    SelicAPI,
+    Utils,
+  }
+}
+
+// Exportar para testes no Node (CommonJS)
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = {
+    FinancialCalculator,
+    SelicAPI,
+    Utils,
+  }
 }
