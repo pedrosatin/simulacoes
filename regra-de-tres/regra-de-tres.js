@@ -152,16 +152,6 @@ class RegraDeTresCalculadora {
   }
 
   /**
-   * Formatar número para exibição monetária
-   */
-  formatCurrency(value) {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-    }).format(value)
-  }
-
-  /**
    * Formatar número para exibição simples
    */
   formatNumber(value, decimals = 2) {
