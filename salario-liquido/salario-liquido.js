@@ -25,11 +25,13 @@ document.addEventListener('DOMContentLoaded', function () {
   const dependentDeduction = 189.59 // Valor por dependente em 2025
 
   // Formatação monetária
+  const currencyFormatter = new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+  })
+
   function formatCurrency(value) {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-    }).format(value)
+    return currencyFormatter.format(value)
   }
 
   // Converter string monetária para número
