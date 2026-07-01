@@ -691,3 +691,11 @@ function setDefaultDates() {
     dataAdmissaoInput.value = formatDateForInput(oneYearAgo)
   }
 }
+
+// Exportar funções para teste, se estiver em ambiente Node.js
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = {
+    calculateSalaryBalance,
+    CONSTANTS
+  }
+}
