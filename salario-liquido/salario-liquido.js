@@ -1,17 +1,50 @@
 // Calculadora de Salário Líquido
 // Tabelas atualizadas para 2025
 
+// Tabelas de INSS 2025
+const inssTable = [
+  { min: 0, max: 1412.0, rate: 0.075 },
+  { min: 1412.01, max: 2666.68, rate: 0.09 },
+  { min: 2666.69, max: 4000.03, rate: 0.12 },
+  { min: 4000.04, max: 7786.02, rate: 0.14 },
+]
+
+// Calcular INSS progressivo
+function calculateINSS(grossSalary) {
+  let inss = 0
+  let remainingSalary = grossSalary
+
+  for (const bracket of inssTable) {
+    if (remainingSalary <= 0) break
+
+    const bracketMin = bracket.min
+    const bracketMax = bracket.max
+    const bracketRate = bracket.rate
+
+    const bracketSalary = Math.min(
+      remainingSalary,
+      bracketMax - bracketMin + (bracketMin === 0 ? 0 : 0.01)
+    )
+
+    if (grossSalary > bracketMin) {
+      const taxableInThisBracket = Math.min(
+        grossSalary - bracketMin,
+        bracketMax - bracketMin + (bracketMin === 0 ? 0 : 0.01)
+      )
+      inss += taxableInThisBracket * bracketRate
+    }
+
+    remainingSalary -= bracketSalary
+  }
+
+  // Teto do INSS 2025
+  const inssCeiling = 7786.02 * 0.14 // R$ 1.090.04
+  return Math.min(inss, inssCeiling)
+}
+
 document.addEventListener('DOMContentLoaded', function () {
   const salaryForm = document.getElementById('salaryForm')
   const resultsSection = document.getElementById('salaryResults')
-
-  // Tabelas de INSS 2025
-  const inssTable = [
-    { min: 0, max: 1412.0, rate: 0.075 },
-    { min: 1412.01, max: 2666.68, rate: 0.09 },
-    { min: 2666.69, max: 4000.03, rate: 0.12 },
-    { min: 4000.04, max: 7786.02, rate: 0.14 },
-  ]
 
   // Tabelas de IRRF 2025
   const irrfTable = [
@@ -68,39 +101,6 @@ document.addEventListener('DOMContentLoaded', function () {
       if (!input.value) input.value = ''
     })
   })
-
-  // Calcular INSS progressivo
-  function calculateINSS(grossSalary) {
-    let inss = 0
-    let remainingSalary = grossSalary
-
-    for (const bracket of inssTable) {
-      if (remainingSalary <= 0) break
-
-      const bracketMin = bracket.min
-      const bracketMax = bracket.max
-      const bracketRate = bracket.rate
-
-      const bracketSalary = Math.min(
-        remainingSalary,
-        bracketMax - bracketMin + (bracketMin === 0 ? 0 : 0.01)
-      )
-
-      if (grossSalary > bracketMin) {
-        const taxableInThisBracket = Math.min(
-          grossSalary - bracketMin,
-          bracketMax - bracketMin + (bracketMin === 0 ? 0 : 0.01)
-        )
-        inss += taxableInThisBracket * bracketRate
-      }
-
-      remainingSalary -= bracketSalary
-    }
-
-    // Teto do INSS 2025
-    const inssCeiling = 7786.02 * 0.14 // R$ 1.090.04
-    return Math.min(inss, inssCeiling)
-  }
 
   // Determinar alíquota do INSS para exibição
   function getINSSRate(grossSalary) {
@@ -316,3 +316,8 @@ document.addEventListener('DOMContentLoaded', function () {
   // Inicializar campos com valores padrão
   document.getElementById('dependents').value = '0'
 })
+
+// Exportar para testes (apenas se estiver em ambiente Node.js)
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { calculateINSS, inssTable }
+}
