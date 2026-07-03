@@ -1,0 +1,28 @@
+{
+  "name": "app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pedrosatin/simulacoes.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/pedrosatin/simulacoes/issues"
+  },
+  "homepage": "https://github.com/pedrosatin/simulacoes#readme",
+  "devDependencies": {
+    "jest": "^30.4.2",
+    "jest-environment-jsdom": "^30.4.1"
+  },
+  "jest": {
+    "testEnvironment": "jsdom"
+  }
+}
