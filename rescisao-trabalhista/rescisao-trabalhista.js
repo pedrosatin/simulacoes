@@ -597,9 +597,9 @@ function updateObservations(dados) {
 
   // Observação sobre férias vencidas
   if (dados.feriasVencidas > 0) {
-    observacoesList.innerHTML += `<li>Consideradas ${dados.feriasVencidas.toFixed(
-      1
-    )} período(s) de férias vencidas</li>`
+    const li = document.createElement('li')
+    li.textContent = `Consideradas ${dados.feriasVencidas.toFixed(1)} período(s) de férias vencidas`
+    observacoesList.appendChild(li)
   }
 }
 
