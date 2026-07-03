@@ -39,14 +39,24 @@ const elements = {
   grossReturn: document.getElementById('grossReturn'),
 }
 
+// Formatadores de moeda (cache para otimização de performance)
+const currencyFormatter = new Intl.NumberFormat('pt-BR', {
+  style: 'currency',
+  currency: 'BRL',
+})
+
+const currencyInputFormatter = new Intl.NumberFormat('pt-BR', {
+  style: 'currency',
+  currency: 'BRL',
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+})
+
 // Utilitários
 const Utils = {
   // Formatar valor monetário
   formatCurrency(value) {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-    }).format(value)
+    return currencyFormatter.format(value)
   },
 
   // Formatar valor para input (R$ 1.234,56)
@@ -56,12 +66,7 @@ const Utils = {
     const numericValue = this.parseCurrencyInput(value)
     if (isNaN(numericValue)) return value
 
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(numericValue)
+    return currencyInputFormatter.format(numericValue)
   },
 
   // Converter valor formatado para número
