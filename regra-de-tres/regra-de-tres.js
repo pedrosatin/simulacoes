@@ -311,14 +311,6 @@ class RegraDeTresCalculadora {
     }, 200)
   }
 
-  /**
-   * Demonstrar cálculo passo a passo (para futuras melhorias)
-   */
-  mostrarPassoAPasso(tipo, valores) {
-    // Funcionalidade para mostrar os passos do cálculo
-    // Pode ser implementada no futuro para fins educativos
-    console.log(`Cálculo do tipo: ${tipo}`, valores)
-  }
 }
 
 // Inicializar quando o DOM estiver carregado
