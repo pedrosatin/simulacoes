@@ -247,20 +247,10 @@ function collectFormData() {
 }
 
 /**
- * Calcula o período trabalhado em anos, meses e dias
+ * Calcula os anos completos trabalhados
  */
-function calculateWorkPeriod(dataAdmissao, dataRescisao) {
-  const diffTime = dataRescisao.getTime() - dataAdmissao.getTime()
-  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24))
-
-  let anos = 0
-  let meses = 0
-  let dias = 0
-
-  // Cálculo mais preciso usando datas
-  let tempDate = new Date(dataAdmissao)
-
-  // Conta anos completos
+function calculateCompleteYears(tempDate, dataRescisao) {
+  let anos = 0;
   while (
     tempDate.getFullYear() < dataRescisao.getFullYear() ||
     (tempDate.getFullYear() === dataRescisao.getFullYear() &&
@@ -274,13 +264,19 @@ function calculateWorkPeriod(dataAdmissao, dataRescisao) {
 
     if (nextYear <= dataRescisao) {
       anos++
-      tempDate = nextYear
+      tempDate.setTime(nextYear.getTime())
     } else {
       break
     }
   }
+  return anos;
+}
 
-  // Conta meses completos
+/**
+ * Calcula os meses completos trabalhados
+ */
+function calculateCompleteMonths(tempDate, dataRescisao) {
+  let meses = 0;
   while (
     tempDate.getMonth() < dataRescisao.getMonth() ||
     (tempDate.getMonth() === dataRescisao.getMonth() &&
@@ -291,15 +287,35 @@ function calculateWorkPeriod(dataAdmissao, dataRescisao) {
 
     if (nextMonth <= dataRescisao) {
       meses++
-      tempDate = nextMonth
+      tempDate.setTime(nextMonth.getTime())
     } else {
       break
     }
   }
+  return meses;
+}
 
-  // Calcula dias restantes
+/**
+ * Calcula os dias restantes trabalhados
+ */
+function calculateRemainingDays(tempDate, dataRescisao) {
   const diffFinal = dataRescisao.getTime() - tempDate.getTime()
-  dias = Math.floor(diffFinal / (1000 * 60 * 60 * 24))
+  return Math.floor(diffFinal / (1000 * 60 * 60 * 24))
+}
+
+/**
+ * Calcula o período trabalhado em anos, meses e dias
+ */
+function calculateWorkPeriod(dataAdmissao, dataRescisao) {
+  const diffTime = dataRescisao.getTime() - dataAdmissao.getTime()
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24))
+
+  // Cálculo mais preciso usando datas
+  let tempDate = new Date(dataAdmissao)
+
+  const anos = calculateCompleteYears(tempDate, dataRescisao)
+  const meses = calculateCompleteMonths(tempDate, dataRescisao)
+  const dias = calculateRemainingDays(tempDate, dataRescisao)
 
   return {
     anos,
