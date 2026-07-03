@@ -631,11 +631,13 @@ function parseMoneyToFloat(moneyString) {
 }
 
 // Formata número para formato monetário brasileiro
+const moneyFormatter = new Intl.NumberFormat('pt-BR', {
+  style: 'currency',
+  currency: 'BRL',
+})
+
 function formatMoney(value) {
-  return new Intl.NumberFormat('pt-BR', {
-    style: 'currency',
-    currency: 'BRL',
-  }).format(value)
+  return moneyFormatter.format(value)
 }
 
 // Formata data para input type="date"
