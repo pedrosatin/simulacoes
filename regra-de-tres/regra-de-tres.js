@@ -155,10 +155,18 @@ class RegraDeTresCalculadora {
    * Formatar número para exibição simples
    */
   formatNumber(value, decimals = 2) {
-    return new Intl.NumberFormat('pt-BR', {
-      minimumFractionDigits: decimals,
-      maximumFractionDigits: decimals,
-    }).format(value)
+    if (!this._numberFormatters) {
+      this._numberFormatters = new Map()
+    }
+
+    if (!this._numberFormatters.has(decimals)) {
+      this._numberFormatters.set(decimals, new Intl.NumberFormat('pt-BR', {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals,
+      }))
+    }
+
+    return this._numberFormatters.get(decimals).format(value)
   }
 
   /**
