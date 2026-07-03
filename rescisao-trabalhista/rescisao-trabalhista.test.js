@@ -1,4 +1,4 @@
-const { calculateSalaryBalance, CONSTANTS } = require('./rescisao-trabalhista.js')
+const { calculateSalaryBalance, calculateFGTSPenalty, CONSTANTS } = require('./rescisao-trabalhista.js')
 
 describe('calculateSalaryBalance', () => {
   it('should correctly calculate the salary balance for a mid-month rescision', () => {
@@ -69,5 +69,37 @@ describe('calculateSalaryBalance', () => {
     }
     const result = calculateSalaryBalance(dados)
     expect(result).toBe(0)
+  })
+})
+
+describe('calculateFGTSPenalty', () => {
+  it('should return 0 for demissao-justa-causa', () => {
+    const dados = { tipoRescisao: 'demissao-justa-causa', saldoFGTS: 1000 }
+    expect(calculateFGTSPenalty(dados)).toBe(0)
+  })
+
+  it('should return 0 for pedido-demissao', () => {
+    const dados = { tipoRescisao: 'pedido-demissao', saldoFGTS: 1000 }
+    expect(calculateFGTSPenalty(dados)).toBe(0)
+  })
+
+  it('should return 0 when saldoFGTS is 0', () => {
+    const dados = { tipoRescisao: 'demissao-sem-justa-causa', saldoFGTS: 0 }
+    expect(calculateFGTSPenalty(dados)).toBe(0)
+  })
+
+  it('should calculate 40% penalty for demissao-sem-justa-causa', () => {
+    const dados = { tipoRescisao: 'demissao-sem-justa-causa', saldoFGTS: 1000, saqueAniversario: false }
+    expect(calculateFGTSPenalty(dados)).toBe(400) // 1000 * 0.4
+  })
+
+  it('should calculate 20% penalty for acordo', () => {
+    const dados = { tipoRescisao: 'acordo', saldoFGTS: 1000, saqueAniversario: false }
+    expect(calculateFGTSPenalty(dados)).toBe(200) // 1000 * 0.2
+  })
+
+  it('should calculate 20% penalty for demissao-sem-justa-causa when saqueAniversario is true', () => {
+    const dados = { tipoRescisao: 'demissao-sem-justa-causa', saldoFGTS: 1000, saqueAniversario: true }
+    expect(calculateFGTSPenalty(dados)).toBe(200) // 1000 * 0.2
   })
 })
