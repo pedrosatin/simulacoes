@@ -10,9 +10,22 @@ class RegraDeTresCalculadora {
   }
 
   init() {
+    this.cacheElements()
     this.setupEventListeners()
     this.setupTabs()
     this.setupInputMasks()
+  }
+
+  /**
+   * Cache elements to avoid repeated DOM queries
+   */
+  cacheElements() {
+    this.elements = {
+      valorA: document.getElementById('valorA'),
+      valorB: document.getElementById('valorB'),
+      valorC: document.getElementById('valorC'),
+      valorX: document.getElementById('valorX'),
+    }
   }
 
   /**
@@ -175,11 +188,11 @@ class RegraDeTresCalculadora {
    * A/B = C/X → X = (B * C) / A
    */
   calcularRegraDeTres() {
-    const valorA = this.parseNumber(document.getElementById('valorA').value)
-    const valorB = this.parseNumber(document.getElementById('valorB').value)
-    const valorC = this.parseNumber(document.getElementById('valorC').value)
+    const valorA = this.parseNumber(this.elements.valorA?.value)
+    const valorB = this.parseNumber(this.elements.valorB?.value)
+    const valorC = this.parseNumber(this.elements.valorC?.value)
 
-    const resultadoInput = document.getElementById('valorX')
+    const resultadoInput = this.elements.valorX
 
     if (valorA === 0 || !valorA) {
       resultadoInput.value = ''
