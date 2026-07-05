@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- SEO Meta Tags -->
+    <title>Calculadora de Juros Compostos e Investimentos - Simulações Online</title>
+    <meta
+      name="description"
+      content="Calculadora online gratuita de juros compostos com aportes mensais. Simule investimentos, descubra quanto acumular para viver de renda, compare aplicações e projete sua aposentadoria."
+    />
+    <meta
+      name="keywords"
+      content="juros compostos, calculadora de juros, simulador de investimentos, viver de renda, aposentadoria, aporte mensal, montante, valor futuro, renda passiva, comparador de investimentos"
+    />
+    <meta name="author" content="satinP" />
+    <meta name="robots" content="index, follow" />
+    <meta name="language" content="Portuguese" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="https://satinp.github.io/simulacoes/juros-compostos/"
+    />
+    <meta
+      property="og:title"
+      content="Calculadora de Juros Compostos e Investimentos"
+    />
+    <meta
+      property="og:description"
+      content="Simule juros compostos com aportes mensais, descubra quanto precisa para viver de renda, compare investimentos e projete a aposentadoria."
+    />
+    <meta
+      property="og:image"
+      content="https://satinp.github.io/simulacoes/favicon.svg"
+    />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta
+      property="twitter:url"
+      content="https://satinp.github.io/simulacoes/juros-compostos/"
+    />
+    <meta
+      property="twitter:title"
+      content="Calculadora de Juros Compostos e Investimentos"
+    />
+    <meta
+      property="twitter:description"
+      content="Simule juros compostos com aportes mensais, viver de renda, comparação de investimentos e aposentadoria."
+    />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="../manifest.json" />
+
+    <link
+      rel="canonical"
+      href="https://satinp.github.io/simulacoes/juros-compostos/"
+    />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="../assets/global.css" />
+    <link rel="stylesheet" href="juros-compostos.css" />
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Calculadora de Juros Compostos e Investimentos",
+        "description": "Calculadora online gratuita de juros compostos com aportes mensais, viver de renda, comparação de investimentos e projeção de aposentadoria",
+        "url": "https://satinp.github.io/simulacoes/juros-compostos/",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "Any",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "BRL"
+        },
+        "creator": {
+          "@type": "Person",
+          "name": "satinP"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div class="container">
+      <nav class="navigation">
+        <div class="nav-brand">
+          <a href="../" class="nav-home">🏠 Início</a>
+          <span class="nav-title">Simulações Online</span>
+        </div>
+        <ul class="nav-menu">
+          <li>
+            <a href="../a-vista-vs-parcelado/" class="nav-link"
+              >À Vista vs Parcelado</a
+            >
+          </li>
+          <li>
+            <a href="../salario-liquido/" class="nav-link">Salário Líquido</a>
+          </li>
+          <li>
+            <a href="../rescisao-trabalhista/" class="nav-link"
+              >Rescisão Trabalhista</a
+            >
+          </li>
+          <li>
+            <a href="../regra-de-tres/" class="nav-link">Regra de Três</a>
+          </li>
+          <li>
+            <a href="../juros-compostos/" class="nav-link active"
+              >Juros Compostos</a
+            >
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Header -->
+      <header>
+        <h1>Juros Compostos e Investimentos</h1>
+        <p class="subtitle">
+          Simule o crescimento do seu dinheiro no tempo
+        </p>
+        <p class="description">
+          Calcule juros compostos com aportes mensais, descubra quanto precisa
+          acumular para viver de renda, compare investimentos e projete a sua
+          aposentadoria — tudo em uma única ferramenta.
+        </p>
+      </header>
+
+      <!-- Menu de Abas -->
+      <div class="tabs-container">
+        <button class="tab-button active" data-tab="juros">
+          Juros Compostos
+        </button>
+        <button class="tab-button" data-tab="renda">Viver de Renda</button>
+        <button class="tab-button" data-tab="comparar">Comparador</button>
+        <button class="tab-button" data-tab="aposentadoria">
+          Aposentadoria
+        </button>
+      </div>
+
+      <main>
+        <!-- ================= Aba 1: Juros Compostos ================= -->
+        <div id="juros" class="tab-content active">
+          <div class="form-container">
+            <h2>💰 Juros Compostos</h2>
+            <p class="section-description">
+              Informe o valor inicial, os aportes mensais, a taxa de juros e o
+              prazo para ver quanto o seu dinheiro rende.
+            </p>
+
+            <div class="input-group">
+              <label for="jurosAporteInicial">Valor inicial (R$)</label>
+              <input
+                type="text"
+                id="jurosAporteInicial"
+                inputmode="numeric"
+                data-money
+                placeholder="0,00"
+              />
+            </div>
+
+            <div class="input-group">
+              <label for="jurosAporteMensal">Aporte mensal (R$)</label>
+              <input
+                type="text"
+                id="jurosAporteMensal"
+                inputmode="numeric"
+                data-money
+                placeholder="0,00"
+              />
+            </div>
+
+            <div class="input-row">
+              <div class="input-group">
+                <label for="jurosTaxa">Taxa de juros (%)</label>
+                <input
+                  type="text"
+                  id="jurosTaxa"
+                  inputmode="decimal"
+                  placeholder="0"
+                />
+              </div>
+              <div class="input-group">
+                <label for="jurosTaxaPeriodo">Período da taxa</label>
+                <select id="jurosTaxaPeriodo">
+                  <option value="anual">ao ano</option>
+                  <option value="mensal">ao mês</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="input-row">
+              <div class="input-group">
+                <label for="jurosTempo">Período</label>
+                <input
+                  type="text"
+                  id="jurosTempo"
+                  inputmode="numeric"
+                  placeholder="0"
+                />
+              </div>
+              <div class="input-group">
+                <label for="jurosTempoPeriodo">Unidade</label>
+                <select id="jurosTempoPeriodo">
+                  <option value="anos">anos</option>
+                  <option value="meses">meses</option>
+                </select>
+              </div>
+            </div>
+
+            <button type="button" id="calcJurosBtn" class="calculate-btn">
+              <span class="btn-icon">📈</span> Calcular
+            </button>
+          </div>
+
+          <div id="jurosResultado" class="result-card" style="display: none">
+            <div class="result-summary">
+              <div class="total-value">
+                <span class="label">Montante final</span>
+                <span class="value" id="jurosMontante">R$ 0,00</span>
+              </div>
+            </div>
+
+            <div class="result-grid">
+              <div class="result-item">
+                <span class="result-label">Total investido</span>
+                <span class="result-value" id="jurosInvestido">R$ 0,00</span>
+              </div>
+              <div class="result-item highlight">
+                <span class="result-label">Total em juros</span>
+                <span class="result-value" id="jurosJuros">R$ 0,00</span>
+              </div>
+            </div>
+            <p class="rate-info" id="jurosTaxaMensalInfo"></p>
+
+            <h3 class="evolution-title">Evolução ano a ano</h3>
+            <div class="table-wrapper">
+              <table class="evolution-table">
+                <thead>
+                  <tr>
+                    <th>Ano</th>
+                    <th>Investido</th>
+                    <th>Juros</th>
+                    <th>Total</th>
+                  </tr>
+                </thead>
+                <tbody id="jurosEvolucaoBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= Aba 2: Viver de Renda ================= -->
+        <div id="renda" class="tab-content">
+          <div class="form-container">
+            <h2>🏖️ Viver de Renda</h2>
+            <p class="section-description">
+              Descubra o patrimônio necessário para viver dos rendimentos, sem
+              consumir o principal.
+            </p>
+
+            <div class="input-group">
+              <label for="rendaDesejada">Renda mensal desejada (R$)</label>
+              <input
+                type="text"
+                id="rendaDesejada"
+                inputmode="numeric"
+                data-money
+                placeholder="0,00"
+              />
+            </div>
+
+            <div class="input-row">
+              <div class="input-group">
+                <label for="rendaTaxa">Rentabilidade (%)</label>
+                <input
+                  type="text"
+                  id="rendaTaxa"
+                  inputmode="decimal"
+                  placeholder="0"
+                />
+              </div>
+              <div class="input-group">
+                <label for="rendaTaxaPeriodo">Período da taxa</label>
+                <select id="rendaTaxaPeriodo">
+                  <option value="anual">ao ano</option>
+                  <option value="mensal">ao mês</option>
+                </select>
+              </div>
+            </div>
+
+            <p class="section-description optional-hint">
+              Opcional: informe seus aportes para saber quanto tempo falta.
+            </p>
+
+            <div class="input-row">
+              <div class="input-group">
+                <label for="rendaAporteInicial">Valor já acumulado (R$)</label>
+                <input
+                  type="text"
+                  id="rendaAporteInicial"
+                  inputmode="numeric"
+                  data-money
+                  placeholder="0,00"
+                />
+              </div>
+              <div class="input-group">
+                <label for="rendaAporteMensal">Aporte mensal (R$)</label>
+                <input
+                  type="text"
+                  id="rendaAporteMensal"
+                  inputmode="numeric"
+                  data-money
+                  placeholder="0,00"
+                />
+              </div>
+            </div>
+
+            <button type="button" id="calcRendaBtn" class="calculate-btn">
+              <span class="btn-icon">🏖️</span> Calcular
+            </button>
+          </div>
+
+          <div id="rendaResultado" class="result-card" style="display: none">
+            <div class="result-summary">
+              <div class="total-value">
+                <span class="label">Patrimônio necessário</span>
+                <span class="value" id="rendaPatrimonio">R$ 0,00</span>
+              </div>
+            </div>
+            <p class="rate-info" id="rendaExplicacao"></p>
+            <p class="rate-info" id="rendaTempo"></p>
+          </div>
+        </div>
+
+        <!-- ================= Aba 3: Comparador ================= -->
+        <div id="comparar" class="tab-content">
+          <div class="form-container">
+            <h2>⚖️ Comparador de Investimentos</h2>
+            <p class="section-description">
+              Mesmos aportes, taxas diferentes. Veja qual aplicação rende mais
+              no fim do período.
+            </p>
+
+            <div class="input-group">
+              <label for="compararAporteInicial">Valor inicial (R$)</label>
+              <input
+                type="text"
+                id="compararAporteInicial"
+                inputmode="numeric"
+                data-money
+                placeholder="0,00"
+              />
+            </div>
+
+            <div class="input-group">
+              <label for="compararAporteMensal">Aporte mensal (R$)</label>
+              <input
+                type="text"
+                id="compararAporteMensal"
+                inputmode="numeric"
+                data-money
+                placeholder="0,00"
+              />
+            </div>
+
+            <div class="input-row">
+              <div class="input-group">
+                <label for="compararTempo">Período</label>
+                <input
+                  type="text"
+                  id="compararTempo"
+                  inputmode="numeric"
+                  placeholder="0"
+                />
+              </div>
+              <div class="input-group">
+                <label for="compararTempoPeriodo">Unidade</label>
+                <select id="compararTempoPeriodo">
+                  <option value="anos">anos</option>
+                  <option value="meses">meses</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="compare-inputs">
+              <div class="compare-input-card">
+                <h3>Investimento A</h3>
+                <div class="input-row">
+                  <div class="input-group">
+                    <label for="compararTaxaA">Taxa (%)</label>
+                    <input
+                      type="text"
+                      id="compararTaxaA"
+                      inputmode="decimal"
+                      placeholder="0"
+                    />
+                  </div>
+                  <div class="input-group">
+                    <label for="compararTaxaAPeriodo">Período</label>
+                    <select id="compararTaxaAPeriodo">
+                      <option value="anual">ao ano</option>
+                      <option value="mensal">ao mês</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="compare-input-card">
+                <h3>Investimento B</h3>
+                <div class="input-row">
+                  <div class="input-group">
+                    <label for="compararTaxaB">Taxa (%)</label>
+                    <input
+                      type="text"
+                      id="compararTaxaB"
+                      inputmode="decimal"
+                      placeholder="0"
+                    />
+                  </div>
+                  <div class="input-group">
+                    <label for="compararTaxaBPeriodo">Período</label>
+                    <select id="compararTaxaBPeriodo">
+                      <option value="anual">ao ano</option>
+                      <option value="mensal">ao mês</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <button type="button" id="calcCompararBtn" class="calculate-btn">
+              <span class="btn-icon">⚖️</span> Comparar
+            </button>
+          </div>
+
+          <div id="compararResultado" class="result-card" style="display: none">
+            <div class="compare-results">
+              <div class="compare-result-card" id="compararCardA">
+                <span class="compare-name">Investimento A</span>
+                <span class="compare-value" id="compararMontanteA">R$ 0,00</span>
+              </div>
+              <div class="compare-result-card" id="compararCardB">
+                <span class="compare-name">Investimento B</span>
+                <span class="compare-value" id="compararMontanteB">R$ 0,00</span>
+              </div>
+            </div>
+            <p class="verdict" id="compararVeredito"></p>
+          </div>
+        </div>
+
+        <!-- ================= Aba 4: Aposentadoria ================= -->
+        <div id="aposentadoria" class="tab-content">
+          <div class="form-container">
+            <h2>👵 Aposentadoria</h2>
+            <p class="section-description">
+              Projete quanto você terá ao se aposentar e quanto de renda passiva
+              esse patrimônio gera.
+            </p>
+
+            <div class="input-row">
+              <div class="input-group">
+                <label for="aposIdadeAtual">Idade atual</label>
+                <input
+                  type="text"
+                  id="aposIdadeAtual"
+                  inputmode="numeric"
+                  placeholder="0"
+                />
+              </div>
+              <div class="input-group">
+                <label for="aposIdadeAposentar">Idade para aposentar</label>
+                <input
+                  type="text"
+                  id="aposIdadeAposentar"
+                  inputmode="numeric"
+                  placeholder="0"
+                />
+              </div>
+            </div>
+
+            <div class="input-row">
+              <div class="input-group">
+                <label for="aposAporteInicial">Valor já acumulado (R$)</label>
+                <input
+                  type="text"
+                  id="aposAporteInicial"
+                  inputmode="numeric"
+                  data-money
+                  placeholder="0,00"
+                />
+              </div>
+              <div class="input-group">
+                <label for="aposAporteMensal">Aporte mensal (R$)</label>
+                <input
+                  type="text"
+                  id="aposAporteMensal"
+                  inputmode="numeric"
+                  data-money
+                  placeholder="0,00"
+                />
+              </div>
+            </div>
+
+            <div class="input-row">
+              <div class="input-group">
+                <label for="aposTaxa">Rentabilidade (%)</label>
+                <input
+                  type="text"
+                  id="aposTaxa"
+                  inputmode="decimal"
+                  placeholder="0"
+                />
+              </div>
+              <div class="input-group">
+                <label for="aposTaxaPeriodo">Período da taxa</label>
+                <select id="aposTaxaPeriodo">
+                  <option value="anual">ao ano</option>
+                  <option value="mensal">ao mês</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="input-group">
+              <label for="aposRendaDesejada"
+                >Renda mensal desejada na aposentadoria (R$)</label
+              >
+              <input
+                type="text"
+                id="aposRendaDesejada"
+                inputmode="numeric"
+                data-money
+                placeholder="0,00"
+              />
+            </div>
+
+            <button
+              type="button"
+              id="calcAposentadoriaBtn"
+              class="calculate-btn"
+            >
+              <span class="btn-icon">👵</span> Projetar
+            </button>
+          </div>
+
+          <div id="aposResultado" class="result-card" style="display: none">
+            <div class="result-summary">
+              <div class="total-value">
+                <span class="label">Patrimônio na aposentadoria</span>
+                <span class="value" id="aposPatrimonio">R$ 0,00</span>
+              </div>
+            </div>
+            <div class="result-grid">
+              <div class="result-item highlight">
+                <span class="result-label">Renda passiva gerada</span>
+                <span class="result-value" id="aposRendaGerada">R$ 0,00</span>
+              </div>
+            </div>
+            <p class="rate-info" id="aposResumo"></p>
+            <p class="rate-info" id="aposMeta"></p>
+          </div>
+        </div>
+
+        <!-- Seção Informativa -->
+        <section class="info-section">
+          <div class="info-card">
+            <h3>📈 O poder dos juros compostos</h3>
+            <p>
+              Nos juros compostos, os rendimentos rendem sobre si mesmos. Quanto
+              mais tempo o dinheiro fica investido, mais forte fica esse efeito
+              de "bola de neve".
+            </p>
+          </div>
+
+          <div class="info-card">
+            <h3>💡 Como usar as taxas</h3>
+            <p>
+              Escolha se a taxa informada é ao ano ou ao mês. A calculadora faz
+              a conversão para taxa mensal equivalente automaticamente.
+            </p>
+          </div>
+
+          <div class="info-card">
+            <h3>🎯 Estimativas</h3>
+            <p>
+              Os cálculos assumem taxa constante e aportes no fim de cada mês.
+              Rentabilidades reais variam; use como estimativa de planejamento.
+            </p>
+          </div>
+        </section>
+      </main>
+
+      <!-- Footer -->
+      <footer>
+        <div class="footer-content">
+          <p>
+            <strong>Simulações Online</strong> - Ferramentas educativas para
+            decisões inteligentes
+          </p>
+          <p class="disclaimer">
+            ⚠️ <strong>Aviso Legal:</strong> Esta é uma ferramenta educativa de
+            simulação financeira. Os resultados assumem taxa de juros constante
+            e não consideram impostos, inflação ou taxas. Para decisões de
+            investimento, consulte sempre um profissional qualificado.
+          </p>
+        </div>
+      </footer>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="juros-compostos.js"></script>
+  </body>
+</html>
