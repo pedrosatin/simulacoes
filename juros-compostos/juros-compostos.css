@@ -1,0 +1,271 @@
+/* =================================
+   JUROS COMPOSTOS - ESTILOS
+   ================================= */
+
+/* ===== ABAS ===== */
+.tabs-container {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.tab-button {
+  flex: 1 1 auto;
+  min-width: 140px;
+  padding: 12px 18px;
+  background: rgba(26, 26, 46, 0.6);
+  border: 1px solid #333;
+  border-radius: 10px;
+  color: #a0a0a0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.tab-button:hover {
+  color: #ffffff;
+  border-color: #667eea;
+}
+
+.tab-button.active {
+  color: #ffffff;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-color: transparent;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+  animation: slideIn 0.4s ease-out;
+}
+
+/* ===== DESCRIÇÕES DE SEÇÃO ===== */
+.section-description {
+  color: #a0a0a0;
+  font-size: 0.95rem;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.section-description.optional-hint {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #2a2a2a;
+  font-style: italic;
+}
+
+.form-container h2 {
+  color: #ffffff;
+  margin-bottom: 8px;
+  font-size: 1.4rem;
+}
+
+/* ===== LINHAS DE INPUT ===== */
+.input-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 16px;
+}
+
+/* ===== GRID DE RESULTADOS ===== */
+.result-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.result-item {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid #333;
+  border-radius: 10px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: center;
+}
+
+.result-item.highlight {
+  border-color: rgba(0, 212, 170, 0.4);
+  background: rgba(0, 212, 170, 0.06);
+}
+
+.result-label {
+  font-size: 0.9rem;
+  color: #a0a0a0;
+}
+
+.result-value {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.result-item.highlight .result-value {
+  color: #00d4aa;
+}
+
+.rate-info {
+  color: #b0b0b0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-top: 12px;
+}
+
+.rate-info:empty {
+  display: none;
+}
+
+/* ===== TABELA DE EVOLUÇÃO ===== */
+.evolution-title {
+  color: #ffffff;
+  font-size: 1.1rem;
+  margin: 24px 0 12px;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: 10px;
+  border: 1px solid #333;
+}
+
+.evolution-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.evolution-table th,
+.evolution-table td {
+  padding: 10px 14px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.evolution-table th:first-child,
+.evolution-table td:first-child {
+  text-align: left;
+}
+
+.evolution-table thead th {
+  background: rgba(102, 126, 234, 0.15);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.evolution-table tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.evolution-table tbody td {
+  color: #c0c0c0;
+  border-top: 1px solid #2a2a2a;
+}
+
+/* ===== COMPARADOR ===== */
+.compare-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.compare-input-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid #333;
+  border-radius: 10px;
+  padding: 18px;
+}
+
+.compare-input-card h3 {
+  color: #ffffff;
+  font-size: 1.05rem;
+  margin-bottom: 14px;
+  text-align: center;
+}
+
+.compare-input-card .input-group:last-child {
+  margin-bottom: 0;
+}
+
+.compare-results {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.compare-result-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 2px solid #333;
+  border-radius: 12px;
+  padding: 22px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.compare-result-card.winner {
+  border-color: #00d4aa;
+  background: rgba(0, 212, 170, 0.08);
+  box-shadow: 0 0 20px rgba(0, 212, 170, 0.15);
+}
+
+.compare-name {
+  display: block;
+  font-size: 0.95rem;
+  color: #a0a0a0;
+  margin-bottom: 8px;
+}
+
+.compare-value {
+  display: block;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.compare-result-card.winner .compare-value {
+  color: #00d4aa;
+}
+
+.verdict {
+  text-align: center;
+  color: #ffffff;
+  font-size: 1.05rem;
+  font-weight: 500;
+  padding: 16px;
+  background: rgba(102, 126, 234, 0.1);
+  border: 1px solid rgba(102, 126, 234, 0.3);
+  border-radius: 10px;
+}
+
+.verdict:empty {
+  display: none;
+}
+
+/* ===== RESPONSIVIDADE ===== */
+@media (max-width: 600px) {
+  .input-row,
+  .compare-inputs,
+  .compare-results {
+    grid-template-columns: 1fr;
+  }
+
+  .tab-button {
+    min-width: calc(50% - 4px);
+    padding: 10px 12px;
+    font-size: 0.9rem;
+  }
+
+  .compare-value {
+    font-size: 1.4rem;
+  }
+}
