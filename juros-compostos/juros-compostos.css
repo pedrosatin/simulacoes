@@ -113,6 +113,10 @@
   color: #00d4aa;
 }
 
+.result-card {
+  margin-bottom: 30px;
+}
+
 .rate-info {
   color: #b0b0b0;
   font-size: 0.9rem;
