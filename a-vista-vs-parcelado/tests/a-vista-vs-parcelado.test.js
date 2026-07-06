@@ -52,4 +52,79 @@ describe('FinancialCalculator', () => {
       expect(result).toBeCloseTo(expected, 5);
     });
   });
+
+  describe('calculateInstallmentCost', () => {
+    it('should calculate installment cost correctly for typical values', () => {
+      const productValue = 1200;
+      const cashValue = 1000;
+      const selicRate = 10.47;
+      const installments = 12;
+
+      const result = FinancialCalculator.calculateInstallmentCost(productValue, cashValue, selicRate, installments);
+
+      expect(result.installmentValue).toBe(100);
+      expect(result.totalCost).toBe(1200);
+
+      // Calculate expected manually:
+      const monthlyRate = FinancialCalculator.annualToMonthlyRate(selicRate);
+
+      let expectedPresentValue = 0;
+      let currentDiscountFactor = 1 + monthlyRate;
+      for (let month = 1; month <= installments; month++) {
+        expectedPresentValue += 100 / currentDiscountFactor;
+        currentDiscountFactor *= (1 + monthlyRate);
+      }
+
+      const averagePeriod = 6; // 12 / 2
+      const selicReturn = cashValue * Math.pow(1 + monthlyRate, averagePeriod);
+      const opportunityCost = selicReturn - cashValue;
+
+      expect(result.effectiveCost).toBeCloseTo(expectedPresentValue, 5);
+      expect(result.selicReturn).toBeCloseTo(selicReturn, 5);
+      expect(result.opportunityCost).toBeCloseTo(opportunityCost, 5);
+      expect(result.presentValueOfInstallments).toBeCloseTo(expectedPresentValue, 5);
+    });
+
+    it('should calculate correctly when Selic rate is 0%', () => {
+      const productValue = 1200;
+      const cashValue = 1000;
+      const selicRate = 0;
+      const installments = 12;
+
+      const result = FinancialCalculator.calculateInstallmentCost(productValue, cashValue, selicRate, installments);
+
+      expect(result.installmentValue).toBe(100);
+      expect(result.totalCost).toBe(1200);
+      expect(result.effectiveCost).toBe(1200);
+      expect(result.selicReturn).toBe(1000);
+      expect(result.opportunityCost).toBe(0);
+      expect(result.presentValueOfInstallments).toBe(1200);
+    });
+
+    it('should calculate correctly for a single installment', () => {
+      const productValue = 500;
+      const cashValue = 450;
+      const selicRate = 10.47;
+      const installments = 1;
+
+      const result = FinancialCalculator.calculateInstallmentCost(productValue, cashValue, selicRate, installments);
+
+      expect(result.installmentValue).toBe(500);
+      expect(result.totalCost).toBe(500);
+
+      const monthlyRate = FinancialCalculator.annualToMonthlyRate(selicRate);
+
+      // 1 installment means it's paid in month 1
+      const expectedPresentValue = 500 / (1 + monthlyRate);
+
+      const averagePeriod = 0.5; // 1 / 2
+      const selicReturn = cashValue * Math.pow(1 + monthlyRate, averagePeriod);
+      const opportunityCost = selicReturn - cashValue;
+
+      expect(result.effectiveCost).toBeCloseTo(expectedPresentValue, 5);
+      expect(result.selicReturn).toBeCloseTo(selicReturn, 5);
+      expect(result.opportunityCost).toBeCloseTo(opportunityCost, 5);
+      expect(result.presentValueOfInstallments).toBeCloseTo(expectedPresentValue, 5);
+    });
+  });
 });
