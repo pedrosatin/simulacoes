@@ -42,9 +42,7 @@ function calculateINSS(grossSalary) {
   return Math.min(inss, inssCeiling)
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-  const salaryForm = document.getElementById('salaryForm')
-  const resultsSection = document.getElementById('salaryResults')
+
 
   // Tabelas de IRRF 2025
   const irrfTable = [
@@ -54,6 +52,23 @@ document.addEventListener('DOMContentLoaded', function () {
     { min: 3751.06, max: 4664.68, rate: 0.225, deduction: 662.77 },
     { min: 4664.69, max: Infinity, rate: 0.275, deduction: 896.0 },
   ]
+
+
+
+  // Calcular IRRF
+  function calculateIRRF(taxableIncome) {
+    for (const bracket of irrfTable) {
+      if (taxableIncome >= bracket.min && taxableIncome <= bracket.max) {
+        const irrf = taxableIncome * bracket.rate - bracket.deduction
+        return Math.max(0, irrf)
+      }
+    }
+    return 0
+  }
+
+document.addEventListener('DOMContentLoaded', function () {
+  const salaryForm = document.getElementById('salaryForm')
+  const resultsSection = document.getElementById('salaryResults')
 
   const dependentDeduction = 189.59 // Valor por dependente em 2025
 
@@ -107,17 +122,6 @@ document.addEventListener('DOMContentLoaded', function () {
     for (let i = inssTable.length - 1; i >= 0; i--) {
       if (grossSalary >= inssTable[i].min) {
         return inssTable[i].rate
-      }
-    }
-    return 0
-  }
-
-  // Calcular IRRF
-  function calculateIRRF(taxableIncome) {
-    for (const bracket of irrfTable) {
-      if (taxableIncome >= bracket.min && taxableIncome <= bracket.max) {
-        const irrf = taxableIncome * bracket.rate - bracket.deduction
-        return Math.max(0, irrf)
       }
     }
     return 0
@@ -319,5 +323,5 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // Exportar para testes (apenas se estiver em ambiente Node.js)
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { calculateINSS, inssTable }
+  module.exports = { calculateINSS, inssTable, calculateIRRF, irrfTable }
 }

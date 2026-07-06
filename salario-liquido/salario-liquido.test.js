@@ -1,4 +1,4 @@
-const { calculateINSS } = require('./salario-liquido');
+const { calculateINSS, calculateIRRF } = require('./salario-liquido');
 
 describe('calculateINSS', () => {
   it('should calculate INSS for salary within the first bracket', () => {
@@ -64,5 +64,59 @@ describe('calculateINSS', () => {
   it('should return 0 for negative salary', () => {
     const inss = calculateINSS(-1000);
     expect(inss).toBe(0);
+  });
+});
+
+describe('calculateIRRF', () => {
+  it('should calculate IRRF for salary within the first bracket', () => {
+    // 0 to 2259.20 @ 0%
+    const irrf = calculateIRRF(2000.00);
+    expect(irrf).toBe(0);
+  });
+
+  it('should calculate IRRF for salary within the second bracket', () => {
+    // 2259.21 to 2826.65 @ 7.5% - 169.44
+    // 2500 * 0.075 = 187.5 - 169.44 = 18.06
+    const irrf = calculateIRRF(2500.00);
+    expect(irrf).toBeCloseTo(18.06, 2);
+  });
+
+  it('should calculate IRRF for salary within the third bracket', () => {
+    // 2826.66 to 3751.05 @ 15% - 381.44
+    // 3000 * 0.15 = 450 - 381.44 = 68.56
+    const irrf = calculateIRRF(3000.00);
+    expect(irrf).toBeCloseTo(68.56, 2);
+  });
+
+  it('should calculate IRRF for salary within the fourth bracket', () => {
+    // 3751.06 to 4664.68 @ 22.5% - 662.77
+    // 4000 * 0.225 = 900 - 662.77 = 237.23
+    const irrf = calculateIRRF(4000.00);
+    expect(irrf).toBeCloseTo(237.23, 2);
+  });
+
+  it('should calculate IRRF for salary within the fifth bracket', () => {
+    // 4664.69+ @ 27.5% - 896.00
+    // 5000 * 0.275 = 1375 - 896.00 = 479.00
+    const irrf = calculateIRRF(5000.00);
+    expect(irrf).toBeCloseTo(479.00, 2);
+  });
+
+  it('should return 0 for 0 salary', () => {
+    const irrf = calculateIRRF(0);
+    expect(irrf).toBe(0);
+  });
+
+  it('should return 0 for negative salary', () => {
+    const irrf = calculateIRRF(-1000);
+    expect(irrf).toBe(0);
+  });
+
+  it('should return 0 if irrf calculates to less than 0', () => {
+    // Should never happen realistically because of deduction logic,
+    // but the function has Math.max(0, irrf) just in case.
+    const irrf = calculateIRRF(2259.21);
+    // 2259.21 * 0.075 = 169.44075 - 169.44 = 0.00075
+    expect(irrf).toBeCloseTo(0, 2);
   });
 });
