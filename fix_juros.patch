@@ -1,0 +1,30 @@
+--- juros-compostos/juros-compostos.js
++++ juros-compostos/juros-compostos.js
+@@ -285,15 +285,16 @@
+   renderEvolution(rows) {
+     const tbody = document.getElementById('jurosEvolucaoBody')
+     if (!tbody) return
+-    tbody.innerHTML = rows
+-      .map(
+-        (r) => `
+-        <tr>
+-          <td>${r.year}º</td>
+-          <td>${Format.currency(r.invested)}</td>
+-          <td>${Format.currency(r.interest)}</td>
+-          <td>${Format.currency(r.balance)}</td>
+-        </tr>`
+-      )
+-      .join('')
++
++    tbody.replaceChildren()
++
++    for (const r of rows) {
++      const tr = document.createElement('tr')
++      tr.insertAdjacentHTML('beforeend', '<td></td><td></td><td></td><td></td>')
++      tr.children[0].textContent = `${r.year}º`
++      tr.children[1].textContent = Format.currency(r.invested)
++      tr.children[2].textContent = Format.currency(r.interest)
++      tr.children[3].textContent = Format.currency(r.balance)
++      tbody.appendChild(tr)
++    }
+   }
