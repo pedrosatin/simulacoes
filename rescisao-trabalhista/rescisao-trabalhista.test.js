@@ -1,4 +1,4 @@
-const { calculateSalaryBalance, calculateFGTSPenalty, CONSTANTS } = require('./rescisao-trabalhista.js')
+const { calculateSalaryBalance, calculateFGTSPenalty, calculateThirteenthSalary, CONSTANTS } = require('./rescisao-trabalhista.js')
 
 describe('calculateSalaryBalance', () => {
   it('should correctly calculate the salary balance for a mid-month rescision', () => {
@@ -101,5 +101,78 @@ describe('calculateFGTSPenalty', () => {
   it('should calculate 20% penalty for demissao-sem-justa-causa when saqueAniversario is true', () => {
     const dados = { tipoRescisao: 'demissao-sem-justa-causa', saldoFGTS: 1000, saqueAniversario: true }
     expect(calculateFGTSPenalty(dados)).toBe(200) // 1000 * 0.2
+  })
+})
+
+describe('calculateThirteenthSalary', () => {
+  it('should return 0 for demissao-justa-causa', () => {
+    const dados = { tipoRescisao: 'demissao-justa-causa', salario: 3000, dataAdmissao: new Date(2022, 0, 1), dataRescisao: new Date(2023, 11, 31) }
+    expect(calculateThirteenthSalary(dados)).toBe(0)
+  })
+
+  it('should count the month if hired and fired in the same year, and fired on the 15th or later', () => {
+    const dados = {
+      tipoRescisao: 'demissao-sem-justa-causa',
+      salario: 1200,
+      dataAdmissao: new Date(2023, 0, 1), // Jan 1st
+      dataRescisao: new Date(2023, 1, 15) // Feb 15th
+    }
+    // Expected: 2 months (Jan, Feb). 1200 / 12 * 2 = 200
+    expect(calculateThirteenthSalary(dados)).toBe(200)
+  })
+
+  it('should NOT count the month if hired and fired in the same year, and fired on the 14th or earlier', () => {
+    const dados = {
+      tipoRescisao: 'demissao-sem-justa-causa',
+      salario: 1200,
+      dataAdmissao: new Date(2023, 0, 1), // Jan 1st
+      dataRescisao: new Date(2023, 1, 14) // Feb 14th
+    }
+    // Expected: 1 month (Jan). Feb has < 15 days. 1200 / 12 * 1 = 100
+    expect(calculateThirteenthSalary(dados)).toBe(100)
+  })
+
+  it('should count the month if hired in a previous year, and fired on the 15th or later', () => {
+    const dados = {
+      tipoRescisao: 'demissao-sem-justa-causa',
+      salario: 1200,
+      dataAdmissao: new Date(2022, 5, 10), // Jun 10, previous year
+      dataRescisao: new Date(2023, 2, 15) // Mar 15th
+    }
+    // Expected: 3 months (Jan, Feb, Mar). 1200 / 12 * 3 = 300
+    expect(calculateThirteenthSalary(dados)).toBe(300)
+  })
+
+  it('should NOT count the month if hired in a previous year, and fired on the 14th or earlier', () => {
+    const dados = {
+      tipoRescisao: 'demissao-sem-justa-causa',
+      salario: 1200,
+      dataAdmissao: new Date(2022, 5, 10), // Jun 10, previous year
+      dataRescisao: new Date(2023, 2, 14) // Mar 14th
+    }
+    // Expected: 2 months (Jan, Feb). 1200 / 12 * 2 = 200
+    expect(calculateThirteenthSalary(dados)).toBe(200)
+  })
+
+  it('should return 0 if hired and fired in the same month with less than 15 days worked', () => {
+    const dados = {
+      tipoRescisao: 'demissao-sem-justa-causa',
+      salario: 1200,
+      dataAdmissao: new Date(2023, 5, 1), // Jun 1st
+      dataRescisao: new Date(2023, 5, 14) // Jun 14th
+    }
+    // Expected: 0 months. 1200 / 12 * 0 = 0
+    expect(calculateThirteenthSalary(dados)).toBe(0)
+  })
+
+  it('should return correct proportional value if hired late in the year', () => {
+    const dados = {
+      tipoRescisao: 'demissao-sem-justa-causa',
+      salario: 2400,
+      dataAdmissao: new Date(2023, 10, 1), // Nov 1st
+      dataRescisao: new Date(2023, 11, 31) // Dec 31st
+    }
+    // Expected: 2 months (Nov, Dec). 2400 / 12 * 2 = 400
+    expect(calculateThirteenthSalary(dados)).toBe(400)
   })
 })
