@@ -13,8 +13,13 @@ const inssTable = [
 function calculateINSS(grossSalary) {
   let inss = 0
   let remainingSalary = grossSalary
+  let finalRate = 0
 
   for (const bracket of inssTable) {
+    if (grossSalary >= bracket.min) {
+      finalRate = bracket.rate
+    }
+
     if (remainingSalary <= 0) break
 
     const bracketMin = bracket.min
@@ -39,7 +44,10 @@ function calculateINSS(grossSalary) {
 
   // Teto do INSS 2025
   const inssCeiling = 7786.02 * 0.14 // R$ 1.090.04
-  return Math.min(inss, inssCeiling)
+  return {
+    value: Math.min(inss, inssCeiling),
+    rate: finalRate
+  }
 }
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -102,16 +110,6 @@ document.addEventListener('DOMContentLoaded', function () {
     })
   })
 
-  // Determinar alíquota do INSS para exibição
-  function getINSSRate(grossSalary) {
-    for (let i = inssTable.length - 1; i >= 0; i--) {
-      if (grossSalary >= inssTable[i].min) {
-        return inssTable[i].rate
-      }
-    }
-    return 0
-  }
-
   // Calcular IRRF
   function calculateIRRF(taxableIncome) {
     for (const bracket of irrfTable) {
@@ -152,8 +150,9 @@ document.addEventListener('DOMContentLoaded', function () {
     transportVoucher = validateTransportVoucher(transportVoucher, grossSalary)
 
     // Calcular INSS
-    const inssValue = calculateINSS(grossSalary)
-    const inssRate = getINSSRate(grossSalary)
+    const inssResult = calculateINSS(grossSalary)
+    const inssValue = inssResult.value
+    const inssRate = inssResult.rate
 
     // Base de cálculo do IRRF (Salário bruto - INSS - dependentes - plano de saúde)
     const dependentDeductions = dependents * dependentDeduction
