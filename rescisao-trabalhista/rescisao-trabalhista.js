@@ -14,6 +14,8 @@
  * - Formatação monetária brasileira
  */
 
+const { formatCurrency, parseCurrency } = typeof window !== 'undefined' && window.SharedUtils ? window.SharedUtils : require('../assets/utils.js');
+
 // Constantes para cálculos trabalhistas
 const CONSTANTS = {
   DIAS_MES: 30,
@@ -200,9 +202,9 @@ function calculateRescision() {
     if (dados.salario < CONSTANTS.SALARIO_MINIMO_2025) {
       if (
         !confirm(
-          `O salário informado (${formatMoney(
+          `O salário informado (${formatCurrency(
             dados.salario
-          )}) está abaixo do salário mínimo (${formatMoney(
+          )}) está abaixo do salário mínimo (${formatCurrency(
             CONSTANTS.SALARIO_MINIMO_2025
           )}). Deseja continuar?`
         )
@@ -532,23 +534,23 @@ function displayResults(verbas, periodo, dados) {
   resultSection.style.display = 'block'
 
   // Atualiza valores
-  document.getElementById('valorTotal').textContent = formatMoney(verbas.total)
-  document.getElementById('saldoSalario').textContent = formatMoney(
+  document.getElementById('valorTotal').textContent = formatCurrency(verbas.total)
+  document.getElementById('saldoSalario').textContent = formatCurrency(
     verbas.saldoSalario
   )
-  document.getElementById('avisoPrevio').textContent = formatMoney(
+  document.getElementById('avisoPrevio').textContent = formatCurrency(
     verbas.avisoPrevio
   )
-  document.getElementById('decimoTerceiro').textContent = formatMoney(
+  document.getElementById('decimoTerceiro').textContent = formatCurrency(
     verbas.decimoTerceiro
   )
-  document.getElementById('feriasVencidasValor').textContent = formatMoney(
+  document.getElementById('feriasVencidasValor').textContent = formatCurrency(
     verbas.feriasVencidas
   )
-  document.getElementById('feriasProporcionais').textContent = formatMoney(
+  document.getElementById('feriasProporcionais').textContent = formatCurrency(
     verbas.feriasProporcionais
   )
-  document.getElementById('multaFGTS').textContent = formatMoney(
+  document.getElementById('multaFGTS').textContent = formatCurrency(
     verbas.multaFGTS
   )
 
@@ -634,26 +636,7 @@ function applyMoneyMask(input) {
 
 // Converte valor monetário para float
 function parseMoneyToFloat(moneyString) {
-  if (!moneyString) return 0
-
-  return (
-    parseFloat(
-      moneyString
-        .replace(/R\$\s?/g, '')
-        .replace(/\./g, '')
-        .replace(',', '.')
-    ) || 0
-  )
-}
-
-// Formata número para formato monetário brasileiro
-const moneyFormatter = new Intl.NumberFormat('pt-BR', {
-  style: 'currency',
-  currency: 'BRL',
-})
-
-function formatMoney(value) {
-  return moneyFormatter.format(value)
+  return parseCurrency(moneyString)
 }
 
 // Formata data para input type="date"

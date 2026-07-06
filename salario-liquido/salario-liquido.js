@@ -1,6 +1,8 @@
 // Calculadora de Salário Líquido
 // Tabelas atualizadas para 2025
 
+const { formatCurrency, parseCurrency } = typeof window !== 'undefined' && window.SharedUtils ? window.SharedUtils : require('../assets/utils.js');
+
 // Tabelas de INSS 2025
 const inssTable = [
   { min: 0, max: 1412.0, rate: 0.075 },
@@ -56,22 +58,6 @@ document.addEventListener('DOMContentLoaded', function () {
   ]
 
   const dependentDeduction = 189.59 // Valor por dependente em 2025
-
-  // Formatação monetária
-  const currencyFormatter = new Intl.NumberFormat('pt-BR', {
-    style: 'currency',
-    currency: 'BRL',
-  })
-
-  function formatCurrency(value) {
-    return currencyFormatter.format(value)
-  }
-
-  // Converter string monetária para número
-  function parseCurrency(value) {
-    if (!value) return 0
-    return parseFloat(value.replace(/[^\d,]/g, '').replace(',', '.')) || 0
-  }
 
   // Aplicar máscara monetária
   function applyMoneyMask(input) {

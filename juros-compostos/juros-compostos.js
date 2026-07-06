@@ -10,6 +10,8 @@
  *   4. Aposentadoria (projeção até a idade de aposentar)
  */
 
+const { formatCurrency, parseCurrency } = typeof window !== 'undefined' && window.SharedUtils ? window.SharedUtils : require('../assets/utils.js');
+
 /* =====================================================================
    MOTOR MATEMÁTICO (funções puras, testáveis)
    ===================================================================== */
@@ -121,10 +123,6 @@ const JurosMath = {
 /* =====================================================================
    UTILITÁRIOS DE FORMATAÇÃO / PARSING
    ===================================================================== */
-const currencyFormatter = new Intl.NumberFormat('pt-BR', {
-  style: 'currency',
-  currency: 'BRL',
-})
 
 const numberFormatter = new Intl.NumberFormat('pt-BR', {
   minimumFractionDigits: 2,
@@ -133,8 +131,7 @@ const numberFormatter = new Intl.NumberFormat('pt-BR', {
 
 const Format = {
   currency(value) {
-    if (!isFinite(value)) return '—'
-    return currencyFormatter.format(value)
+    return formatCurrency(value)
   },
   number(value, decimals = 2) {
     if (!isFinite(value)) return '—'
@@ -145,10 +142,7 @@ const Format = {
   },
   /** Converte "1.234,56" ou "1234,56" em número. */
   parseNumber(value) {
-    if (typeof value !== 'string') return value || 0
-    const cleaned = value.replace(/\./g, '').replace(',', '.').replace(/[^0-9.\-]/g, '')
-    const parsed = parseFloat(cleaned)
-    return isNaN(parsed) ? 0 : parsed
+    return parseCurrency(value)
   },
   /** Converte meses (possivelmente fracionários) em texto "X anos e Y meses". */
   monthsToText(months) {
