@@ -696,6 +696,7 @@ function setDefaultDates() {
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
     calculateSalaryBalance,
+    calculatePriorNotice,
     calculateFGTSPenalty,
     CONSTANTS
   }

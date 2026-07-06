@@ -1,4 +1,4 @@
-const { calculateSalaryBalance, calculateFGTSPenalty, CONSTANTS } = require('./rescisao-trabalhista.js')
+const { calculateSalaryBalance, calculatePriorNotice, calculateFGTSPenalty, CONSTANTS } = require('./rescisao-trabalhista.js')
 
 describe('calculateSalaryBalance', () => {
   it('should correctly calculate the salary balance for a mid-month rescision', () => {
@@ -101,5 +101,68 @@ describe('calculateFGTSPenalty', () => {
   it('should calculate 20% penalty for demissao-sem-justa-causa when saqueAniversario is true', () => {
     const dados = { tipoRescisao: 'demissao-sem-justa-causa', saldoFGTS: 1000, saqueAniversario: true }
     expect(calculateFGTSPenalty(dados)).toBe(200) // 1000 * 0.2
+  })
+})
+
+describe('calculatePriorNotice', () => {
+  it('should return 0 for demissao-justa-causa', () => {
+    const dados = { tipoRescisao: 'demissao-justa-causa', salario: 3000 }
+    const periodo = { anos: 2 }
+    expect(calculatePriorNotice(dados, periodo)).toBe(0)
+  })
+
+  it('should return 0 for pedido-demissao when 0 notice is given', () => {
+    const dados = { tipoRescisao: 'pedido-demissao', salario: 3000, diasAviso: 0 }
+    const periodo = { anos: 2 }
+    expect(calculatePriorNotice(dados, periodo)).toBe(0)
+  })
+
+  it('should calculate correctly for pedido-demissao when notice is given partially', () => {
+    const dados = { tipoRescisao: 'pedido-demissao', salario: 3000, diasAviso: 10 }
+    const periodo = { anos: 2 } // 30 + 6 = 36 days. 36 - 10 = 26 days to be paid
+    // expected: (3000 / 30) * 26 = 2600
+    expect(calculatePriorNotice(dados, periodo)).toBe(2600)
+  })
+
+  it('should calculate base 30 days for demissao-sem-justa-causa with 0 years worked', () => {
+    const dados = { tipoRescisao: 'demissao-sem-justa-causa', salario: 3000, diasAviso: 0 }
+    const periodo = { anos: 0 }
+    // expected: (3000 / 30) * 30 = 3000
+    expect(calculatePriorNotice(dados, periodo)).toBe(3000)
+  })
+
+  it('should add 3 days per year worked for demissao-sem-justa-causa', () => {
+    const dados = { tipoRescisao: 'demissao-sem-justa-causa', salario: 3000, diasAviso: 0 }
+    const periodo = { anos: 5 } // 30 + 15 = 45 days
+    // expected: (3000 / 30) * 45 = 4500
+    expect(calculatePriorNotice(dados, periodo)).toBe(4500)
+  })
+
+  it('should cap the prior notice at 90 days', () => {
+    const dados = { tipoRescisao: 'demissao-sem-justa-causa', salario: 3000, diasAviso: 0 }
+    const periodo = { anos: 25 } // 30 + 75 = 105 days, capped at 90
+    // expected: (3000 / 30) * 90 = 9000
+    expect(calculatePriorNotice(dados, periodo)).toBe(9000)
+  })
+
+  it('should subtract worked days from the total notice days', () => {
+    const dados = { tipoRescisao: 'demissao-sem-justa-causa', salario: 3000, diasAviso: 15 }
+    const periodo = { anos: 3 } // 30 + 9 = 39 days. 39 - 15 = 24 days
+    // expected: (3000 / 30) * 24 = 2400
+    expect(calculatePriorNotice(dados, periodo)).toBe(2400)
+  })
+
+  it('should apply 50% reduction for acordo', () => {
+    const dados = { tipoRescisao: 'acordo', salario: 3000, diasAviso: 0 }
+    const periodo = { anos: 4 } // 30 + 12 = 42 days. 42 * 0.5 = 21 days
+    // expected: (3000 / 30) * 21 = 2100
+    expect(calculatePriorNotice(dados, periodo)).toBe(2100)
+  })
+
+  it('should apply 50% reduction for acordo with partial worked notice', () => {
+    const dados = { tipoRescisao: 'acordo', salario: 3000, diasAviso: 10 }
+    const periodo = { anos: 4 } // 30 + 12 = 42 days. 42 - 10 = 32. 32 * 0.5 = 16 days
+    // expected: (3000 / 30) * 16 = 1600
+    expect(calculatePriorNotice(dados, periodo)).toBe(1600)
   })
 })
