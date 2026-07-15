@@ -1,0 +1,8 @@
+127.0.0.1 - - [15/Jul/2026 00:26:26] "GET /juros-compostos/index.html HTTP/1.1" 200 -
+127.0.0.1 - - [15/Jul/2026 00:26:26] "GET /assets/global.css HTTP/1.1" 200 -
+127.0.0.1 - - [15/Jul/2026 00:26:26] "GET /juros-compostos/juros-compostos.css HTTP/1.1" 200 -
+127.0.0.1 - - [15/Jul/2026 00:26:26] "GET /juros-compostos/juros-compostos.js HTTP/1.1" 200 -
+127.0.0.1 - - [15/Jul/2026 00:27:16] "GET /juros-compostos/index.html HTTP/1.1" 200 -
+127.0.0.1 - - [15/Jul/2026 00:27:16] "GET /assets/global.css HTTP/1.1" 200 -
+127.0.0.1 - - [15/Jul/2026 00:27:16] "GET /juros-compostos/juros-compostos.js HTTP/1.1" 200 -
+127.0.0.1 - - [15/Jul/2026 00:27:16] "GET /juros-compostos/juros-compostos.css HTTP/1.1" 200 -
