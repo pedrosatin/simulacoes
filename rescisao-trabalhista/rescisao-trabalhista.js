@@ -171,7 +171,7 @@ function validateDates() {
  * Valida se os campos básicos estão preenchidos
  */
 function validateBasicInputs() {
-  const salario = parseMoneyToFloat(document.getElementById('salario').value)
+  const salario = parseCurrency(document.getElementById('salario').value)
   const dataAdmissao = document.getElementById('dataAdmissao').value
   const dataRescisao = document.getElementById('dataRescisao').value
 
@@ -200,9 +200,9 @@ function calculateRescision() {
     if (dados.salario < CONSTANTS.SALARIO_MINIMO_2025) {
       if (
         !confirm(
-          `O salário informado (${formatMoney(
+          `O salário informado (${formatCurrency(
             dados.salario
-          )}) está abaixo do salário mínimo (${formatMoney(
+          )}) está abaixo do salário mínimo (${formatCurrency(
             CONSTANTS.SALARIO_MINIMO_2025
           )}). Deseja continuar?`
         )
@@ -233,7 +233,7 @@ function calculateRescision() {
  */
 function collectFormData() {
   return {
-    salario: parseMoneyToFloat(document.getElementById('salario').value),
+    salario: parseCurrency(document.getElementById('salario').value),
     dataAdmissao: new Date(document.getElementById('dataAdmissao').value),
     dataRescisao: new Date(document.getElementById('dataRescisao').value),
     tipoRescisao: document.getElementById('tipoRescisao').value,
@@ -242,7 +242,7 @@ function collectFormData() {
       parseFloat(document.getElementById('feriasVencidas').value) || 0,
     saqueAniversario: document.getElementById('saqueAniversario').checked,
     saldoFGTS:
-      parseMoneyToFloat(document.getElementById('saldoFGTS').value) || 0,
+      parseCurrency(document.getElementById('saldoFGTS').value) || 0,
   }
 }
 
@@ -516,23 +516,23 @@ function displayResults(verbas, periodo, dados) {
   resultSection.style.display = 'block'
 
   // Atualiza valores
-  document.getElementById('valorTotal').textContent = formatMoney(verbas.total)
-  document.getElementById('saldoSalario').textContent = formatMoney(
+  document.getElementById('valorTotal').textContent = formatCurrency(verbas.total)
+  document.getElementById('saldoSalario').textContent = formatCurrency(
     verbas.saldoSalario
   )
-  document.getElementById('avisoPrevio').textContent = formatMoney(
+  document.getElementById('avisoPrevio').textContent = formatCurrency(
     verbas.avisoPrevio
   )
-  document.getElementById('decimoTerceiro').textContent = formatMoney(
+  document.getElementById('decimoTerceiro').textContent = formatCurrency(
     verbas.decimoTerceiro
   )
-  document.getElementById('feriasVencidasValor').textContent = formatMoney(
+  document.getElementById('feriasVencidasValor').textContent = formatCurrency(
     verbas.feriasVencidas
   )
-  document.getElementById('feriasProporcionais').textContent = formatMoney(
+  document.getElementById('feriasProporcionais').textContent = formatCurrency(
     verbas.feriasProporcionais
   )
-  document.getElementById('multaFGTS').textContent = formatMoney(
+  document.getElementById('multaFGTS').textContent = formatCurrency(
     verbas.multaFGTS
   )
 
@@ -607,36 +607,6 @@ function updateObservations(dados) {
  * Utilitários para formatação e manipulação de dados
  */
 
-// Aplica máscara monetária brasileira
-function applyMoneyMask(input) {
-  let value = input.value.replace(/\D/g, '')
-  value = (value / 100).toFixed(2) + ''
-  value = value.replace('.', ',')
-  value = value.replace(/(\d)(?=(\d{3})+\,)/g, '$1.')
-  input.value = 'R$ ' + value
-}
-
-// Converte valor monetário para float
-function parseMoneyToFloat(moneyString) {
-  if (!moneyString) return 0
-
-  return (
-    parseFloat(
-      moneyString
-        .replace(/R\$\s?/g, '')
-        .replace(/\./g, '')
-        .replace(',', '.')
-    ) || 0
-  )
-}
-
-// Formata número para formato monetário brasileiro
-function formatMoney(value) {
-  return new Intl.NumberFormat('pt-BR', {
-    style: 'currency',
-    currency: 'BRL',
-  }).format(value)
-}
 
 // Formata data para input type="date"
 function formatDateForInput(date) {

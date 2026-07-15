@@ -40,60 +40,9 @@ const elements = {
 }
 
 // Utilitários
-const Utils = {
-  // Formatar valor monetário
-  formatCurrency(value) {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-    }).format(value)
-  },
-
-  // Formatar valor para input (R$ 1.234,56)
-  formatCurrencyInput(value) {
-    if (!value) return ''
-
-    const numericValue = this.parseCurrencyInput(value)
-    if (isNaN(numericValue)) return value
-
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(numericValue)
-  },
-
-  // Converter valor formatado para número
-  parseCurrencyInput(value) {
-    if (typeof value !== 'string') return value
-
-    // Remove símbolos monetários e espaços
-    let cleaned = value.replace(/[R$\s]/g, '')
-
-    // Substitui vírgula decimal por ponto
-    cleaned = cleaned.replace(/\./g, '').replace(',', '.')
-
-    return parseFloat(cleaned) || 0
-  },
 
   // Aplicar máscara monetária em tempo real
-  applyCurrencyMask(input) {
-    let value = input.value
-
-    // Remove tudo exceto números
-    value = value.replace(/\D/g, '')
-
-    // Converte para centavos
-    value = (parseInt(value) || 0) / 100
-
-    // Formata como moeda
-    input.value = this.formatCurrencyInput(value)
-
-    return value
-  },
-
-  // Formatar porcentagem
+const Utils = {
   formatPercent(value, decimals = 2) {
     return `${value.toFixed(decimals)}%`
   },
@@ -126,15 +75,11 @@ const Utils = {
   // Validar número positivo
   isValidPositiveNumber(value) {
     const numericValue =
-      typeof value === 'string' ? this.parseCurrencyInput(value) : value
+      typeof value === 'string' ? parseCurrency(value) : value
     return !isNaN(numericValue) && numericValue > 0
   },
 
   // Obter valor numérico de input formatado
-  getNumericValue(input) {
-    return this.parseCurrencyInput(input.value)
-  },
-
   // Mostrar erro
   showError(message) {
     const existingError = document.querySelector('.error')
@@ -245,29 +190,29 @@ const FinancialCalculator = {
   generateRecommendation(isCashBetter, savings, savingsPercent, installments) {
     if (isCashBetter) {
       if (savingsPercent > 10) {
-        return `Comprar à vista é muito mais vantajoso! Você economizará ${Utils.formatCurrency(
+        return `Comprar à vista é muito mais vantajoso! Você economizará ${formatCurrency(
           savings
         )} investindo a diferença na Selic durante ${installments} meses.`
       } else if (savingsPercent > 5) {
-        return `Comprar à vista é mais vantajoso. A economia de ${Utils.formatCurrency(
+        return `Comprar à vista é mais vantajoso. A economia de ${formatCurrency(
           savings
         )} compensa o investimento na Selic.`
       } else {
-        return `Comprar à vista é ligeiramente melhor, mas a diferença é pequena (${Utils.formatCurrency(
+        return `Comprar à vista é ligeiramente melhor, mas a diferença é pequena (${formatCurrency(
           savings
         )}). Considere sua disponibilidade de caixa.`
       }
     } else {
       if (savingsPercent > 10) {
-        return `Parcelar é muito mais vantajoso! Você terá ${Utils.formatCurrency(
+        return `Parcelar é muito mais vantajoso! Você terá ${formatCurrency(
           savings
         )} a mais investindo na Selic ao invés de pagar à vista.`
       } else if (savingsPercent > 5) {
-        return `Parcelar é mais vantajoso. Você ganha ${Utils.formatCurrency(
+        return `Parcelar é mais vantajoso. Você ganha ${formatCurrency(
           savings
         )} a mais mantendo o dinheiro investido.`
       } else {
-        return `Parcelar é ligeiramente melhor, mas a diferença é pequena (${Utils.formatCurrency(
+        return `Parcelar é ligeiramente melhor, mas a diferença é pequena (${formatCurrency(
           savings
         )}). Avalie sua preferência pessoal.`
       }
@@ -397,17 +342,17 @@ const SimulationController = {
     ;[elements.productValue, elements.cashValue].forEach((input) => {
       // Formatar valor inicial se houver
       if (input.value) {
-        Utils.applyCurrencyMask(input)
+        applyMoneyMask(input)
       }
 
       // Aplicar máscara durante digitação
       input.addEventListener('input', (e) => {
-        Utils.applyCurrencyMask(e.target)
+        applyMoneyMask(e.target)
       })
 
       // Remover formatação ao focar para facilitar edição
       input.addEventListener('focus', (e) => {
-        const numericValue = Utils.getNumericValue(e.target)
+        const numericValue = parseCurrency(e.target.value)
         if (numericValue > 0) {
           e.target.value = numericValue.toFixed(2).replace('.', ',')
         }
@@ -415,9 +360,9 @@ const SimulationController = {
 
       // Reaplicar formatação ao sair do foco
       input.addEventListener('blur', (e) => {
-        const numericValue = Utils.parseCurrencyInput(e.target.value)
+        const numericValue = parseCurrency(e.target.value)
         if (numericValue > 0) {
-          e.target.value = Utils.formatCurrencyInput(numericValue)
+          e.target.value = formatCurrencyInput(numericValue)
         }
       })
     })
@@ -436,21 +381,21 @@ const SimulationController = {
 
   // Tratar mudança no valor do produto
   handleProductValueChange(e) {
-    const productValue = Utils.getNumericValue(e.target)
+    const productValue = parseCurrency(e.target.value)
     if (
       Utils.isValidPositiveNumber(productValue) &&
       !elements.cashValue.value
     ) {
       // Sugerir 5% de desconto à vista
       const suggestedCashValue = productValue * 0.95
-      elements.cashValue.value = Utils.formatCurrencyInput(suggestedCashValue)
+      elements.cashValue.value = formatCurrencyInput(suggestedCashValue)
     }
   },
 
   // Validar input individual
   validateInput(e) {
     const input = e.target
-    const value = Utils.getNumericValue(input)
+    const value = parseCurrency(input.value)
 
     // Remover classes de erro anteriores
     input.classList.remove('error')
@@ -461,7 +406,7 @@ const SimulationController = {
 
     // Validação específica para valor à vista
     if (input === elements.cashValue) {
-      const productValue = Utils.getNumericValue(elements.productValue)
+      const productValue = parseCurrency(elements.productValue.value)
       if (Utils.isValidPositiveNumber(productValue) && value > productValue) {
         input.classList.add('error')
       }
@@ -481,8 +426,8 @@ const SimulationController = {
 
   // Validar formulário completo
   validateForm() {
-    const productValue = Utils.getNumericValue(elements.productValue)
-    const cashValue = Utils.getNumericValue(elements.cashValue)
+    const productValue = parseCurrency(elements.productValue.value)
+    const cashValue = parseCurrency(elements.cashValue.value)
     const installments = parseInt(elements.installments.value)
 
     // Validações básicas
@@ -529,8 +474,8 @@ const SimulationController = {
       elements.form.classList.add('loading')
 
       // Obter valores do formulário
-      const productValue = Utils.getNumericValue(elements.productValue)
-      const cashValue = Utils.getNumericValue(elements.cashValue)
+      const productValue = parseCurrency(elements.productValue.value)
+      const cashValue = parseCurrency(elements.cashValue.value)
       const installments = parseInt(elements.installments.value)
 
       // Obter taxa Selic atual
@@ -584,21 +529,21 @@ const SimulationController = {
     installments
   ) {
     // Preencher valores do pagamento à vista
-    elements.cashPayment.textContent = Utils.formatCurrency(
+    elements.cashPayment.textContent = formatCurrency(
       cashResult.cashPayment
     )
-    elements.cashTotalCost.textContent = Utils.formatCurrency(
+    elements.cashTotalCost.textContent = formatCurrency(
       cashResult.effectiveCost
     )
 
     // Preencher valores do parcelamento
-    elements.installmentValue.textContent = Utils.formatCurrency(
+    elements.installmentValue.textContent = formatCurrency(
       installmentResult.installmentValue
     )
-    elements.installmentTotal.textContent = Utils.formatCurrency(
+    elements.installmentTotal.textContent = formatCurrency(
       installmentResult.totalCost
     )
-    elements.installmentTotalCost.textContent = Utils.formatCurrency(
+    elements.installmentTotalCost.textContent = formatCurrency(
       installmentResult.effectiveCost
     )
 
@@ -613,7 +558,7 @@ const SimulationController = {
     elements.savingsLabel.textContent = comparison.isCashBetter
       ? 'Economia total:'
       : 'Vantagem do parcelamento:'
-    elements.savingsValue.textContent = Utils.formatCurrency(comparison.savings)
+    elements.savingsValue.textContent = formatCurrency(comparison.savings)
     elements.savingsPercent.textContent = `(${Utils.formatPercent(
       comparison.savingsPercent
     )})`

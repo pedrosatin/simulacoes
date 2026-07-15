@@ -24,33 +24,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
   const dependentDeduction = 189.59 // Valor por dependente em 2025
 
-  // Formatação monetária
-  function formatCurrency(value) {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-    }).format(value)
-  }
-
-  // Converter string monetária para número
-  function parseCurrency(value) {
-    if (!value) return 0
-    return parseFloat(value.replace(/[^\d,]/g, '').replace(',', '.')) || 0
-  }
-
-  // Aplicar máscara monetária
-  function applyMoneyMask(input) {
-    let value = input.value.replace(/\D/g, '')
-    if (value) {
-      value = (parseInt(value) / 100).toFixed(2)
-      value = value.replace('.', ',')
-      value = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.')
-      input.value = 'R$ ' + value
-    } else {
-      input.value = ''
-    }
-  }
-
   // Adicionar máscaras monetárias aos inputs
   const moneyInputs = [
     'grossSalary',

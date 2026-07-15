@@ -1,6 +1,4 @@
 /**
- * Calculadora de Regra de Três e Porcentagens
- * Autor: satinP
  * Data: 2025
  */
 
@@ -15,9 +13,6 @@ class RegraDeTresCalculadora {
     this.setupInputMasks()
   }
 
-  /**
-   * Configurar listeners para todos os eventos
-   */
   setupEventListeners() {
     // Regra de três
     const inputsRegraTres = ['valorA', 'valorB', 'valorC']
@@ -61,9 +56,6 @@ class RegraDeTresCalculadora {
     })
   }
 
-  /**
-   * Configurar sistema de abas
-   */
   setupTabs() {
     const tabButtons = document.querySelectorAll('.tab-button')
     const tabContents = document.querySelectorAll('.tab-content')
@@ -83,9 +75,6 @@ class RegraDeTresCalculadora {
     })
   }
 
-  /**
-   * Configurar máscaras de input
-   */
   setupInputMasks() {
     const inputsNumber = document.querySelectorAll('.input-number')
     inputsNumber.forEach((input) => {
@@ -94,9 +83,6 @@ class RegraDeTresCalculadora {
     })
   }
 
-  /**
-   * Formatar número conforme digitação
-   */
   formatarNumero(event) {
     const input = event.target
     let value = input.value
@@ -118,9 +104,6 @@ class RegraDeTresCalculadora {
     input.value = value
   }
 
-  /**
-   * Validar número ao sair do campo
-   */
   validarNumero(event) {
     const input = event.target
     const value = input.value
@@ -134,36 +117,18 @@ class RegraDeTresCalculadora {
     }
   }
 
-  /**
-   * Verificar se é um número válido
-   */
   isValidNumber(value) {
     if (!value) return true
     const numberRegex = /^\d+(,\d{1,2})?$/
     return numberRegex.test(value)
   }
 
-  /**
-   * Converter string para número
-   */
   parseNumber(value) {
     if (!value) return 0
     return parseFloat(value.replace(',', '.')) || 0
   }
 
-  /**
-   * Formatar número para exibição monetária
-   */
-  formatCurrency(value) {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-    }).format(value)
-  }
 
-  /**
-   * Formatar número para exibição simples
-   */
   formatNumber(value, decimals = 2) {
     return new Intl.NumberFormat('pt-BR', {
       minimumFractionDigits: decimals,
@@ -198,9 +163,6 @@ class RegraDeTresCalculadora {
     this.animateResult(resultadoInput)
   }
 
-  /**
-   * Calcular quanto é X% de um valor
-   */
   calcularPorcentagem1() {
     const percentual = this.parseNumber(
       document.getElementById('percentual1').value
@@ -215,9 +177,6 @@ class RegraDeTresCalculadora {
     )
   }
 
-  /**
-   * Calcular aumento ou desconto percentual
-   */
   calcularAumentoDesconto() {
     const valorBase = this.parseNumber(
       document.getElementById('valorBase').value
@@ -256,9 +215,6 @@ class RegraDeTresCalculadora {
     valorFinalElement.style.color = isAumento ? '#2ed573' : '#ff4757'
   }
 
-  /**
-   * Toggle entre aumento e desconto
-   */
   toggleAumentoDesconto(event) {
     const clickedBtn = event.target
     const allBtns = document.querySelectorAll('.toggle-btn')
@@ -270,9 +226,6 @@ class RegraDeTresCalculadora {
     this.calcularAumentoDesconto()
   }
 
-  /**
-   * Calcular que porcentagem um valor representa de outro
-   */
   calcularProporcaoPorcentual() {
     const valorParte = this.parseNumber(
       document.getElementById('valorParte').value
@@ -309,9 +262,6 @@ class RegraDeTresCalculadora {
     this.animateResult(document.getElementById('resultadoPorcentagem'))
   }
 
-  /**
-   * Animar resultado quando calculado
-   */
   animateResult(element) {
     element.style.transform = 'scale(1.05)'
     element.style.transition = 'transform 0.2s ease'
@@ -321,9 +271,6 @@ class RegraDeTresCalculadora {
     }, 200)
   }
 
-  /**
-   * Demonstrar cálculo passo a passo (para futuras melhorias)
-   */
   mostrarPassoAPasso(tipo, valores) {
     // Funcionalidade para mostrar os passos do cálculo
     // Pode ser implementada no futuro para fins educativos
