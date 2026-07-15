@@ -121,10 +121,6 @@ const JurosMath = {
 /* =====================================================================
    UTILITÁRIOS DE FORMATAÇÃO / PARSING
    ===================================================================== */
-const currencyFormatter = new Intl.NumberFormat('pt-BR', {
-  style: 'currency',
-  currency: 'BRL',
-})
 
 const numberFormatter = new Intl.NumberFormat('pt-BR', {
   minimumFractionDigits: 2,
@@ -134,7 +130,7 @@ const numberFormatter = new Intl.NumberFormat('pt-BR', {
 const Format = {
   currency(value) {
     if (!isFinite(value)) return '—'
-    return currencyFormatter.format(value)
+    return CurrencyUtils.formatCurrency(value)
   },
   number(value, decimals = 2) {
     if (!isFinite(value)) return '—'
