@@ -149,35 +149,6 @@ document.addEventListener('DOMContentLoaded', function () {
   const salaryForm = document.getElementById('salaryForm')
   const resultsSection = document.getElementById('salaryResults')
 
-  // Formatação monetária
-  const currencyFormatter = new Intl.NumberFormat('pt-BR', {
-    style: 'currency',
-    currency: 'BRL',
-  })
-
-  function formatCurrency(value) {
-    return currencyFormatter.format(value)
-  }
-
-  // Converter string monetária para número
-  function parseCurrency(value) {
-    if (!value) return 0
-    return parseFloat(value.replace(/[^\d,]/g, '').replace(',', '.')) || 0
-  }
-
-  // Aplicar máscara monetária
-  function applyMoneyMask(input) {
-    let value = input.value.replace(/\D/g, '')
-    if (value) {
-      value = (parseInt(value) / 100).toFixed(2)
-      value = value.replace('.', ',')
-      value = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.')
-      input.value = 'R$ ' + value
-    } else {
-      input.value = ''
-    }
-  }
-
   // Adicionar máscaras monetárias aos inputs
   const moneyInputs = [
     'grossSalary',
@@ -188,7 +159,7 @@ document.addEventListener('DOMContentLoaded', function () {
   ]
   moneyInputs.forEach((inputId) => {
     const input = document.getElementById(inputId)
-    input.addEventListener('input', () => applyMoneyMask(input))
+    input.addEventListener('input', () => Utils.applyCurrencyMask(input))
     input.addEventListener('blur', () => {
       if (!input.value) input.value = ''
     })
@@ -197,24 +168,24 @@ document.addEventListener('DOMContentLoaded', function () {
   // Exibir resultados
   function displayResults(results) {
     // Salário bruto e líquido
-    document.getElementById('displayGrossSalary').textContent = formatCurrency(
+    document.getElementById('displayGrossSalary').textContent = Utils.formatCurrency(
       results.grossSalary
     )
-    document.getElementById('displayNetSalary').textContent = formatCurrency(
+    document.getElementById('displayNetSalary').textContent = Utils.formatCurrency(
       results.netSalary
     )
     document.getElementById('displayTotalDeductions').textContent =
-      formatCurrency(results.totalDeductions)
+      Utils.formatCurrency(results.totalDeductions)
 
     // Descontos obrigatórios
-    document.getElementById('inssDeduction').textContent = formatCurrency(
+    document.getElementById('inssDeduction').textContent = Utils.formatCurrency(
       results.inss.value
     )
     document.getElementById('inssRate').textContent = `(${(
       results.inss.rate * 100
     ).toFixed(1)}%)`
 
-    document.getElementById('irrfDeduction').textContent = formatCurrency(
+    document.getElementById('irrfDeduction').textContent = Utils.formatCurrency(
       results.irrf.value
     )
     document.getElementById('irrfRate').textContent =
@@ -232,7 +203,7 @@ document.addEventListener('DOMContentLoaded', function () {
       if (results.optional.healthPlan > 0) {
         healthPlanDiv.style.display = 'flex'
         healthPlanDiv.querySelector('.deduction-value').textContent =
-          formatCurrency(results.optional.healthPlan)
+          Utils.formatCurrency(results.optional.healthPlan)
       } else {
         healthPlanDiv.style.display = 'none'
       }
@@ -242,7 +213,7 @@ document.addEventListener('DOMContentLoaded', function () {
       if (results.optional.mealVoucher > 0) {
         mealVoucherDiv.style.display = 'flex'
         mealVoucherDiv.querySelector('.deduction-value').textContent =
-          formatCurrency(results.optional.mealVoucher)
+          Utils.formatCurrency(results.optional.mealVoucher)
       } else {
         mealVoucherDiv.style.display = 'none'
       }
@@ -254,7 +225,7 @@ document.addEventListener('DOMContentLoaded', function () {
       if (results.optional.transportVoucher > 0) {
         transportVoucherDiv.style.display = 'flex'
         transportVoucherDiv.querySelector('.deduction-value').textContent =
-          formatCurrency(results.optional.transportVoucher)
+          Utils.formatCurrency(results.optional.transportVoucher)
       } else {
         transportVoucherDiv.style.display = 'none'
       }
@@ -266,7 +237,7 @@ document.addEventListener('DOMContentLoaded', function () {
       if (results.optional.otherDeductions > 0) {
         otherDeductionsDiv.style.display = 'flex'
         otherDeductionsDiv.querySelector('.deduction-value').textContent =
-          formatCurrency(results.optional.otherDeductions)
+          Utils.formatCurrency(results.optional.otherDeductions)
       } else {
         otherDeductionsDiv.style.display = 'none'
       }
@@ -285,14 +256,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Coletar dados do formulário
     const formData = {
-      grossSalary: parseCurrency(document.getElementById('grossSalary').value),
+      grossSalary: Utils.parseCurrencyInput(document.getElementById('grossSalary').value),
       dependents: parseInt(document.getElementById('dependents').value) || 0,
-      healthPlan: parseCurrency(document.getElementById('healthPlan').value),
-      mealVoucher: parseCurrency(document.getElementById('mealVoucher').value),
-      transportVoucher: parseCurrency(
+      healthPlan: Utils.parseCurrencyInput(document.getElementById('healthPlan').value),
+      mealVoucher: Utils.parseCurrencyInput(document.getElementById('mealVoucher').value),
+      transportVoucher: Utils.parseCurrencyInput(
         document.getElementById('transportVoucher').value
       ),
-      otherDeductions: parseCurrency(
+      otherDeductions: Utils.parseCurrencyInput(
         document.getElementById('otherDeductions').value
       ),
     }
