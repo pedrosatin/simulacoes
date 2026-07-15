@@ -1,4 +1,4 @@
-const { calculateINSS, calculateNetSalary } = require('./salario-liquido');
+const { calculateINSS, calculateNetSalary, validateTransportVoucher } = require('./salario-liquido');
 
 describe('calculateINSS', () => {
   it('should calculate INSS for salary within the first bracket', () => {
@@ -64,6 +64,36 @@ describe('calculateINSS', () => {
   it('should return 0 for negative salary', () => {
     const inss = calculateINSS(-1000);
     expect(inss).toBe(0);
+  });
+});
+
+describe('validateTransportVoucher', () => {
+  it('should return the transport value when it is less than 6% of gross salary', () => {
+    // 6% of 2000 is 120
+    const result = validateTransportVoucher(100, 2000);
+    expect(result).toBe(100);
+  });
+
+  it('should return the transport value when it is exactly 6% of gross salary', () => {
+    // 6% of 2000 is 120
+    const result = validateTransportVoucher(120, 2000);
+    expect(result).toBe(120);
+  });
+
+  it('should cap the transport value at 6% of gross salary', () => {
+    // 6% of 2000 is 120
+    const result = validateTransportVoucher(200, 2000);
+    expect(result).toBe(120);
+  });
+
+  it('should return 0 when transport value is 0', () => {
+    const result = validateTransportVoucher(0, 2000);
+    expect(result).toBe(0);
+  });
+
+  it('should return 0 when gross salary is 0', () => {
+    const result = validateTransportVoucher(100, 0);
+    expect(result).toBe(0);
   });
 });
 
