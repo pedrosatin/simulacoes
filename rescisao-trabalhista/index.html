@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
@@ -203,98 +203,90 @@
 
             <!-- Informações básicas -->
             <div class="input-group">
-              <h3>Informações Básicas</h3>
+              <h3 style="grid-column: 1 / -1">Informações Básicas</h3>
 
-              <div class="form-row">
-                <div class="input-container">
-                  <label for="salario">Salário Mensal (R$)</label>
-                  <input
-                    type="text"
-                    id="salario"
-                    placeholder="R$ 0,00"
-                    inputmode="numeric"
-                  />
-                </div>
-
-                <div class="input-container">
-                  <label for="dataAdmissao">Data de Admissão</label>
-                  <input type="date" id="dataAdmissao" />
-                </div>
+              <div class="input-container">
+                <label for="salario">Salário Mensal (R$)</label>
+                <input
+                  type="text"
+                  id="salario"
+                  placeholder="R$ 0,00"
+                  inputmode="numeric"
+                />
               </div>
 
-              <div class="form-row">
-                <div class="input-container">
-                  <label for="dataRescisao">Data da Rescisão</label>
-                  <input type="date" id="dataRescisao" />
-                </div>
+              <div class="input-container">
+                <label for="dataAdmissao">Data de Admissão</label>
+                <input type="date" id="dataAdmissao" />
+              </div>
 
-                <div class="input-container">
-                  <label for="tipoRescisao">Tipo de Rescisão</label>
-                  <select id="tipoRescisao">
-                    <option value="demissao-sem-justa-causa">
-                      Demissão sem justa causa
-                    </option>
-                    <option value="demissao-justa-causa">
-                      Demissão por justa causa
-                    </option>
-                    <option value="pedido-demissao">Pedido de demissão</option>
-                    <option value="acordo">Acordo (Reforma Trabalhista)</option>
-                  </select>
-                </div>
+              <div class="input-container">
+                <label for="dataRescisao">Data da Rescisão</label>
+                <input type="date" id="dataRescisao" />
+              </div>
+
+              <div class="input-container">
+                <label for="tipoRescisao">Tipo de Rescisão</label>
+                <select id="tipoRescisao">
+                  <option value="demissao-sem-justa-causa">
+                    Demissão sem justa causa
+                  </option>
+                  <option value="demissao-justa-causa">
+                    Demissão por justa causa
+                  </option>
+                  <option value="pedido-demissao">Pedido de demissão</option>
+                  <option value="acordo">Acordo (Reforma Trabalhista)</option>
+                </select>
               </div>
             </div>
 
             <!-- Informações adicionais -->
             <div class="input-group">
-              <h3>Informações Adicionais</h3>
+              <h3 style="grid-column: 1 / -1">Informações Adicionais</h3>
 
-              <div class="form-row">
-                <div class="input-container">
-                  <label for="diasAviso">Aviso Prévio Trabalhado (dias)</label>
-                  <input
-                    type="number"
-                    id="diasAviso"
-                    placeholder="0"
-                    min="0"
-                    max="90"
-                  />
-                  <small>0 = Aviso indenizado / Máximo 90 dias</small>
-                </div>
-
-                <div class="input-container">
-                  <label for="feriasVencidas">Férias Vencidas (meses)</label>
-                  <input
-                    type="number"
-                    id="feriasVencidas"
-                    placeholder="0"
-                    min="0"
-                    max="24"
-                    step="0.1"
-                  />
-                  <small>Período de férias não gozadas</small>
-                </div>
+              <div class="input-container">
+                <label for="diasAviso">Aviso Prévio Trabalhado (dias)</label>
+                <input
+                  type="number"
+                  id="diasAviso"
+                  placeholder="0"
+                  min="0"
+                  max="90"
+                />
+                <small>0 = Aviso indenizado / Máximo 90 dias</small>
               </div>
 
-              <div class="form-row">
-                <div class="input-container checkbox-container">
-                  <label>
-                    <input type="checkbox" id="saqueAniversario" />
-                    <span class="checkmark"></span>
-                    Optante pelo Saque-Aniversário FGTS
-                  </label>
-                  <small>Se sim, reduz a multa de 40% para 20%</small>
-                </div>
+              <div class="input-container">
+                <label for="feriasVencidas">Férias Vencidas (meses)</label>
+                <input
+                  type="number"
+                  id="feriasVencidas"
+                  placeholder="0"
+                  min="0"
+                  max="24"
+                  step="0.1"
+                />
+                <small>Período de férias não gozadas</small>
+              </div>
 
-                <div class="input-container">
-                  <label for="saldoFGTS">Saldo FGTS (R$)</label>
-                  <input
-                    type="text"
-                    id="saldoFGTS"
-                    placeholder="R$ 0,00"
-                    inputmode="numeric"
-                  />
-                  <small>Saldo atual do FGTS (opcional)</small>
-                </div>
+              <div class="input-container checkbox-container">
+                <label>
+                  <input type="checkbox" id="saqueAniversario" />
+                  <span class="checkmark"></span>
+                  Optante pelo Saque-Aniversário FGTS
+                </label>
+                <small>Se sim, reduz a multa de 40% para 20%</small>
+              </div>
+
+              <div class="input-container">
+                <label for="saldoFGTS">Saldo FGTS (R$)</label>
+                <input
+                  type="text"
+                  id="saldoFGTS"
+                  placeholder="R$ 0,00"
+                  inputmode="numeric"
+                />
+                <small>Saldo atual do FGTS (opcional)</small>
               </div>
             </div>
 

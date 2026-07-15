@@ -10,8 +10,9 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-    Ubuntu, Cantarell, sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
+    Cantarell, sans-serif;
   background: #0f0f0f;
   color: #e1e1e1;
   line-height: 1.6;
@@ -202,7 +203,7 @@ header h1 {
 }
 
 .info-card li::before {
-  content: '•';
+  content: "•";
   color: #667eea;
   font-weight: bold;
   position: absolute;
@@ -222,10 +223,18 @@ header h1 {
 }
 
 .input-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  align-items: start;
   margin-bottom: 24px;
 }
 
 .input-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  align-items: start;
   margin-bottom: 20px;
 }
 
@@ -276,23 +285,23 @@ header h1 {
 }
 
 /* Estilos específicos para inputs de data e number */
-input[type='date'],
-input[type='number'] {
+input[type="date"],
+input[type="number"] {
   cursor: pointer;
 }
 
-input[type='date']::-webkit-calendar-picker-indicator {
+input[type="date"]::-webkit-calendar-picker-indicator {
   filter: invert(0.7);
   cursor: pointer;
 }
 
-input[type='number']::-webkit-outer-spin-button,
-input[type='number']::-webkit-inner-spin-button {
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 
-input[type='number'] {
+input[type="number"] {
   appearance: textfield;
   -moz-appearance: textfield;
 }
@@ -563,7 +572,7 @@ header h1 {
 }
 
 .calculator-card::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -625,7 +634,7 @@ header h1 {
 }
 
 .features-list li::before {
-  content: '✓';
+  content: "✓";
   position: absolute;
   left: 0;
   color: #00d4aa;
@@ -748,5 +757,11 @@ footer {
 
   .calculator-card h2 {
     font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .input-group {
+    grid-template-columns: 1fr;
   }
 }
