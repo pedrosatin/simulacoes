@@ -1,4 +1,4 @@
-const { FinancialCalculator } = require('../a-vista-vs-parcelado.js');
+const { FinancialCalculator, SelicAPI } = require('../a-vista-vs-parcelado.js');
 
 describe('FinancialCalculator', () => {
   describe('calculateCompoundInterest', () => {
@@ -125,6 +125,83 @@ describe('FinancialCalculator', () => {
       expect(result.selicReturn).toBeCloseTo(selicReturn, 5);
       expect(result.opportunityCost).toBeCloseTo(opportunityCost, 5);
       expect(result.presentValueOfInstallments).toBeCloseTo(expectedPresentValue, 5);
+    });
+  });
+});
+
+describe('SelicAPI', () => {
+  describe('getSelicRate', () => {
+    let originalFetch;
+    let consoleWarnSpy;
+    let isCacheValidSpy;
+
+    beforeEach(() => {
+      originalFetch = global.fetch;
+      consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+      isCacheValidSpy = jest.spyOn(SelicAPI, 'isCacheValid').mockReturnValue(false);
+    });
+
+    afterEach(() => {
+      global.fetch = originalFetch;
+      consoleWarnSpy.mockRestore();
+      isCacheValidSpy.mockRestore();
+    });
+
+    const getFormattedToday = () => {
+      const today = new Date();
+      return `${today.getDate().toString().padStart(2, '0')}/${(today.getMonth() + 1)
+        .toString()
+        .padStart(2, '0')}/${today.getFullYear()}`;
+    };
+
+    it('should use fallback rate when API fetch fails', async () => {
+      global.fetch = jest.fn(() => Promise.reject(new Error('Network error')));
+
+      const result = await SelicAPI.getSelicRate();
+
+      expect(global.fetch).toHaveBeenCalledTimes(1);
+      expect(consoleWarnSpy).toHaveBeenCalledWith('Erro ao buscar taxa Selic:', 'Network error');
+      expect(result.rate).toBe(15.0);
+      expect(result.date).toBe(getFormattedToday());
+    });
+
+    it('should use fallback rate when API returns non-ok response', async () => {
+      global.fetch = jest.fn(() =>
+        Promise.resolve({
+          ok: false,
+          status: 500,
+          statusText: 'Internal Server Error',
+        })
+      );
+
+      const result = await SelicAPI.getSelicRate();
+
+      expect(global.fetch).toHaveBeenCalledTimes(1);
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        'Erro ao buscar taxa Selic:',
+        'HTTP 500: Internal Server Error'
+      );
+      expect(result.rate).toBe(15.0);
+      expect(result.date).toBe(getFormattedToday());
+    });
+
+    it('should use fallback rate when API returns invalid data format', async () => {
+      global.fetch = jest.fn(() =>
+        Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve({ notAnArray: true }),
+        })
+      );
+
+      const result = await SelicAPI.getSelicRate();
+
+      expect(global.fetch).toHaveBeenCalledTimes(1);
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        'Erro ao buscar taxa Selic:',
+        'Dados inválidos recebidos da API'
+      );
+      expect(result.rate).toBe(15.0);
+      expect(result.date).toBe(getFormattedToday());
     });
   });
 });
