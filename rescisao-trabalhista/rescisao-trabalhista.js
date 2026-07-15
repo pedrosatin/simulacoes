@@ -698,6 +698,7 @@ if (typeof module !== 'undefined' && module.exports) {
     calculateSalaryBalance,
     calculatePriorNotice,
     calculateFGTSPenalty,
+    calculateProportionalVacation,
     CONSTANTS
   }
 }
