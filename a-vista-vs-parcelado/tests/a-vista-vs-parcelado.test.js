@@ -127,6 +127,64 @@ describe('FinancialCalculator', () => {
       expect(result.presentValueOfInstallments).toBeCloseTo(expectedPresentValue, 5);
     });
   });
+
+  describe('compareOptions', () => {
+    it('should recommend cash payment when cash cost is lower', () => {
+      const cashResult = { effectiveCost: 900 };
+      const installmentResult = { effectiveCost: 1000 };
+      const productValue = 1000;
+      const installments = 10;
+
+      const result = FinancialCalculator.compareOptions(cashResult, installmentResult, productValue, installments);
+
+      expect(result.isCashBetter).toBe(true);
+      expect(result.savings).toBe(100);
+      expect(result.savingsPercent).toBeCloseTo(11.11, 2); // (100 / 900) * 100
+      expect(result.recommendation).toContain('Comprar à vista é muito mais vantajoso!');
+    });
+
+    it('should recommend installment payment when installment cost is lower', () => {
+      const cashResult = { effectiveCost: 1100 };
+      const installmentResult = { effectiveCost: 1000 };
+      const productValue = 1200;
+      const installments = 12;
+
+      const result = FinancialCalculator.compareOptions(cashResult, installmentResult, productValue, installments);
+
+      expect(result.isCashBetter).toBe(false);
+      expect(result.savings).toBe(100);
+      expect(result.savingsPercent).toBeCloseTo(10.0, 2); // (100 / 1000) * 100 -> exactly 10, not > 10
+      expect(result.recommendation).toContain('Parcelar é mais vantajoso');
+    });
+
+    it('should calculate correctly when costs are equal', () => {
+      const cashResult = { effectiveCost: 1000 };
+      const installmentResult = { effectiveCost: 1000 };
+      const productValue = 1000;
+      const installments = 5;
+
+      const result = FinancialCalculator.compareOptions(cashResult, installmentResult, productValue, installments);
+
+      expect(result.isCashBetter).toBe(false); // cashCost < installmentCost is false
+      expect(result.savings).toBe(0);
+      expect(result.savingsPercent).toBe(0);
+      expect(result.recommendation).toContain('Parcelar é ligeiramente melhor, mas a diferença é pequena (R$ 0,00)');
+    });
+
+    it('should handle small differences for cash advantage', () => {
+      const cashResult = { effectiveCost: 990 };
+      const installmentResult = { effectiveCost: 1000 };
+      const productValue = 1000;
+      const installments = 5;
+
+      const result = FinancialCalculator.compareOptions(cashResult, installmentResult, productValue, installments);
+
+      expect(result.isCashBetter).toBe(true);
+      expect(result.savings).toBe(10);
+      expect(result.savingsPercent).toBeCloseTo(1.01, 2); // (10 / 990) * 100
+      expect(result.recommendation).toContain('Comprar à vista é ligeiramente melhor, mas a diferença é pequena (R$ 10,00)');
+    });
+  });
 });
 
 describe('SelicAPI', () => {
