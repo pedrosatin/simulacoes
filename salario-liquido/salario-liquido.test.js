@@ -1,4 +1,34 @@
-const { calculateINSS, calculateNetSalary, calculateIRRF, getIRRFRate } = require('./salario-liquido');
+const { calculateINSS, getINSSRate, calculateNetSalary, calculateIRRF, getIRRFRate } = require('./salario-liquido');
+
+describe('getINSSRate', () => {
+  it('should return 0.075 for salary in the first bracket (0 to 1412.0)', () => {
+    expect(getINSSRate(0)).toBe(0.075);
+    expect(getINSSRate(1000)).toBe(0.075);
+    expect(getINSSRate(1412.0)).toBe(0.075);
+  });
+
+  it('should return 0.09 for salary in the second bracket (1412.01 to 2666.68)', () => {
+    expect(getINSSRate(1412.01)).toBe(0.09);
+    expect(getINSSRate(2000)).toBe(0.09);
+    expect(getINSSRate(2666.68)).toBe(0.09);
+  });
+
+  it('should return 0.12 for salary in the third bracket (2666.69 to 4000.03)', () => {
+    expect(getINSSRate(2666.69)).toBe(0.12);
+    expect(getINSSRate(3000)).toBe(0.12);
+    expect(getINSSRate(4000.03)).toBe(0.12);
+  });
+
+  it('should return 0.14 for salary in the fourth bracket (4000.04 and above)', () => {
+    expect(getINSSRate(4000.04)).toBe(0.14);
+    expect(getINSSRate(6000)).toBe(0.14);
+    expect(getINSSRate(10000)).toBe(0.14); // Above ceiling
+  });
+
+  it('should return 0 for negative salary', () => {
+    expect(getINSSRate(-100)).toBe(0);
+  });
+});
 
 describe('calculateINSS', () => {
   it('should calculate INSS for salary within the first bracket', () => {
