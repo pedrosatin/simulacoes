@@ -42,20 +42,112 @@ function calculateINSS(grossSalary) {
   return Math.min(inss, inssCeiling)
 }
 
+// Tabelas de IRRF 2025
+const irrfTable = [
+  { min: 0, max: 2259.2, rate: 0, deduction: 0 },
+  { min: 2259.21, max: 2826.65, rate: 0.075, deduction: 169.44 },
+  { min: 2826.66, max: 3751.05, rate: 0.15, deduction: 381.44 },
+  { min: 3751.06, max: 4664.68, rate: 0.225, deduction: 662.77 },
+  { min: 4664.69, max: Infinity, rate: 0.275, deduction: 896.0 },
+]
+
+const dependentDeduction = 189.59 // Valor por dependente em 2025
+
+// Determinar alíquota do INSS para exibição
+function getINSSRate(grossSalary) {
+  for (let i = inssTable.length - 1; i >= 0; i--) {
+    if (grossSalary >= inssTable[i].min) {
+      return inssTable[i].rate
+    }
+  }
+  return 0
+}
+
+// Calcular IRRF
+function calculateIRRF(taxableIncome) {
+  for (const bracket of irrfTable) {
+    if (taxableIncome >= bracket.min && taxableIncome <= bracket.max) {
+      const irrf = taxableIncome * bracket.rate - bracket.deduction
+      return Math.max(0, irrf)
+    }
+  }
+  return 0
+}
+
+// Determinar alíquota do IRRF para exibição
+function getIRRFRate(taxableIncome) {
+  for (const bracket of irrfTable) {
+    if (taxableIncome >= bracket.min && taxableIncome <= bracket.max) {
+      return bracket.rate
+    }
+  }
+  return 0
+}
+
+// Validar vale transporte (máximo 6% do salário bruto)
+function validateTransportVoucher(transportValue, grossSalary) {
+  const maxTransport = grossSalary * 0.06
+  return Math.min(transportValue, maxTransport)
+}
+
+// Calcular salário líquido
+function calculateNetSalary(data) {
+  const grossSalary = data.grossSalary
+  const dependents = data.dependents
+  const healthPlan = data.healthPlan
+  const mealVoucher = data.mealVoucher
+  let transportVoucher = data.transportVoucher
+  const otherDeductions = data.otherDeductions
+
+  // Validar vale transporte
+  transportVoucher = validateTransportVoucher(transportVoucher, grossSalary)
+
+  // Calcular INSS
+  const inssValue = calculateINSS(grossSalary)
+  const inssRate = getINSSRate(grossSalary)
+
+  // Base de cálculo do IRRF (Salário bruto - INSS - dependentes - plano de saúde)
+  const dependentDeductions = dependents * dependentDeduction
+  const irrfBase = grossSalary - inssValue - dependentDeductions - healthPlan
+
+  // Calcular IRRF
+  const irrfValue = calculateIRRF(Math.max(0, irrfBase))
+  const irrfRate = getIRRFRate(Math.max(0, irrfBase))
+
+  // Descontos totais
+  const totalOptionalDeductions =
+    healthPlan + mealVoucher + transportVoucher + otherDeductions
+  const totalDeductions = inssValue + irrfValue + totalOptionalDeductions
+
+  // Salário líquido
+  const netSalary = grossSalary - totalDeductions
+
+  return {
+    grossSalary,
+    netSalary,
+    totalDeductions,
+    inss: {
+      value: inssValue,
+      rate: inssRate,
+    },
+    irrf: {
+      value: irrfValue,
+      rate: irrfRate,
+    },
+    optional: {
+      healthPlan,
+      mealVoucher,
+      transportVoucher,
+      otherDeductions,
+      total: totalOptionalDeductions,
+    },
+    hasOptionalDeductions: totalOptionalDeductions > 0,
+  }
+}
+
 document.addEventListener('DOMContentLoaded', function () {
   const salaryForm = document.getElementById('salaryForm')
   const resultsSection = document.getElementById('salaryResults')
-
-  // Tabelas de IRRF 2025
-  const irrfTable = [
-    { min: 0, max: 2259.2, rate: 0, deduction: 0 },
-    { min: 2259.21, max: 2826.65, rate: 0.075, deduction: 169.44 },
-    { min: 2826.66, max: 3751.05, rate: 0.15, deduction: 381.44 },
-    { min: 3751.06, max: 4664.68, rate: 0.225, deduction: 662.77 },
-    { min: 4664.69, max: Infinity, rate: 0.275, deduction: 896.0 },
-  ]
-
-  const dependentDeduction = 189.59 // Valor por dependente em 2025
 
   // Formatação monetária
   const currencyFormatter = new Intl.NumberFormat('pt-BR', {
@@ -75,15 +167,36 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Aplicar máscara monetária
   function applyMoneyMask(input) {
-    let value = input.value.replace(/\D/g, '')
-    if (value) {
-      value = (parseInt(value) / 100).toFixed(2)
-      value = value.replace('.', ',')
-      value = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.')
-      input.value = 'R$ ' + value
-    } else {
-      input.value = ''
+    let valueString = input.value
+    let digits = ''
+    for (let i = 0; i < valueString.length; i++) {
+      if (valueString[i] >= '0' && valueString[i] <= '9') {
+        digits += valueString[i]
+      }
     }
+
+    if (!digits) {
+      input.value = ''
+      return
+    }
+
+    let numStr = parseInt(digits, 10).toString()
+    if (numStr.length < 3) {
+      numStr = numStr.padStart(3, '0')
+    }
+
+    const reais = numStr.slice(0, -2)
+    const cents = numStr.slice(-2)
+
+    let formattedReais = ''
+    for (let i = reais.length - 1, j = 0; i >= 0; i--, j++) {
+      if (j > 0 && j % 3 === 0) {
+        formattedReais = '.' + formattedReais
+      }
+      formattedReais = reais[i] + formattedReais
+    }
+
+    input.value = 'R$ ' + formattedReais + ',' + cents
   }
 
   // Adicionar máscaras monetárias aos inputs
@@ -101,98 +214,6 @@ document.addEventListener('DOMContentLoaded', function () {
       if (!input.value) input.value = ''
     })
   })
-
-  // Determinar alíquota do INSS para exibição
-  function getINSSRate(grossSalary) {
-    for (let i = inssTable.length - 1; i >= 0; i--) {
-      if (grossSalary >= inssTable[i].min) {
-        return inssTable[i].rate
-      }
-    }
-    return 0
-  }
-
-  // Calcular IRRF
-  function calculateIRRF(taxableIncome) {
-    for (const bracket of irrfTable) {
-      if (taxableIncome >= bracket.min && taxableIncome <= bracket.max) {
-        const irrf = taxableIncome * bracket.rate - bracket.deduction
-        return Math.max(0, irrf)
-      }
-    }
-    return 0
-  }
-
-  // Determinar alíquota do IRRF para exibição
-  function getIRRFRate(taxableIncome) {
-    for (const bracket of irrfTable) {
-      if (taxableIncome >= bracket.min && taxableIncome <= bracket.max) {
-        return bracket.rate
-      }
-    }
-    return 0
-  }
-
-  // Validar vale transporte (máximo 6% do salário bruto)
-  function validateTransportVoucher(transportValue, grossSalary) {
-    const maxTransport = grossSalary * 0.06
-    return Math.min(transportValue, maxTransport)
-  }
-
-  // Calcular salário líquido
-  function calculateNetSalary(data) {
-    const grossSalary = data.grossSalary
-    const dependents = data.dependents
-    const healthPlan = data.healthPlan
-    const mealVoucher = data.mealVoucher
-    let transportVoucher = data.transportVoucher
-    const otherDeductions = data.otherDeductions
-
-    // Validar vale transporte
-    transportVoucher = validateTransportVoucher(transportVoucher, grossSalary)
-
-    // Calcular INSS
-    const inssValue = calculateINSS(grossSalary)
-    const inssRate = getINSSRate(grossSalary)
-
-    // Base de cálculo do IRRF (Salário bruto - INSS - dependentes - plano de saúde)
-    const dependentDeductions = dependents * dependentDeduction
-    const irrfBase = grossSalary - inssValue - dependentDeductions - healthPlan
-
-    // Calcular IRRF
-    const irrfValue = calculateIRRF(Math.max(0, irrfBase))
-    const irrfRate = getIRRFRate(Math.max(0, irrfBase))
-
-    // Descontos totais
-    const totalOptionalDeductions =
-      healthPlan + mealVoucher + transportVoucher + otherDeductions
-    const totalDeductions = inssValue + irrfValue + totalOptionalDeductions
-
-    // Salário líquido
-    const netSalary = grossSalary - totalDeductions
-
-    return {
-      grossSalary,
-      netSalary,
-      totalDeductions,
-      inss: {
-        value: inssValue,
-        rate: inssRate,
-      },
-      irrf: {
-        value: irrfValue,
-        rate: irrfRate,
-      },
-      optional: {
-        healthPlan,
-        mealVoucher,
-        transportVoucher,
-        otherDeductions,
-        total: totalOptionalDeductions,
-      },
-      hasOptionalDeductions: totalOptionalDeductions > 0,
-    }
-  }
 
   // Exibir resultados
   function displayResults(results) {
@@ -319,5 +340,5 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // Exportar para testes (apenas se estiver em ambiente Node.js)
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { calculateINSS, inssTable }
+  module.exports = { calculateINSS, getINSSRate, inssTable, calculateNetSalary, calculateIRRF, getIRRFRate, validateTransportVoucher }
 }

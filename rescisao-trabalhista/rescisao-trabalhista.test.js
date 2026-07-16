@@ -1,4 +1,4 @@
-const { calculateSalaryBalance, calculateFGTSPenalty, calculateThirteenthSalary, CONSTANTS } = require('./rescisao-trabalhista.js')
+const { calculateSalaryBalance, calculatePriorNotice, calculateFGTSPenalty, calculateProportionalVacation, calculateThirteenthSalary, CONSTANTS } = require('./rescisao-trabalhista.js')
 
 describe('calculateSalaryBalance', () => {
   it('should correctly calculate the salary balance for a mid-month rescision', () => {
@@ -174,5 +174,140 @@ describe('calculateThirteenthSalary', () => {
     }
     // Expected: 2 months (Nov, Dec). 2400 / 12 * 2 = 400
     expect(calculateThirteenthSalary(dados)).toBe(400)
+  })
+})
+
+describe('calculatePriorNotice', () => {
+  it('should return 0 for demissao-justa-causa', () => {
+    const dados = { tipoRescisao: 'demissao-justa-causa', salario: 3000 }
+    const periodo = { anos: 2 }
+    expect(calculatePriorNotice(dados, periodo)).toBe(0)
+  })
+
+  it('should return 0 for pedido-demissao when 0 notice is given', () => {
+    const dados = { tipoRescisao: 'pedido-demissao', salario: 3000, diasAviso: 0 }
+    const periodo = { anos: 2 }
+    expect(calculatePriorNotice(dados, periodo)).toBe(0)
+  })
+
+  it('should calculate correctly for pedido-demissao when notice is given partially', () => {
+    const dados = { tipoRescisao: 'pedido-demissao', salario: 3000, diasAviso: 10 }
+    const periodo = { anos: 2 } // 30 + 6 = 36 days. 36 - 10 = 26 days to be paid
+    // expected: (3000 / 30) * 26 = 2600
+    expect(calculatePriorNotice(dados, periodo)).toBe(2600)
+  })
+
+  it('should calculate base 30 days for demissao-sem-justa-causa with 0 years worked', () => {
+    const dados = { tipoRescisao: 'demissao-sem-justa-causa', salario: 3000, diasAviso: 0 }
+    const periodo = { anos: 0 }
+    // expected: (3000 / 30) * 30 = 3000
+    expect(calculatePriorNotice(dados, periodo)).toBe(3000)
+  })
+
+  it('should add 3 days per year worked for demissao-sem-justa-causa', () => {
+    const dados = { tipoRescisao: 'demissao-sem-justa-causa', salario: 3000, diasAviso: 0 }
+    const periodo = { anos: 5 } // 30 + 15 = 45 days
+    // expected: (3000 / 30) * 45 = 4500
+    expect(calculatePriorNotice(dados, periodo)).toBe(4500)
+  })
+
+  it('should cap the prior notice at 90 days', () => {
+    const dados = { tipoRescisao: 'demissao-sem-justa-causa', salario: 3000, diasAviso: 0 }
+    const periodo = { anos: 25 } // 30 + 75 = 105 days, capped at 90
+    // expected: (3000 / 30) * 90 = 9000
+    expect(calculatePriorNotice(dados, periodo)).toBe(9000)
+  })
+
+  it('should subtract worked days from the total notice days', () => {
+    const dados = { tipoRescisao: 'demissao-sem-justa-causa', salario: 3000, diasAviso: 15 }
+    const periodo = { anos: 3 } // 30 + 9 = 39 days. 39 - 15 = 24 days
+    // expected: (3000 / 30) * 24 = 2400
+    expect(calculatePriorNotice(dados, periodo)).toBe(2400)
+  })
+
+  it('should apply 50% reduction for acordo', () => {
+    const dados = { tipoRescisao: 'acordo', salario: 3000, diasAviso: 0 }
+    const periodo = { anos: 4 } // 30 + 12 = 42 days. 42 * 0.5 = 21 days
+    // expected: (3000 / 30) * 21 = 2100
+    expect(calculatePriorNotice(dados, periodo)).toBe(2100)
+  })
+
+  it('should apply 50% reduction for acordo with partial worked notice', () => {
+    const dados = { tipoRescisao: 'acordo', salario: 3000, diasAviso: 10 }
+    const periodo = { anos: 4 } // 30 + 12 = 42 days. 42 - 10 = 32. 32 * 0.5 = 16 days
+    // expected: (3000 / 30) * 16 = 1600
+    expect(calculatePriorNotice(dados, periodo)).toBe(1600)
+  })
+})
+
+describe('calculateProportionalVacation', () => {
+  it('should return 0 for demissao-justa-causa', () => {
+    const dados = {
+      tipoRescisao: 'demissao-justa-causa',
+      salario: 3000,
+      dataAdmissao: new Date(2022, 0, 1),
+      dataRescisao: new Date(2023, 6, 1)
+    }
+    const periodo = { anos: 1 }
+    expect(calculateProportionalVacation(dados, periodo)).toBe(0)
+  })
+
+  it('should calculate 0 months if less than 15 days worked since the last anniversary', () => {
+    const dados = {
+      tipoRescisao: 'demissao-sem-justa-causa',
+      salario: 3000,
+      dataAdmissao: new Date(2022, 0, 1), // Jan 1, 2022
+      dataRescisao: new Date(2023, 0, 14) // Jan 14, 2023 (13 days diff since Jan 1)
+    }
+    const periodo = { anos: 1 }
+    // Expected: 0 months. (3000 / 12) * 0 = 0. + 1/3 = 0. Total = 0.
+    expect(calculateProportionalVacation(dados, periodo)).toBe(0)
+  })
+
+  it('should calculate 1 month if exactly 15 days worked since the last anniversary', () => {
+    const dados = {
+      tipoRescisao: 'demissao-sem-justa-causa',
+      salario: 3000,
+      dataAdmissao: new Date(2022, 0, 1), // Jan 1, 2022
+      dataRescisao: new Date(2023, 0, 16) // Jan 16, 2023 (15 days diff since Jan 1)
+    }
+    const periodo = { anos: 1 }
+    // Expected: 1 month. (3000 / 12) * 1 = 250. + 1/3 = 83.33. Total = 333.33...
+    const result = calculateProportionalVacation(dados, periodo)
+    const expected = (3000 / 12) * 1 * (1 + CONSTANTS.ADICIONAL_FERIAS)
+    expect(result).toBeCloseTo(expected)
+  })
+
+  it('should calculate correctly across multiple months (e.g. 2 months and 14 days)', () => {
+    const dados = {
+      tipoRescisao: 'demissao-sem-justa-causa',
+      salario: 3000,
+      dataAdmissao: new Date(2022, 0, 1), // Jan 1, 2022
+      dataRescisao: new Date(2023, 2, 14) // Mar 14, 2023 (2 months, 13 days diff since Jan 1)
+    }
+    const periodo = { anos: 1 }
+    // Note: Feb has 28 days usually. But let's see how the diff math is calculated:
+    // math: diffTime / (1000 * 60 * 60 * 24 * 30).
+    // Let's rely on the function's actual execution for testing diff math.
+    // Mar 14 - Jan 1 = 72 days diff
+    // 72 / 30 = 2 months (60 days) + 12 days left
+    // 12 days < 15 days, so 2 months adjusted.
+    const expected = (3000 / 12) * 2 * (1 + CONSTANTS.ADICIONAL_FERIAS)
+    expect(calculateProportionalVacation(dados, periodo)).toBeCloseTo(expected)
+  })
+
+  it('should calculate correctly across multiple months (e.g. 2 months and 15 days)', () => {
+    const dados = {
+      tipoRescisao: 'demissao-sem-justa-causa',
+      salario: 3000,
+      dataAdmissao: new Date(2022, 0, 1), // Jan 1, 2022
+      dataRescisao: new Date(2023, 2, 17) // Mar 17, 2023 (2 months, 16 days diff since Jan 1)
+    }
+    const periodo = { anos: 1 }
+    // Mar 17 - Jan 1 = 75 days diff
+    // 75 / 30 = 2 months (60 days) + 15 days left
+    // 15 days >= 15 days, so 3 months adjusted.
+    const expected = (3000 / 12) * 3 * (1 + CONSTANTS.ADICIONAL_FERIAS)
+    expect(calculateProportionalVacation(dados, periodo)).toBeCloseTo(expected)
   })
 })
