@@ -701,6 +701,7 @@ if (typeof module !== "undefined" && module.exports) {
     calculatePriorNotice,
     calculateFGTSPenalty,
     calculateProportionalVacation,
+    calculateThirteenthSalary,
     CONSTANTS,
   };
 }
