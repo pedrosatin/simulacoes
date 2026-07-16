@@ -1,4 +1,4 @@
-const { calculateINSS, calculateNetSalary, calculateIRRF } = require('./salario-liquido');
+const { calculateINSS, calculateNetSalary, calculateIRRF, getIRRFRate } = require('./salario-liquido');
 
 describe('calculateINSS', () => {
   it('should calculate INSS for salary within the first bracket', () => {
@@ -208,5 +208,38 @@ describe('calculateNetSalary', () => {
 
     expect(result.optional.transportVoucher).toBe(120);
     expect(result.hasOptionalDeductions).toBe(true);
+  });
+});
+
+describe('getIRRFRate', () => {
+  it('should return 0 for income in the first bracket (<= 2259.20)', () => {
+    expect(getIRRFRate(2259.20)).toBe(0);
+    expect(getIRRFRate(1000)).toBe(0);
+    expect(getIRRFRate(0)).toBe(0);
+    expect(getIRRFRate(-500)).toBe(0);
+  });
+
+  it('should return 0.075 for income in the second bracket (2259.21 to 2826.65)', () => {
+    expect(getIRRFRate(2259.21)).toBe(0.075);
+    expect(getIRRFRate(2500)).toBe(0.075);
+    expect(getIRRFRate(2826.65)).toBe(0.075);
+  });
+
+  it('should return 0.15 for income in the third bracket (2826.66 to 3751.05)', () => {
+    expect(getIRRFRate(2826.66)).toBe(0.15);
+    expect(getIRRFRate(3000)).toBe(0.15);
+    expect(getIRRFRate(3751.05)).toBe(0.15);
+  });
+
+  it('should return 0.225 for income in the fourth bracket (3751.06 to 4664.68)', () => {
+    expect(getIRRFRate(3751.06)).toBe(0.225);
+    expect(getIRRFRate(4000)).toBe(0.225);
+    expect(getIRRFRate(4664.68)).toBe(0.225);
+  });
+
+  it('should return 0.275 for income in the fifth bracket (>= 4664.69)', () => {
+    expect(getIRRFRate(4664.69)).toBe(0.275);
+    expect(getIRRFRate(5000)).toBe(0.275);
+    expect(getIRRFRate(10000)).toBe(0.275);
   });
 });
