@@ -1,4 +1,4 @@
-const { calculateINSS, getINSSRate, calculateNetSalary } = require('./salario-liquido');
+const { calculateINSS, getINSSRate, calculateNetSalary, calculateIRRF, getIRRFRate } = require('./salario-liquido');
 
 describe('getINSSRate', () => {
   it('should return 0.075 for salary in the first bracket (0 to 1412.0)', () => {
@@ -94,6 +94,47 @@ describe('calculateINSS', () => {
   it('should return 0 for negative salary', () => {
     const inss = calculateINSS(-1000);
     expect(inss).toBe(0);
+  });
+});
+
+describe('calculateIRRF', () => {
+  it('should return 0 for income in the first bracket (exempt)', () => {
+    const irrf = calculateIRRF(2000.00);
+    expect(irrf).toBe(0);
+  });
+
+  it('should calculate IRRF for income in the second bracket (7.5%)', () => {
+    // 2500.00 * 0.075 - 169.44 = 18.06
+    const irrf = calculateIRRF(2500.00);
+    expect(irrf).toBeCloseTo(18.06, 2);
+  });
+
+  it('should calculate IRRF for income in the third bracket (15%)', () => {
+    // 3000.00 * 0.15 - 381.44 = 68.56
+    const irrf = calculateIRRF(3000.00);
+    expect(irrf).toBeCloseTo(68.56, 2);
+  });
+
+  it('should calculate IRRF for income in the fourth bracket (22.5%)', () => {
+    // 4000.00 * 0.225 - 662.77 = 237.23
+    const irrf = calculateIRRF(4000.00);
+    expect(irrf).toBeCloseTo(237.23, 2);
+  });
+
+  it('should calculate IRRF for income in the fifth bracket (27.5%)', () => {
+    // 5000.00 * 0.275 - 896.00 = 479.00
+    const irrf = calculateIRRF(5000.00);
+    expect(irrf).toBeCloseTo(479.00, 2);
+  });
+
+  it('should return 0 for 0 income', () => {
+    const irrf = calculateIRRF(0);
+    expect(irrf).toBe(0);
+  });
+
+  it('should return 0 for negative income', () => {
+    const irrf = calculateIRRF(-1000.00);
+    expect(irrf).toBe(0);
   });
 });
 
@@ -197,5 +238,38 @@ describe('calculateNetSalary', () => {
 
     expect(result.optional.transportVoucher).toBe(120);
     expect(result.hasOptionalDeductions).toBe(true);
+  });
+});
+
+describe('getIRRFRate', () => {
+  it('should return 0 for income in the first bracket (<= 2259.20)', () => {
+    expect(getIRRFRate(2259.20)).toBe(0);
+    expect(getIRRFRate(1000)).toBe(0);
+    expect(getIRRFRate(0)).toBe(0);
+    expect(getIRRFRate(-500)).toBe(0);
+  });
+
+  it('should return 0.075 for income in the second bracket (2259.21 to 2826.65)', () => {
+    expect(getIRRFRate(2259.21)).toBe(0.075);
+    expect(getIRRFRate(2500)).toBe(0.075);
+    expect(getIRRFRate(2826.65)).toBe(0.075);
+  });
+
+  it('should return 0.15 for income in the third bracket (2826.66 to 3751.05)', () => {
+    expect(getIRRFRate(2826.66)).toBe(0.15);
+    expect(getIRRFRate(3000)).toBe(0.15);
+    expect(getIRRFRate(3751.05)).toBe(0.15);
+  });
+
+  it('should return 0.225 for income in the fourth bracket (3751.06 to 4664.68)', () => {
+    expect(getIRRFRate(3751.06)).toBe(0.225);
+    expect(getIRRFRate(4000)).toBe(0.225);
+    expect(getIRRFRate(4664.68)).toBe(0.225);
+  });
+
+  it('should return 0.275 for income in the fifth bracket (>= 4664.69)', () => {
+    expect(getIRRFRate(4664.69)).toBe(0.275);
+    expect(getIRRFRate(5000)).toBe(0.275);
+    expect(getIRRFRate(10000)).toBe(0.275);
   });
 });
