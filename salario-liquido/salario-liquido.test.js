@@ -1,4 +1,4 @@
-const { calculateINSS, calculateNetSalary, getIRRFRate } = require('./salario-liquido');
+const { calculateINSS, calculateNetSalary, calculateIRRF, getIRRFRate } = require('./salario-liquido');
 
 describe('calculateINSS', () => {
   it('should calculate INSS for salary within the first bracket', () => {
@@ -64,6 +64,47 @@ describe('calculateINSS', () => {
   it('should return 0 for negative salary', () => {
     const inss = calculateINSS(-1000);
     expect(inss).toBe(0);
+  });
+});
+
+describe('calculateIRRF', () => {
+  it('should return 0 for income in the first bracket (exempt)', () => {
+    const irrf = calculateIRRF(2000.00);
+    expect(irrf).toBe(0);
+  });
+
+  it('should calculate IRRF for income in the second bracket (7.5%)', () => {
+    // 2500.00 * 0.075 - 169.44 = 18.06
+    const irrf = calculateIRRF(2500.00);
+    expect(irrf).toBeCloseTo(18.06, 2);
+  });
+
+  it('should calculate IRRF for income in the third bracket (15%)', () => {
+    // 3000.00 * 0.15 - 381.44 = 68.56
+    const irrf = calculateIRRF(3000.00);
+    expect(irrf).toBeCloseTo(68.56, 2);
+  });
+
+  it('should calculate IRRF for income in the fourth bracket (22.5%)', () => {
+    // 4000.00 * 0.225 - 662.77 = 237.23
+    const irrf = calculateIRRF(4000.00);
+    expect(irrf).toBeCloseTo(237.23, 2);
+  });
+
+  it('should calculate IRRF for income in the fifth bracket (27.5%)', () => {
+    // 5000.00 * 0.275 - 896.00 = 479.00
+    const irrf = calculateIRRF(5000.00);
+    expect(irrf).toBeCloseTo(479.00, 2);
+  });
+
+  it('should return 0 for 0 income', () => {
+    const irrf = calculateIRRF(0);
+    expect(irrf).toBe(0);
+  });
+
+  it('should return 0 for negative income', () => {
+    const irrf = calculateIRRF(-1000.00);
+    expect(irrf).toBe(0);
   });
 });
 
