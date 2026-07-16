@@ -4,6 +4,7 @@ const CONFIG = {
     'https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados/ultimos/1?formato=json', // Meta Selic COPOM
   FALLBACK_SELIC_RATE: 15.0, // Taxa de fallback caso a API falhe (atual)
   CACHE_DURATION: 60 * 60 * 1000, // 1 hora em milliseconds
+  FETCH_TIMEOUT: 5000, // 5 segundos de timeout para a API
 }
 
 // Cache para a taxa Selic
@@ -299,8 +300,15 @@ const SelicAPI = {
       }
     }
 
+    // Support for AbortController in older Node.js versions if needed for testing,
+    // though native in modern browsers
+    const controller = typeof AbortController !== 'undefined' ? new AbortController() : { abort: () => {}, signal: undefined };
+    const timeoutId = setTimeout(() => controller.abort(), CONFIG.FETCH_TIMEOUT)
+
     try {
-      const response = await fetch(CONFIG.API_SELIC_URL)
+      const response = await fetch(CONFIG.API_SELIC_URL, {
+        signal: controller.signal
+      })
 
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`)
@@ -349,6 +357,8 @@ const SelicAPI = {
         rate: CONFIG.FALLBACK_SELIC_RATE,
         date: fallbackDate,
       }
+    } finally {
+      clearTimeout(timeoutId)
     }
   },
 
