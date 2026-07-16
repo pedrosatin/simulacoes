@@ -24,30 +24,30 @@ const CONSTANTS = {
   MULTA_FGTS_ACORDO: 0.2, // 20%
   MULTA_FGTS_SAQUE_ANIVERSARIO: 0.2, // 20% para optantes do saque-aniversário
   SALARIO_MINIMO_2025: 1518, // Salário mínimo 2025
-}
+};
 
 // Inicialização da aplicação
-document.addEventListener('DOMContentLoaded', function () {
-  initializeCalculator()
-  setupEventListeners()
-  updateCurrentDate()
-  setDefaultDates()
-})
+document.addEventListener("DOMContentLoaded", function () {
+  initializeCalculator();
+  setupEventListeners();
+  updateCurrentDate();
+  setDefaultDates();
+});
 
 /**
  * Inicializa a calculadora definindo valores padrão
  */
 function initializeCalculator() {
   // Define data atual para a data de rescisão
-  const today = new Date()
-  const dataRescisaoInput = document.getElementById('dataRescisao')
-  dataRescisaoInput.value = formatDateForInput(today)
+  const today = new Date();
+  const dataRescisaoInput = document.getElementById("dataRescisao");
+  dataRescisaoInput.value = formatDateForInput(today);
 
   // Define data de admissão como 1 ano atrás por padrão
-  const oneYearAgo = new Date(today)
-  oneYearAgo.setFullYear(today.getFullYear() - 1)
-  const dataAdmissaoInput = document.getElementById('dataAdmissao')
-  dataAdmissaoInput.value = formatDateForInput(oneYearAgo)
+  const oneYearAgo = new Date(today);
+  oneYearAgo.setFullYear(today.getFullYear() - 1);
+  const dataAdmissaoInput = document.getElementById("dataAdmissao");
+  dataAdmissaoInput.value = formatDateForInput(oneYearAgo);
 }
 
 /**
@@ -55,87 +55,87 @@ function initializeCalculator() {
  */
 function setupEventListeners() {
   // Máscara monetária para campos de valor
-  const salarioInput = document.getElementById('salario')
-  const fgtsInput = document.getElementById('saldoFGTS')
+  const salarioInput = document.getElementById("salario");
+  const fgtsInput = document.getElementById("saldoFGTS");
 
-  salarioInput.addEventListener('input', function (e) {
-    applyMoneyMask(e.target)
-  })
+  salarioInput.addEventListener("input", function (e) {
+    applyMoneyMask(e.target);
+  });
 
-  fgtsInput.addEventListener('input', function (e) {
-    applyMoneyMask(e.target)
-  })
+  fgtsInput.addEventListener("input", function (e) {
+    applyMoneyMask(e.target);
+  });
 
   // Listener para mudança no tipo de rescisão
-  const tipoRescisaoSelect = document.getElementById('tipoRescisao')
-  tipoRescisaoSelect.addEventListener('change', function () {
-    updateFormBasedOnRescisionType()
-  })
+  const tipoRescisaoSelect = document.getElementById("tipoRescisao");
+  tipoRescisaoSelect.addEventListener("change", function () {
+    updateFormBasedOnRescisionType();
+  });
 
   // Listener para cálculo automático quando campos importantes mudam
   const formInputs = [
-    'salario',
-    'dataAdmissao',
-    'dataRescisao',
-    'tipoRescisao',
-    'diasAviso',
-    'feriasVencidas',
-    'saqueAniversario',
-    'saldoFGTS',
-  ]
+    "salario",
+    "dataAdmissao",
+    "dataRescisao",
+    "tipoRescisao",
+    "diasAviso",
+    "feriasVencidas",
+    "saqueAniversario",
+    "saldoFGTS",
+  ];
 
   formInputs.forEach((id) => {
-    const element = document.getElementById(id)
+    const element = document.getElementById(id);
     if (element) {
-      element.addEventListener('change', function () {
+      element.addEventListener("change", function () {
         if (validateBasicInputs()) {
-          calculateRescision()
+          calculateRescision();
         }
-      })
+      });
     }
-  })
+  });
 
   // Botão de calcular
-  const calcularBtn = document.getElementById('calcularRescisao')
-  calcularBtn.addEventListener('click', function () {
-    calculateRescision()
-  })
+  const calcularBtn = document.getElementById("calcularRescisao");
+  calcularBtn.addEventListener("click", function () {
+    calculateRescision();
+  });
 
   // Validação de datas em tempo real
-  const dataAdmissaoInput = document.getElementById('dataAdmissao')
-  const dataRescisaoInput = document.getElementById('dataRescisao')
+  const dataAdmissaoInput = document.getElementById("dataAdmissao");
+  const dataRescisaoInput = document.getElementById("dataRescisao");
 
-  dataAdmissaoInput.addEventListener('change', validateDates)
-  dataRescisaoInput.addEventListener('change', validateDates)
+  dataAdmissaoInput.addEventListener("change", validateDates);
+  dataRescisaoInput.addEventListener("change", validateDates);
 }
 
 /**
  * Atualiza a interface baseada no tipo de rescisão selecionado
  */
 function updateFormBasedOnRescisionType() {
-  const tipoRescisao = document.getElementById('tipoRescisao').value
+  const tipoRescisao = document.getElementById("tipoRescisao").value;
 
   // Reseta campo de aviso prévio
-  const diasAvisoInput = document.getElementById('diasAviso')
+  const diasAvisoInput = document.getElementById("diasAviso");
 
   switch (tipoRescisao) {
-    case 'demissao-justa-causa':
+    case "demissao-justa-causa":
       // Em demissão por justa causa, não há aviso prévio
-      diasAvisoInput.value = '0'
-      diasAvisoInput.disabled = true
-      break
-    case 'acordo':
+      diasAvisoInput.value = "0";
+      diasAvisoInput.disabled = true;
+      break;
+    case "acordo":
       // Em acordo, aviso prévio é reduzido pela metade
-      diasAvisoInput.disabled = false
-      break
+      diasAvisoInput.disabled = false;
+      break;
     default:
-      diasAvisoInput.disabled = false
-      break
+      diasAvisoInput.disabled = false;
+      break;
   }
 
   // Recalcula automaticamente se campos básicos estão preenchidos
   if (validateBasicInputs()) {
-    calculateRescision()
+    calculateRescision();
   }
 }
 
@@ -143,36 +143,36 @@ function updateFormBasedOnRescisionType() {
  * Valida se as datas inseridas são consistentes
  */
 function validateDates() {
-  const dataAdmissao = new Date(document.getElementById('dataAdmissao').value)
-  const dataRescisao = new Date(document.getElementById('dataRescisao').value)
+  const dataAdmissao = new Date(document.getElementById("dataAdmissao").value);
+  const dataRescisao = new Date(document.getElementById("dataRescisao").value);
 
   if (dataAdmissao >= dataRescisao) {
-    alert('Data de rescisão deve ser posterior à data de admissão')
-    return false
+    alert("Data de rescisão deve ser posterior à data de admissão");
+    return false;
   }
 
   // Verifica se a data de rescisão não é muito no futuro
-  const today = new Date()
-  const maxFutureDate = new Date(today)
-  maxFutureDate.setFullYear(today.getFullYear() + 1)
+  const today = new Date();
+  const maxFutureDate = new Date(today);
+  maxFutureDate.setFullYear(today.getFullYear() + 1);
 
   if (dataRescisao > maxFutureDate) {
-    alert('Data de rescisão não pode ser superior a 1 ano da data atual')
-    return false
+    alert("Data de rescisão não pode ser superior a 1 ano da data atual");
+    return false;
   }
 
-  return true
+  return true;
 }
 
 /**
  * Valida se os campos básicos estão preenchidos
  */
 function validateBasicInputs() {
-  const salario = parseMoneyToFloat(document.getElementById('salario').value)
-  const dataAdmissao = document.getElementById('dataAdmissao').value
-  const dataRescisao = document.getElementById('dataRescisao').value
+  const salario = parseMoneyToFloat(document.getElementById("salario").value);
+  const dataAdmissao = document.getElementById("dataAdmissao").value;
+  const dataRescisao = document.getElementById("dataRescisao").value;
 
-  return salario > 0 && dataAdmissao && dataRescisao
+  return salario > 0 && dataAdmissao && dataRescisao;
 }
 
 /**
@@ -182,46 +182,46 @@ function calculateRescision() {
   try {
     // Validações iniciais
     if (!validateBasicInputs()) {
-      alert('Por favor, preencha todos os campos obrigatórios')
-      return
+      alert("Por favor, preencha todos os campos obrigatórios");
+      return;
     }
 
     if (!validateDates()) {
-      return
+      return;
     }
 
     // Coleta dados do formulário
-    const dados = collectFormData()
+    const dados = collectFormData();
 
     // Validações adicionais
     if (dados.salario < CONSTANTS.SALARIO_MINIMO_2025) {
       if (
         !confirm(
           `O salário informado (${formatMoney(
-            dados.salario
+            dados.salario,
           )}) está abaixo do salário mínimo (${formatMoney(
-            CONSTANTS.SALARIO_MINIMO_2025
-          )}). Deseja continuar?`
+            CONSTANTS.SALARIO_MINIMO_2025,
+          )}). Deseja continuar?`,
         )
       ) {
-        return
+        return;
       }
     }
 
     // Calcula período trabalhado
     const periodoTrabalhado = calculateWorkPeriod(
       dados.dataAdmissao,
-      dados.dataRescisao
-    )
+      dados.dataRescisao,
+    );
 
     // Calcula cada verba rescisória
-    const verbas = calculateRescisionBenefits(dados, periodoTrabalhado)
+    const verbas = calculateRescisionBenefits(dados, periodoTrabalhado);
 
     // Exibe resultados
-    displayResults(verbas, periodoTrabalhado, dados)
+    displayResults(verbas, periodoTrabalhado, dados);
   } catch (error) {
-    console.error('Erro ao calcular rescisão:', error)
-    alert('Erro ao calcular a rescisão. Verifique os dados informados.')
+    console.error("Erro ao calcular rescisão:", error);
+    alert("Erro ao calcular a rescisão. Verifique os dados informados.");
   }
 }
 
@@ -230,17 +230,17 @@ function calculateRescision() {
  */
 function collectFormData() {
   return {
-    salario: parseMoneyToFloat(document.getElementById('salario').value),
-    dataAdmissao: new Date(document.getElementById('dataAdmissao').value),
-    dataRescisao: new Date(document.getElementById('dataRescisao').value),
-    tipoRescisao: document.getElementById('tipoRescisao').value,
-    diasAviso: parseInt(document.getElementById('diasAviso').value) || 0,
+    salario: parseMoneyToFloat(document.getElementById("salario").value),
+    dataAdmissao: new Date(document.getElementById("dataAdmissao").value),
+    dataRescisao: new Date(document.getElementById("dataRescisao").value),
+    tipoRescisao: document.getElementById("tipoRescisao").value,
+    diasAviso: parseInt(document.getElementById("diasAviso").value) || 0,
     feriasVencidas:
-      parseFloat(document.getElementById('feriasVencidas').value) || 0,
-    saqueAniversario: document.getElementById('saqueAniversario').checked,
+      parseFloat(document.getElementById("feriasVencidas").value) || 0,
+    saqueAniversario: document.getElementById("saqueAniversario").checked,
     saldoFGTS:
-      parseMoneyToFloat(document.getElementById('saldoFGTS').value) || 0,
-  }
+      parseMoneyToFloat(document.getElementById("saldoFGTS").value) || 0,
+  };
 }
 
 /**
@@ -256,14 +256,14 @@ function calculateCompleteYears(tempDate, dataRescisao) {
       tempDate.getMonth() === dataRescisao.getMonth() &&
       tempDate.getDate() <= dataRescisao.getDate())
   ) {
-    const nextYear = new Date(tempDate)
-    nextYear.setFullYear(tempDate.getFullYear() + 1)
+    const nextYear = new Date(tempDate);
+    nextYear.setFullYear(tempDate.getFullYear() + 1);
 
     if (nextYear <= dataRescisao) {
-      anos++
-      tempDate.setTime(nextYear.getTime())
+      anos++;
+      tempDate.setTime(nextYear.getTime());
     } else {
-      break
+      break;
     }
   }
   return anos;
@@ -279,14 +279,14 @@ function calculateCompleteMonths(tempDate, dataRescisao) {
     (tempDate.getMonth() === dataRescisao.getMonth() &&
       tempDate.getDate() <= dataRescisao.getDate())
   ) {
-    const nextMonth = new Date(tempDate)
-    nextMonth.setMonth(tempDate.getMonth() + 1)
+    const nextMonth = new Date(tempDate);
+    nextMonth.setMonth(tempDate.getMonth() + 1);
 
     if (nextMonth <= dataRescisao) {
-      meses++
-      tempDate.setTime(nextMonth.getTime())
+      meses++;
+      tempDate.setTime(nextMonth.getTime());
     } else {
-      break
+      break;
     }
   }
   return meses;
@@ -296,23 +296,23 @@ function calculateCompleteMonths(tempDate, dataRescisao) {
  * Calcula os dias restantes trabalhados
  */
 function calculateRemainingDays(tempDate, dataRescisao) {
-  const diffFinal = dataRescisao.getTime() - tempDate.getTime()
-  return Math.floor(diffFinal / (1000 * 60 * 60 * 24))
+  const diffFinal = dataRescisao.getTime() - tempDate.getTime();
+  return Math.floor(diffFinal / (1000 * 60 * 60 * 24));
 }
 
 /**
  * Calcula o período trabalhado em anos, meses e dias
  */
 function calculateWorkPeriod(dataAdmissao, dataRescisao) {
-  const diffTime = dataRescisao.getTime() - dataAdmissao.getTime()
-  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24))
+  const diffTime = dataRescisao.getTime() - dataAdmissao.getTime();
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
   // Cálculo mais preciso usando datas
-  let tempDate = new Date(dataAdmissao)
+  let tempDate = new Date(dataAdmissao);
 
-  const anos = calculateCompleteYears(tempDate, dataRescisao)
-  const meses = calculateCompleteMonths(tempDate, dataRescisao)
-  const dias = calculateRemainingDays(tempDate, dataRescisao)
+  const anos = calculateCompleteYears(tempDate, dataRescisao);
+  const meses = calculateCompleteMonths(tempDate, dataRescisao);
+  const dias = calculateRemainingDays(tempDate, dataRescisao);
 
   return {
     anos,
@@ -320,7 +320,7 @@ function calculateWorkPeriod(dataAdmissao, dataRescisao) {
     dias,
     totalDias: diffDays,
     totalMeses: anos * 12 + meses + (dias > 14 ? 1 : 0), // Meses para cálculo proporcional (15 dias = 1 mês)
-  }
+  };
 }
 
 /**
@@ -335,30 +335,30 @@ function calculateRescisionBenefits(dados, periodo) {
     feriasProporcionais: 0,
     multaFGTS: 0,
     total: 0,
-  }
+  };
 
   // Calcula saldo de salário (dias trabalhados no mês da rescisão)
-  verbas.saldoSalario = calculateSalaryBalance(dados)
+  verbas.saldoSalario = calculateSalaryBalance(dados);
 
   // Calcula aviso prévio
-  verbas.avisoPrevio = calculatePriorNotice(dados, periodo)
+  verbas.avisoPrevio = calculatePriorNotice(dados, periodo);
 
   // Calcula 13º salário
-  verbas.decimoTerceiro = calculateThirteenthSalary(dados, periodo)
+  verbas.decimoTerceiro = calculateThirteenthSalary(dados, periodo);
 
   // Calcula férias vencidas
-  verbas.feriasVencidas = calculateVacationDue(dados)
+  verbas.feriasVencidas = calculateVacationDue(dados);
 
   // Calcula férias proporcionais
-  verbas.feriasProporcionais = calculateProportionalVacation(dados, periodo)
+  verbas.feriasProporcionais = calculateProportionalVacation(dados, periodo);
 
   // Calcula multa do FGTS
-  verbas.multaFGTS = calculateFGTSPenalty(dados)
+  verbas.multaFGTS = calculateFGTSPenalty(dados);
 
   // Calcula total
-  verbas.total = Object.values(verbas).reduce((sum, valor) => sum + valor, 0)
+  verbas.total = Object.values(verbas).reduce((sum, valor) => sum + valor, 0);
 
-  return verbas
+  return verbas;
 }
 
 /**
@@ -368,11 +368,11 @@ function calculateSalaryBalance(dados) {
   const diasNoMes = new Date(
     dados.dataRescisao.getFullYear(),
     dados.dataRescisao.getMonth() + 1,
-    0
-  ).getDate()
-  const diaRescisao = dados.dataRescisao.getDate()
+    0,
+  ).getDate();
+  const diaRescisao = dados.dataRescisao.getDate();
 
-  return (dados.salario / CONSTANTS.DIAS_MES) * diaRescisao
+  return (dados.salario / CONSTANTS.DIAS_MES) * diaRescisao;
 }
 
 /**
@@ -380,31 +380,31 @@ function calculateSalaryBalance(dados) {
  */
 function calculatePriorNotice(dados, periodo) {
   // Justa causa não tem direito a aviso prévio
-  if (dados.tipoRescisao === 'demissao-justa-causa') {
-    return 0
+  if (dados.tipoRescisao === "demissao-justa-causa") {
+    return 0;
   }
 
   // Pedido de demissão: apenas se o empregado der aviso prévio ao empregador
-  if (dados.tipoRescisao === 'pedido-demissao' && dados.diasAviso === 0) {
-    return 0
+  if (dados.tipoRescisao === "pedido-demissao" && dados.diasAviso === 0) {
+    return 0;
   }
 
   // Calcula dias de aviso prévio baseado no tempo de serviço
-  let diasAviso = CONSTANTS.AVISO_PREVIO_BASE // 30 dias base
-  diasAviso += periodo.anos * CONSTANTS.AVISO_PREVIO_ADICIONAL // +3 dias por ano
-  diasAviso = Math.min(diasAviso, 90) // Máximo 90 dias
+  let diasAviso = CONSTANTS.AVISO_PREVIO_BASE; // 30 dias base
+  diasAviso += periodo.anos * CONSTANTS.AVISO_PREVIO_ADICIONAL; // +3 dias por ano
+  diasAviso = Math.min(diasAviso, 90); // Máximo 90 dias
 
   // Se foi trabalhado parte do aviso, desconta
   if (dados.diasAviso > 0) {
-    diasAviso -= dados.diasAviso
+    diasAviso -= dados.diasAviso;
   }
 
   // Acordo: apenas 50% do aviso prévio
-  if (dados.tipoRescisao === 'acordo') {
-    diasAviso = diasAviso * 0.5
+  if (dados.tipoRescisao === "acordo") {
+    diasAviso = diasAviso * 0.5;
   }
 
-  return (dados.salario / CONSTANTS.DIAS_MES) * diasAviso
+  return (dados.salario / CONSTANTS.DIAS_MES) * diasAviso;
 }
 
 /**
@@ -412,32 +412,32 @@ function calculatePriorNotice(dados, periodo) {
  */
 function calculateThirteenthSalary(dados, periodo) {
   // Justa causa não tem direito ao 13º proporcional
-  if (dados.tipoRescisao === 'demissao-justa-causa') {
-    return 0
+  if (dados.tipoRescisao === "demissao-justa-causa") {
+    return 0;
   }
 
   // Calcula meses trabalhados no ano da rescisão
-  const anoRescisao = dados.dataRescisao.getFullYear()
-  const mesRescisao = dados.dataRescisao.getMonth() + 1 // Janeiro = 1
+  const anoRescisao = dados.dataRescisao.getFullYear();
+  const mesRescisao = dados.dataRescisao.getMonth() + 1; // Janeiro = 1
 
   // Se foi admitido no mesmo ano, conta apenas os meses trabalhados neste ano
-  let mesesTrabalhados
+  let mesesTrabalhados;
   if (dados.dataAdmissao.getFullYear() === anoRescisao) {
-    const mesAdmissao = dados.dataAdmissao.getMonth() + 1
-    mesesTrabalhados = mesRescisao - mesAdmissao + 1
+    const mesAdmissao = dados.dataAdmissao.getMonth() + 1;
+    mesesTrabalhados = mesRescisao - mesAdmissao + 1;
   } else {
-    mesesTrabalhados = mesRescisao
+    mesesTrabalhados = mesRescisao;
   }
 
   // Considera 15 dias ou mais como mês completo
-  const diaRescisao = dados.dataRescisao.getDate()
+  const diaRescisao = dados.dataRescisao.getDate();
   if (diaRescisao >= 15) {
     // Já contado no cálculo de meses acima
   } else {
-    mesesTrabalhados = Math.max(0, mesesTrabalhados - 1)
+    mesesTrabalhados = Math.max(0, mesesTrabalhados - 1);
   }
 
-  return (dados.salario / 12) * mesesTrabalhados
+  return (dados.salario / 12) * mesesTrabalhados;
 }
 
 /**
@@ -445,10 +445,10 @@ function calculateThirteenthSalary(dados, periodo) {
  */
 function calculateVacationDue(dados) {
   // Justa causa só tem direito se as férias já estavam vencidas
-  const valorFerias = dados.salario * dados.feriasVencidas
-  const adicionalUmTerco = valorFerias * CONSTANTS.ADICIONAL_FERIAS
+  const valorFerias = dados.salario * dados.feriasVencidas;
+  const adicionalUmTerco = valorFerias * CONSTANTS.ADICIONAL_FERIAS;
 
-  return valorFerias + adicionalUmTerco
+  return valorFerias + adicionalUmTerco;
 }
 
 /**
@@ -456,33 +456,33 @@ function calculateVacationDue(dados) {
  */
 function calculateProportionalVacation(dados, periodo) {
   // Justa causa não tem direito a férias proporcionais
-  if (dados.tipoRescisao === 'demissao-justa-causa') {
-    return 0
+  if (dados.tipoRescisao === "demissao-justa-causa") {
+    return 0;
   }
 
   // Calcula meses trabalhados no período aquisitivo atual
-  const ultimoAniversario = new Date(dados.dataAdmissao)
+  const ultimoAniversario = new Date(dados.dataAdmissao);
 
   // Encontra o último aniversário de contrato antes da rescisão
   while (ultimoAniversario.getTime() <= dados.dataRescisao.getTime()) {
-    ultimoAniversario.setFullYear(ultimoAniversario.getFullYear() + 1)
+    ultimoAniversario.setFullYear(ultimoAniversario.getFullYear() + 1);
   }
-  ultimoAniversario.setFullYear(ultimoAniversario.getFullYear() - 1)
+  ultimoAniversario.setFullYear(ultimoAniversario.getFullYear() - 1);
 
   // Calcula meses desde o último aniversário
-  const diffTime = dados.dataRescisao.getTime() - ultimoAniversario.getTime()
-  const mesesProporcionais = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 30))
+  const diffTime = dados.dataRescisao.getTime() - ultimoAniversario.getTime();
+  const mesesProporcionais = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 30));
 
   // Considera 15 dias ou mais como mês completo
   const diasRestantes = Math.floor(
-    (diffTime % (1000 * 60 * 60 * 24 * 30)) / (1000 * 60 * 60 * 24)
-  )
-  const mesesAjustados = mesesProporcionais + (diasRestantes >= 15 ? 1 : 0)
+    (diffTime % (1000 * 60 * 60 * 24 * 30)) / (1000 * 60 * 60 * 24),
+  );
+  const mesesAjustados = mesesProporcionais + (diasRestantes >= 15 ? 1 : 0);
 
-  const valorFerias = (dados.salario / 12) * mesesAjustados
-  const adicionalUmTerco = valorFerias * CONSTANTS.ADICIONAL_FERIAS
+  const valorFerias = (dados.salario / 12) * mesesAjustados;
+  const adicionalUmTerco = valorFerias * CONSTANTS.ADICIONAL_FERIAS;
 
-  return valorFerias + adicionalUmTerco
+  return valorFerias + adicionalUmTerco;
 }
 
 /**
@@ -491,33 +491,33 @@ function calculateProportionalVacation(dados, periodo) {
 function calculateFGTSPenalty(dados) {
   // Apenas demissão sem justa causa e acordo têm multa
   if (
-    dados.tipoRescisao === 'demissao-justa-causa' ||
-    dados.tipoRescisao === 'pedido-demissao'
+    dados.tipoRescisao === "demissao-justa-causa" ||
+    dados.tipoRescisao === "pedido-demissao"
   ) {
-    return 0
+    return 0;
   }
 
   // Se não informou saldo do FGTS, não calcula multa
   if (dados.saldoFGTS === 0) {
-    return 0
+    return 0;
   }
 
-  let percentualMulta = CONSTANTS.MULTA_FGTS_DEMISSAO // 40% padrão
+  let percentualMulta = CONSTANTS.MULTA_FGTS_DEMISSAO; // 40% padrão
 
   // Acordo: 20%
-  if (dados.tipoRescisao === 'acordo') {
-    percentualMulta = CONSTANTS.MULTA_FGTS_ACORDO
+  if (dados.tipoRescisao === "acordo") {
+    percentualMulta = CONSTANTS.MULTA_FGTS_ACORDO;
   }
 
   // Saque-aniversário: reduz multa para 20%
   if (
     dados.saqueAniversario &&
-    dados.tipoRescisao === 'demissao-sem-justa-causa'
+    dados.tipoRescisao === "demissao-sem-justa-causa"
   ) {
-    percentualMulta = CONSTANTS.MULTA_FGTS_SAQUE_ANIVERSARIO
+    percentualMulta = CONSTANTS.MULTA_FGTS_SAQUE_ANIVERSARIO;
   }
 
-  return dados.saldoFGTS * percentualMulta
+  return dados.saldoFGTS * percentualMulta;
 }
 
 /**
@@ -525,94 +525,100 @@ function calculateFGTSPenalty(dados) {
  */
 function displayResults(verbas, periodo, dados) {
   // Mostra seção de resultados
-  const resultSection = document.getElementById('resultado')
-  resultSection.style.display = 'block'
+  const resultSection = document.getElementById("resultado");
+  resultSection.style.display = "block";
 
   // Atualiza valores
-  document.getElementById('valorTotal').textContent = formatMoney(verbas.total)
-  document.getElementById('saldoSalario').textContent = formatMoney(
-    verbas.saldoSalario
-  )
-  document.getElementById('avisoPrevio').textContent = formatMoney(
-    verbas.avisoPrevio
-  )
-  document.getElementById('decimoTerceiro').textContent = formatMoney(
-    verbas.decimoTerceiro
-  )
-  document.getElementById('feriasVencidasValor').textContent = formatMoney(
-    verbas.feriasVencidas
-  )
-  document.getElementById('feriasProporcionais').textContent = formatMoney(
-    verbas.feriasProporcionais
-  )
-  document.getElementById('multaFGTS').textContent = formatMoney(
-    verbas.multaFGTS
-  )
+  document.getElementById("valorTotal").textContent = formatMoney(verbas.total);
+  document.getElementById("saldoSalario").textContent = formatMoney(
+    verbas.saldoSalario,
+  );
+  document.getElementById("avisoPrevio").textContent = formatMoney(
+    verbas.avisoPrevio,
+  );
+  document.getElementById("decimoTerceiro").textContent = formatMoney(
+    verbas.decimoTerceiro,
+  );
+  document.getElementById("feriasVencidasValor").textContent = formatMoney(
+    verbas.feriasVencidas,
+  );
+  document.getElementById("feriasProporcionais").textContent = formatMoney(
+    verbas.feriasProporcionais,
+  );
+  document.getElementById("multaFGTS").textContent = formatMoney(
+    verbas.multaFGTS,
+  );
 
   // Atualiza período trabalhado
-  const periodoTexto = `${periodo.anos} ano(s), ${periodo.meses} mês(es) e ${periodo.dias} dia(s)`
-  document.getElementById('periodoTrabalhado').textContent = periodoTexto
+  const periodoTexto = `${periodo.anos} ano(s), ${periodo.meses} mês(es) e ${periodo.dias} dia(s)`;
+  document.getElementById("periodoTrabalhado").textContent = periodoTexto;
 
   // Atualiza observações específicas do tipo de rescisão
-  updateObservations(dados)
+  updateObservations(dados);
 
   // Scroll para o resultado
-  resultSection.scrollIntoView({ behavior: 'smooth' })
+  resultSection.scrollIntoView({ behavior: "smooth" });
 }
 
 /**
  * Atualiza observações baseadas no tipo de rescisão
  */
 function updateObservations(dados) {
-  const observacoesList = document.getElementById('observacoes')
+  const observacoesList = document.getElementById("observacoes");
 
   // Limpa observações anteriores
-  observacoesList.innerHTML = ''
+  observacoesList.innerHTML = "";
+
+  // Função auxiliar para adicionar observações de forma segura
+  const addObservation = (text) => {
+    const li = document.createElement("li");
+    li.textContent = text;
+    observacoesList.appendChild(li);
+  };
 
   // Observações gerais
-  observacoesList.innerHTML +=
-    '<li>Os valores são brutos, antes dos descontos de INSS e IRRF</li>'
-  observacoesList.innerHTML +=
-    '<li>FGTS será depositado na conta vinculada</li>'
+  addObservation("Os valores são brutos, antes dos descontos de INSS e IRRF");
+  addObservation("FGTS será depositado na conta vinculada");
 
   // Observações específicas por tipo
   switch (dados.tipoRescisao) {
-    case 'demissao-sem-justa-causa':
-      observacoesList.innerHTML += '<li>Direito ao seguro-desemprego</li>'
-      observacoesList.innerHTML +=
-        '<li>Liberação total do FGTS + multa de 40%</li>'
+    case "demissao-sem-justa-causa":
+      addObservation("Direito ao seguro-desemprego");
+      addObservation("Liberação total do FGTS + multa de 40%");
       if (dados.saqueAniversario) {
-        observacoesList.innerHTML +=
-          '<li>Como optante do saque-aniversário, multa reduzida para 20%</li>'
+        addObservation(
+          "Como optante do saque-aniversário, multa reduzida para 20%",
+        );
       }
-      break
+      break;
 
-    case 'demissao-justa-causa':
-      observacoesList.innerHTML += '<li>Sem direito ao seguro-desemprego</li>'
-      observacoesList.innerHTML += '<li>Sem liberação do FGTS</li>'
-      observacoesList.innerHTML +=
-        '<li>Direito apenas ao saldo de salário e férias vencidas (se houver)</li>'
-      break
+    case "demissao-justa-causa":
+      addObservation("Sem direito ao seguro-desemprego");
+      addObservation("Sem liberação do FGTS");
+      addObservation(
+        "Direito apenas ao saldo de salário e férias vencidas (se houver)",
+      );
+      break;
 
-    case 'pedido-demissao':
-      observacoesList.innerHTML += '<li>Sem direito ao seguro-desemprego</li>'
-      observacoesList.innerHTML += '<li>Sem multa do FGTS</li>'
-      observacoesList.innerHTML += '<li>FGTS permanece na conta vinculada</li>'
-      break
+    case "pedido-demissao":
+      addObservation("Sem direito ao seguro-desemprego");
+      addObservation("Sem multa do FGTS");
+      addObservation("FGTS permanece na conta vinculada");
+      break;
 
-    case 'acordo':
-      observacoesList.innerHTML += '<li>Saque de até 80% do FGTS</li>'
-      observacoesList.innerHTML += '<li>Multa reduzida para 20% do FGTS</li>'
-      observacoesList.innerHTML += '<li>Sem direito ao seguro-desemprego</li>'
-      observacoesList.innerHTML += '<li>Aviso prévio reduzido pela metade</li>'
-      break
+    case "acordo":
+      addObservation("Saque de até 80% do FGTS");
+      addObservation("Multa reduzida para 20% do FGTS");
+      addObservation("Sem direito ao seguro-desemprego");
+      addObservation("Aviso prévio reduzido pela metade");
+      break;
   }
 
   // Observação sobre férias vencidas
   if (dados.feriasVencidas > 0) {
-    const li = document.createElement('li')
-    li.textContent = `Consideradas ${dados.feriasVencidas.toFixed(1)} período(s) de férias vencidas`
-    observacoesList.appendChild(li)
+    addObservation(
+      `Consideradas ${dados.feriasVencidas.toFixed(1)} período(s) de férias vencidas`,
+    );
   }
 }
 
@@ -622,79 +628,79 @@ function updateObservations(dados) {
 
 // Aplica máscara monetária brasileira
 function applyMoneyMask(input) {
-  let value = input.value.replace(/\D/g, '')
-  value = (value / 100).toFixed(2) + ''
-  value = value.replace('.', ',')
-  value = value.replace(/(\d)(?=(\d{3})+\,)/g, '$1.')
-  input.value = 'R$ ' + value
+  let value = input.value.replace(/\D/g, "");
+  value = (value / 100).toFixed(2) + "";
+  value = value.replace(".", ",");
+  value = value.replace(/(\d)(?=(\d{3})+\,)/g, "$1.");
+  input.value = "R$ " + value;
 }
 
 // Converte valor monetário para float
 function parseMoneyToFloat(moneyString) {
-  if (!moneyString) return 0
+  if (!moneyString) return 0;
 
   return (
     parseFloat(
       moneyString
-        .replace(/R\$\s?/g, '')
-        .replace(/\./g, '')
-        .replace(',', '.')
+        .replace(/R\$\s?/g, "")
+        .replace(/\./g, "")
+        .replace(",", "."),
     ) || 0
-  )
+  );
 }
 
 // Formata número para formato monetário brasileiro
-const moneyFormatter = new Intl.NumberFormat('pt-BR', {
-  style: 'currency',
-  currency: 'BRL',
-})
+const moneyFormatter = new Intl.NumberFormat("pt-BR", {
+  style: "currency",
+  currency: "BRL",
+});
 
 function formatMoney(value) {
-  return moneyFormatter.format(value)
+  return moneyFormatter.format(value);
 }
 
 // Formata data para input type="date"
 function formatDateForInput(date) {
-  return date.toISOString().split('T')[0]
+  return date.toISOString().split("T")[0];
 }
 
 // Atualiza data atual no cabeçalho
 function updateCurrentDate() {
-  const now = new Date()
-  const dateString = now.toLocaleDateString('pt-BR', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-  })
-  document.getElementById(
-    'currentDate'
-  ).textContent = `Atualizado em: ${dateString}`
+  const now = new Date();
+  const dateString = now.toLocaleDateString("pt-BR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+  document.getElementById("currentDate").textContent =
+    `Atualizado em: ${dateString}`;
 }
 
 // Define datas padrão nos inputs
 function setDefaultDates() {
-  const today = new Date()
-  const oneYearAgo = new Date(today)
-  oneYearAgo.setFullYear(today.getFullYear() - 1)
+  const today = new Date();
+  const oneYearAgo = new Date(today);
+  oneYearAgo.setFullYear(today.getFullYear() - 1);
 
-  const dataRescisaoInput = document.getElementById('dataRescisao')
-  const dataAdmissaoInput = document.getElementById('dataAdmissao')
+  const dataRescisaoInput = document.getElementById("dataRescisao");
+  const dataAdmissaoInput = document.getElementById("dataAdmissao");
 
   if (!dataRescisaoInput.value) {
-    dataRescisaoInput.value = formatDateForInput(today)
+    dataRescisaoInput.value = formatDateForInput(today);
   }
 
   if (!dataAdmissaoInput.value) {
-    dataAdmissaoInput.value = formatDateForInput(oneYearAgo)
+    dataAdmissaoInput.value = formatDateForInput(oneYearAgo);
   }
 }
 
 // Exportar funções para teste, se estiver em ambiente Node.js
-if (typeof module !== 'undefined' && module.exports) {
+if (typeof module !== "undefined" && module.exports) {
   module.exports = {
     calculateSalaryBalance,
     calculatePriorNotice,
     calculateFGTSPenalty,
-    CONSTANTS
-  }
+    calculateProportionalVacation,
+    CONSTANTS,
+  };
 }
