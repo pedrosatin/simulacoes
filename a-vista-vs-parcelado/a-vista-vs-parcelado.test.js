@@ -72,4 +72,44 @@ describe('FinancialCalculator', () => {
       expect(annualToMonthlyRate(-10)).toBeCloseTo(-0.0087416, 6);
     });
   });
+
+  describe('generateRecommendation', () => {
+    const { generateRecommendation } = FinancialCalculator;
+
+    it('should return correct recommendation when cash is better and savings > 10%', () => {
+      const savings = 500;
+      const expectedText = `Comprar à vista é muito mais vantajoso! Você economizará ${Utils.formatCurrency(savings)} investindo a diferença na Selic durante 12 meses.`;
+      expect(generateRecommendation(true, savings, 11, 12)).toBe(expectedText);
+    });
+
+    it('should return correct recommendation when cash is better and 5% < savings <= 10%', () => {
+      const savings = 300;
+      const expectedText = `Comprar à vista é mais vantajoso. A economia de ${Utils.formatCurrency(savings)} compensa o investimento na Selic.`;
+      expect(generateRecommendation(true, savings, 8, 12)).toBe(expectedText);
+    });
+
+    it('should return correct recommendation when cash is better and savings <= 5%', () => {
+      const savings = 100;
+      const expectedText = `Comprar à vista é ligeiramente melhor, mas a diferença é pequena (${Utils.formatCurrency(savings)}). Considere sua disponibilidade de caixa.`;
+      expect(generateRecommendation(true, savings, 4, 12)).toBe(expectedText);
+    });
+
+    it('should return correct recommendation when installment is better and savings > 10%', () => {
+      const savings = 600;
+      const expectedText = `Parcelar é muito mais vantajoso! Você terá ${Utils.formatCurrency(savings)} a mais investindo na Selic ao invés de pagar à vista.`;
+      expect(generateRecommendation(false, savings, 12, 12)).toBe(expectedText);
+    });
+
+    it('should return correct recommendation when installment is better and 5% < savings <= 10%', () => {
+      const savings = 350;
+      const expectedText = `Parcelar é mais vantajoso. Você ganha ${Utils.formatCurrency(savings)} a mais mantendo o dinheiro investido.`;
+      expect(generateRecommendation(false, savings, 7, 12)).toBe(expectedText);
+    });
+
+    it('should return correct recommendation when installment is better and savings <= 5%', () => {
+      const savings = 150;
+      const expectedText = `Parcelar é ligeiramente melhor, mas a diferença é pequena (${Utils.formatCurrency(savings)}). Avalie sua preferência pessoal.`;
+      expect(generateRecommendation(false, savings, 2, 12)).toBe(expectedText);
+    });
+  });
 });
