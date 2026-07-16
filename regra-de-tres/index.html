@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
@@ -150,159 +150,155 @@
       <!-- Conteúdo Principal -->
       <main>
         <!-- Aba Regra de Três -->
-        <div id="regra-tres" class="tab-content active">
-          <div class="calculator-section">
-            <h2>🔢 Regra de Três Simples</h2>
-            <p class="section-description">
-              Se <strong>A está para B</strong>, então
-              <strong>C está para X</strong>. Informe três valores conhecidos
-              para descobrir o quarto.
-            </p>
+        <div id="regra-tres" class="tab-content calculator-section active">
+          <h2>🔢 Regra de Três Simples</h2>
+          <p class="section-description">
+            Se <strong>A está para B</strong>, então
+            <strong>C está para X</strong>. Informe três valores conhecidos para
+            descobrir o quarto.
+          </p>
 
-            <div class="regra-tres-visual">
-              <div class="proporcao">
-                <div class="proporcao-lado">
-                  <label for="valorA">A:</label>
-                  <input
-                    type="text"
-                    id="valorA"
-                    class="input-number"
-                    placeholder="0"
-                  />
-                  <span class="proporcao-separator">está para</span>
-                  <label for="valorB">B:</label>
-                  <input
-                    type="text"
-                    id="valorB"
-                    class="input-number"
-                    placeholder="0"
-                  />
-                </div>
+          <div class="regra-tres-visual">
+            <div class="proporcao">
+              <div class="proporcao-lado">
+                <label for="valorA">A:</label>
+                <input
+                  type="text"
+                  id="valorA"
+                  class="input-number"
+                  placeholder="0"
+                />
+                <span class="proporcao-separator">está para</span>
+                <label for="valorB">B:</label>
+                <input
+                  type="text"
+                  id="valorB"
+                  class="input-number"
+                  placeholder="0"
+                />
+              </div>
 
-                <div class="proporcao-centro">
-                  <span class="equals">=</span>
-                </div>
+              <div class="proporcao-centro">
+                <span class="equals">=</span>
+              </div>
 
-                <div class="proporcao-lado">
-                  <label for="valorC">C:</label>
-                  <input
-                    type="text"
-                    id="valorC"
-                    class="input-number"
-                    placeholder="0"
-                  />
-                  <span class="proporcao-separator">está para</span>
-                  <label for="valorX">X:</label>
-                  <input
-                    type="text"
-                    id="valorX"
-                    class="input-number resultado"
-                    readonly
-                    placeholder="?"
-                  />
-                </div>
+              <div class="proporcao-lado">
+                <label for="valorC">C:</label>
+                <input
+                  type="text"
+                  id="valorC"
+                  class="input-number"
+                  placeholder="0"
+                />
+                <span class="proporcao-separator">está para</span>
+                <label for="valorX">X:</label>
+                <input
+                  type="text"
+                  id="valorX"
+                  class="input-number resultado"
+                  readonly
+                  placeholder="?"
+                />
               </div>
             </div>
+          </div>
 
-            <div class="calculation-info">
-              <h3>📐 Como funciona</h3>
-              <p>
-                A regra de três é uma forma de encontrar um valor desconhecido
-                através de uma proporção.
-              </p>
-              <div class="formula">
-                <strong>Fórmula:</strong> A × X = B × C → X = (B × C) ÷ A
-              </div>
+          <div class="calculation-info">
+            <h3>📐 Como funciona</h3>
+            <p>
+              A regra de três é uma forma de encontrar um valor desconhecido
+              através de uma proporção.
+            </p>
+            <div class="formula">
+              <strong>Fórmula:</strong> A × X = B × C → X = (B × C) ÷ A
             </div>
           </div>
         </div>
 
         <!-- Aba Porcentagem -->
-        <div id="porcentagem" class="tab-content">
-          <div class="calculator-section">
-            <h2>📊 Cálculos de Porcentagem</h2>
-            <p class="section-description">
-              Calcule aumentos, descontos e valores baseados em porcentagens.
-            </p>
+        <div id="porcentagem" class="tab-content calculator-section">
+          <h2>📊 Cálculos de Porcentagem</h2>
+          <p class="section-description">
+            Calcule aumentos, descontos e valores baseados em porcentagens.
+          </p>
 
-            <div class="porcentagem-opcoes">
-              <div class="opcao-card">
-                <h3>Quanto é X% de um valor?</h3>
-                <div class="input-group">
-                  <label for="percentual1">Porcentagem (%):</label>
+          <div class="porcentagem-opcoes">
+            <div class="opcao-card">
+              <h3>Quanto é X% de um valor?</h3>
+              <div class="input-group">
+                <label for="percentual1">Porcentagem (%):</label>
+                <input
+                  type="text"
+                  id="percentual1"
+                  class="input-number"
+                  placeholder="0"
+                />
+              </div>
+              <div class="input-group">
+                <label for="valor1">De qual valor:</label>
+                <input
+                  type="text"
+                  id="valor1"
+                  class="input-number"
+                  placeholder="0,00"
+                />
+              </div>
+              <div class="resultado-card">
+                <span class="resultado-label">Resultado:</span>
+                <span id="resultado1" class="resultado-valor">0,00</span>
+              </div>
+            </div>
+
+            <div class="opcao-card">
+              <h3>Aplicar aumento/desconto</h3>
+              <div class="input-group">
+                <label for="valorBase">Valor base:</label>
+                <input
+                  type="text"
+                  id="valorBase"
+                  class="input-number"
+                  placeholder="0,00"
+                />
+              </div>
+              <div class="input-group">
+                <label for="percentualMudanca">Percentual:</label>
+                <div class="input-with-toggle">
                   <input
                     type="text"
-                    id="percentual1"
+                    id="percentualMudanca"
                     class="input-number"
                     placeholder="0"
                   />
-                </div>
-                <div class="input-group">
-                  <label for="valor1">De qual valor:</label>
-                  <input
-                    type="text"
-                    id="valor1"
-                    class="input-number"
-                    placeholder="0,00"
-                  />
-                </div>
-                <div class="resultado-card">
-                  <span class="resultado-label">Resultado:</span>
-                  <span id="resultado1" class="resultado-valor">0,00</span>
+                  <div class="toggle-buttons">
+                    <button
+                      type="button"
+                      class="toggle-btn active"
+                      data-type="aumento"
+                    >
+                      + Aumento
+                    </button>
+                    <button
+                      type="button"
+                      class="toggle-btn"
+                      data-type="desconto"
+                    >
+                      - Desconto
+                    </button>
+                  </div>
                 </div>
               </div>
-
-              <div class="opcao-card">
-                <h3>Aplicar aumento/desconto</h3>
-                <div class="input-group">
-                  <label for="valorBase">Valor base:</label>
-                  <input
-                    type="text"
-                    id="valorBase"
-                    class="input-number"
-                    placeholder="0,00"
-                  />
+              <div class="resultado-detalhado">
+                <div class="resultado-linha">
+                  <span>Valor original:</span>
+                  <span id="valorOriginal">0,00</span>
                 </div>
-                <div class="input-group">
-                  <label for="percentualMudanca">Percentual:</label>
-                  <div class="input-with-toggle">
-                    <input
-                      type="text"
-                      id="percentualMudanca"
-                      class="input-number"
-                      placeholder="0"
-                    />
-                    <div class="toggle-buttons">
-                      <button
-                        type="button"
-                        class="toggle-btn active"
-                        data-type="aumento"
-                      >
-                        + Aumento
-                      </button>
-                      <button
-                        type="button"
-                        class="toggle-btn"
-                        data-type="desconto"
-                      >
-                        - Desconto
-                      </button>
-                    </div>
-                  </div>
+                <div class="resultado-linha">
+                  <span id="tipoMudanca">Aumento:</span>
+                  <span id="valorMudanca">0,00</span>
                 </div>
-                <div class="resultado-detalhado">
-                  <div class="resultado-linha">
-                    <span>Valor original:</span>
-                    <span id="valorOriginal">0,00</span>
-                  </div>
-                  <div class="resultado-linha">
-                    <span id="tipoMudanca">Aumento:</span>
-                    <span id="valorMudanca">0,00</span>
-                  </div>
-                  <div class="resultado-linha total">
-                    <span>Valor final:</span>
-                    <span id="valorFinal">0,00</span>
-                  </div>
+                <div class="resultado-linha total">
+                  <span>Valor final:</span>
+                  <span id="valorFinal">0,00</span>
                 </div>
               </div>
             </div>
@@ -310,65 +306,61 @@
         </div>
 
         <!-- Aba Que % é de -->
-        <div id="proporcao" class="tab-content">
-          <div class="calculator-section">
-            <h2>🔍 Que porcentagem um valor representa</h2>
-            <p class="section-description">
-              Descubra que porcentagem um valor representa em relação a outro.
-            </p>
+        <div id="proporcao" class="tab-content calculator-section">
+          <h2>🔍 Que porcentagem um valor representa</h2>
+          <p class="section-description">
+            Descubra que porcentagem um valor representa em relação a outro.
+          </p>
 
-            <div class="proporcao-calc">
-              <div class="input-group-horizontal">
-                <div class="input-group">
-                  <label for="valorParte">Valor (parte):</label>
-                  <input
-                    type="text"
-                    id="valorParte"
-                    class="input-number"
-                    placeholder="0,00"
-                  />
-                </div>
-
-                <span class="operador">é que % de</span>
-
-                <div class="input-group">
-                  <label for="valorTotal">Valor (total):</label>
-                  <input
-                    type="text"
-                    id="valorTotal"
-                    class="input-number"
-                    placeholder="0,00"
-                  />
-                </div>
-              </div>
-
-              <div class="resultado-proporcao">
-                <div class="resultado-principal">
-                  <span id="resultadoPorcentagem">0%</span>
-                  <p class="resultado-explicacao">
-                    <span id="explicacaoCalculo">0 representa 0% de 0</span>
-                  </p>
-                </div>
-              </div>
-
-              <div class="exemplos-praticos">
-                <h3>📚 Exemplos práticos:</h3>
-                <ul>
-                  <li>
-                    <strong>Desconto:</strong> Se você pagou 80 em um produto
-                    que custava 100, você teve 20% de desconto
-                  </li>
-                  <li>
-                    <strong>Aprovação:</strong> Se você acertou 85 questões de
-                    100, sua taxa de acerto foi de 85%
-                  </li>
-                  <li>
-                    <strong>Crescimento:</strong> Se um valor subiu de 2.000
-                    para 2.400, houve um aumento de 20%
-                  </li>
-                </ul>
-              </div>
+          <div class="input-group-horizontal">
+            <div class="input-group">
+              <label for="valorParte">Valor (parte):</label>
+              <input
+                type="text"
+                id="valorParte"
+                class="input-number"
+                placeholder="0,00"
+              />
             </div>
+
+            <span class="operador">é que % de</span>
+
+            <div class="input-group">
+              <label for="valorTotal">Valor (total):</label>
+              <input
+                type="text"
+                id="valorTotal"
+                class="input-number"
+                placeholder="0,00"
+              />
+            </div>
+          </div>
+
+          <div class="resultado-proporcao">
+            <div class="resultado-principal">
+              <span id="resultadoPorcentagem">0%</span>
+              <p class="resultado-explicacao">
+                <span id="explicacaoCalculo">0 representa 0% de 0</span>
+              </p>
+            </div>
+          </div>
+
+          <div class="exemplos-praticos">
+            <h3>📚 Exemplos práticos:</h3>
+            <ul>
+              <li>
+                <strong>Desconto:</strong> Se você pagou 80 em um produto que
+                custava 100, você teve 20% de desconto
+              </li>
+              <li>
+                <strong>Aprovação:</strong> Se você acertou 85 questões de 100,
+                sua taxa de acerto foi de 85%
+              </li>
+              <li>
+                <strong>Crescimento:</strong> Se um valor subiu de 2.000 para
+                2.400, houve um aumento de 20%
+              </li>
+            </ul>
           </div>
         </div>
 
