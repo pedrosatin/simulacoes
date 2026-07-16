@@ -114,9 +114,6 @@ function setupEventListeners() {
  */
 function updateFormBasedOnRescisionType() {
   const tipoRescisao = document.getElementById("tipoRescisao").value;
-  const diasAvisoContainer = document.getElementById("diasAviso").parentElement;
-  const saqueAniversarioContainer =
-    document.getElementById("saqueAniversario").parentElement.parentElement;
 
   // Reseta campo de aviso prévio
   const diasAvisoInput = document.getElementById("diasAviso");
