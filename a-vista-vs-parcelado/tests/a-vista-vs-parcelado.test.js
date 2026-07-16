@@ -1,4 +1,4 @@
-const { FinancialCalculator } = require('../a-vista-vs-parcelado.js');
+const { FinancialCalculator, SelicAPI } = require('../a-vista-vs-parcelado.js');
 
 describe('FinancialCalculator', () => {
   describe('calculateCompoundInterest', () => {
@@ -157,6 +157,141 @@ describe('FinancialCalculator', () => {
       expect(result.selicReturn).toBeCloseTo(selicReturn, 5);
       expect(result.opportunityCost).toBeCloseTo(opportunityCost, 5);
       expect(result.presentValueOfInstallments).toBeCloseTo(expectedPresentValue, 5);
+    });
+  });
+
+  describe('compareOptions', () => {
+    it('should recommend cash payment when cash cost is lower', () => {
+      const cashResult = { effectiveCost: 900 };
+      const installmentResult = { effectiveCost: 1000 };
+      const productValue = 1000;
+      const installments = 10;
+
+      const result = FinancialCalculator.compareOptions(cashResult, installmentResult, productValue, installments);
+
+      expect(result.isCashBetter).toBe(true);
+      expect(result.savings).toBe(100);
+      expect(result.savingsPercent).toBeCloseTo(11.11, 2); // (100 / 900) * 100
+      expect(result.recommendation).toContain('Comprar à vista é muito mais vantajoso!');
+    });
+
+    it('should recommend installment payment when installment cost is lower', () => {
+      const cashResult = { effectiveCost: 1100 };
+      const installmentResult = { effectiveCost: 1000 };
+      const productValue = 1200;
+      const installments = 12;
+
+      const result = FinancialCalculator.compareOptions(cashResult, installmentResult, productValue, installments);
+
+      expect(result.isCashBetter).toBe(false);
+      expect(result.savings).toBe(100);
+      expect(result.savingsPercent).toBeCloseTo(10.0, 2); // (100 / 1000) * 100 -> exactly 10, not > 10
+      expect(result.recommendation).toContain('Parcelar é mais vantajoso');
+    });
+
+    it('should calculate correctly when costs are equal', () => {
+      const cashResult = { effectiveCost: 1000 };
+      const installmentResult = { effectiveCost: 1000 };
+      const productValue = 1000;
+      const installments = 5;
+
+      const result = FinancialCalculator.compareOptions(cashResult, installmentResult, productValue, installments);
+
+      expect(result.isCashBetter).toBe(false); // cashCost < installmentCost is false
+      expect(result.savings).toBe(0);
+      expect(result.savingsPercent).toBe(0);
+      expect(result.recommendation).toContain('Parcelar é ligeiramente melhor, mas a diferença é pequena (R$ 0,00)');
+    });
+
+    it('should handle small differences for cash advantage', () => {
+      const cashResult = { effectiveCost: 990 };
+      const installmentResult = { effectiveCost: 1000 };
+      const productValue = 1000;
+      const installments = 5;
+
+      const result = FinancialCalculator.compareOptions(cashResult, installmentResult, productValue, installments);
+
+      expect(result.isCashBetter).toBe(true);
+      expect(result.savings).toBe(10);
+      expect(result.savingsPercent).toBeCloseTo(1.01, 2); // (10 / 990) * 100
+      expect(result.recommendation).toContain('Comprar à vista é ligeiramente melhor, mas a diferença é pequena (R$ 10,00)');
+    });
+  });
+});
+
+describe('SelicAPI', () => {
+  describe('getSelicRate', () => {
+    let originalFetch;
+    let consoleWarnSpy;
+    let isCacheValidSpy;
+
+    beforeEach(() => {
+      originalFetch = global.fetch;
+      consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+      isCacheValidSpy = jest.spyOn(SelicAPI, 'isCacheValid').mockReturnValue(false);
+    });
+
+    afterEach(() => {
+      global.fetch = originalFetch;
+      consoleWarnSpy.mockRestore();
+      isCacheValidSpy.mockRestore();
+    });
+
+    const getFormattedToday = () => {
+      const today = new Date();
+      return `${today.getDate().toString().padStart(2, '0')}/${(today.getMonth() + 1)
+        .toString()
+        .padStart(2, '0')}/${today.getFullYear()}`;
+    };
+
+    it('should use fallback rate when API fetch fails', async () => {
+      global.fetch = jest.fn(() => Promise.reject(new Error('Network error')));
+
+      const result = await SelicAPI.getSelicRate();
+
+      expect(global.fetch).toHaveBeenCalledTimes(1);
+      expect(consoleWarnSpy).toHaveBeenCalledWith('Erro ao buscar taxa Selic:', 'Network error');
+      expect(result.rate).toBe(15.0);
+      expect(result.date).toBe(getFormattedToday());
+    });
+
+    it('should use fallback rate when API returns non-ok response', async () => {
+      global.fetch = jest.fn(() =>
+        Promise.resolve({
+          ok: false,
+          status: 500,
+          statusText: 'Internal Server Error',
+        })
+      );
+
+      const result = await SelicAPI.getSelicRate();
+
+      expect(global.fetch).toHaveBeenCalledTimes(1);
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        'Erro ao buscar taxa Selic:',
+        'HTTP 500: Internal Server Error'
+      );
+      expect(result.rate).toBe(15.0);
+      expect(result.date).toBe(getFormattedToday());
+    });
+
+    it('should use fallback rate when API returns invalid data format', async () => {
+      global.fetch = jest.fn(() =>
+        Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve({ notAnArray: true }),
+        })
+      );
+
+      const result = await SelicAPI.getSelicRate();
+
+      expect(global.fetch).toHaveBeenCalledTimes(1);
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        'Erro ao buscar taxa Selic:',
+        'Dados inválidos recebidos da API'
+      );
+      expect(result.rate).toBe(15.0);
+      expect(result.date).toBe(getFormattedToday());
     });
   });
 });
