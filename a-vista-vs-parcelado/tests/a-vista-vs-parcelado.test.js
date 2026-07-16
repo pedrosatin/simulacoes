@@ -53,6 +53,38 @@ describe('FinancialCalculator', () => {
     });
   });
 
+  describe('calculateCashCost', () => {
+    it('should correctly calculate cash cost for typical values', () => {
+      const cashValue = 1000;
+      const productValue = 1200;
+      const selicRate = 10.47;
+      const installments = 12;
+
+      const result = FinancialCalculator.calculateCashCost(cashValue, productValue, selicRate, installments);
+
+      const expectedMonthlyRate = FinancialCalculator.annualToMonthlyRate(selicRate);
+
+      expect(result.cashPayment).toBe(1000);
+      expect(result.effectiveCost).toBe(1000);
+      expect(result.monthlyRate).toBe(expectedMonthlyRate);
+    });
+
+    it('should calculate correctly when Selic rate is 0%', () => {
+      const cashValue = 500;
+      const productValue = 500;
+      const selicRate = 0;
+      const installments = 10;
+
+      const result = FinancialCalculator.calculateCashCost(cashValue, productValue, selicRate, installments);
+
+      const expectedMonthlyRate = FinancialCalculator.annualToMonthlyRate(0);
+
+      expect(result.cashPayment).toBe(500);
+      expect(result.effectiveCost).toBe(500);
+      expect(result.monthlyRate).toBe(expectedMonthlyRate);
+    });
+  });
+
   describe('calculateInstallmentCost', () => {
     it('should calculate installment cost correctly for typical values', () => {
       const productValue = 1200;
