@@ -319,5 +319,5 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // Exportar para testes (apenas se estiver em ambiente Node.js)
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { calculateINSS, getINSSRate, inssTable, calculateNetSalary, calculateIRRF, getIRRFRate }
+  module.exports = { calculateINSS, getINSSRate, inssTable, calculateNetSalary, calculateIRRF, getIRRFRate, validateTransportVoucher }
 }
