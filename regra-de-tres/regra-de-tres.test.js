@@ -49,10 +49,18 @@ describe('RegraDeTresCalculadora', () => {
 
   describe('Initialization', () => {
     it('caches elements correctly', () => {
-      expect(calculadora.elements.valorA).toBe(document.getElementById('valorA'))
-      expect(calculadora.elements.valorB).toBe(document.getElementById('valorB'))
-      expect(calculadora.elements.valorC).toBe(document.getElementById('valorC'))
-      expect(calculadora.elements.valorX).toBe(document.getElementById('valorX'))
+      expect(calculadora.elements.valorA).toBe(
+        document.getElementById('valorA'),
+      )
+      expect(calculadora.elements.valorB).toBe(
+        document.getElementById('valorB'),
+      )
+      expect(calculadora.elements.valorC).toBe(
+        document.getElementById('valorC'),
+      )
+      expect(calculadora.elements.valorX).toBe(
+        document.getElementById('valorX'),
+      )
     })
   })
 
@@ -146,11 +154,17 @@ describe('RegraDeTresCalculadora', () => {
 
       calculadora.calcularAumentoDesconto()
 
-      expect(document.getElementById('valorOriginal').textContent).toBe('100,00')
-      expect(document.getElementById('tipoMudanca').textContent).toBe('Aumento:')
+      expect(document.getElementById('valorOriginal').textContent).toBe(
+        '100,00',
+      )
+      expect(document.getElementById('tipoMudanca').textContent).toBe(
+        'Aumento:',
+      )
       expect(document.getElementById('valorMudanca').textContent).toBe('10,00')
       expect(document.getElementById('valorFinal').textContent).toBe('110,00')
-      expect(document.getElementById('valorFinal').style.color).toBe('rgb(46, 213, 115)') // #2ed573
+      expect(document.getElementById('valorFinal').style.color).toBe(
+        'rgb(46, 213, 115)',
+      ) // #2ed573
     })
 
     it('calculates desconto correctly', () => {
@@ -163,10 +177,14 @@ describe('RegraDeTresCalculadora', () => {
 
       calculadora.calcularAumentoDesconto()
 
-      expect(document.getElementById('tipoMudanca').textContent).toBe('Desconto:')
+      expect(document.getElementById('tipoMudanca').textContent).toBe(
+        'Desconto:',
+      )
       expect(document.getElementById('valorMudanca').textContent).toBe('10,00')
       expect(document.getElementById('valorFinal').textContent).toBe('90,00')
-      expect(document.getElementById('valorFinal').style.color).toBe('rgb(255, 71, 87)') // #ff4757
+      expect(document.getElementById('valorFinal').style.color).toBe(
+        'rgb(255, 71, 87)',
+      ) // #ff4757
     })
   })
 
@@ -177,8 +195,12 @@ describe('RegraDeTresCalculadora', () => {
 
       calculadora.calcularProporcaoPorcentual()
 
-      expect(document.getElementById('resultadoPorcentagem').textContent).toBe('12,5%')
-      expect(document.getElementById('explicacaoCalculo').textContent).toBe('25,00 representa 12,5% de 200,00')
+      expect(document.getElementById('resultadoPorcentagem').textContent).toBe(
+        '12,5%',
+      )
+      expect(document.getElementById('explicacaoCalculo').textContent).toBe(
+        '25,00 representa 12,5% de 200,00',
+      )
     })
 
     it('handles total 0', () => {
@@ -187,8 +209,12 @@ describe('RegraDeTresCalculadora', () => {
 
       calculadora.calcularProporcaoPorcentual()
 
-      expect(document.getElementById('resultadoPorcentagem').textContent).toBe('0%')
-      expect(document.getElementById('explicacaoCalculo').textContent).toBe('Informe o valor total')
+      expect(document.getElementById('resultadoPorcentagem').textContent).toBe(
+        '0%',
+      )
+      expect(document.getElementById('explicacaoCalculo').textContent).toBe(
+        'Informe o valor total',
+      )
     })
   })
 })

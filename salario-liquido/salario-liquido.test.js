@@ -1,42 +1,49 @@
-const { calculateINSS, getINSSRate, calculateNetSalary, calculateIRRF, getIRRFRate, validateTransportVoucher } = require('./salario-liquido');
+const {
+  calculateINSS,
+  getINSSRate,
+  calculateNetSalary,
+  calculateIRRF,
+  getIRRFRate,
+  validateTransportVoucher,
+} = require('./salario-liquido')
 
 describe('getINSSRate', () => {
   it('should return 0.075 for salary in the first bracket (0 to 1412.0)', () => {
-    expect(getINSSRate(0)).toBe(0.075);
-    expect(getINSSRate(1000)).toBe(0.075);
-    expect(getINSSRate(1412.0)).toBe(0.075);
-  });
+    expect(getINSSRate(0)).toBe(0.075)
+    expect(getINSSRate(1000)).toBe(0.075)
+    expect(getINSSRate(1412.0)).toBe(0.075)
+  })
 
   it('should return 0.09 for salary in the second bracket (1412.01 to 2666.68)', () => {
-    expect(getINSSRate(1412.01)).toBe(0.09);
-    expect(getINSSRate(2000)).toBe(0.09);
-    expect(getINSSRate(2666.68)).toBe(0.09);
-  });
+    expect(getINSSRate(1412.01)).toBe(0.09)
+    expect(getINSSRate(2000)).toBe(0.09)
+    expect(getINSSRate(2666.68)).toBe(0.09)
+  })
 
   it('should return 0.12 for salary in the third bracket (2666.69 to 4000.03)', () => {
-    expect(getINSSRate(2666.69)).toBe(0.12);
-    expect(getINSSRate(3000)).toBe(0.12);
-    expect(getINSSRate(4000.03)).toBe(0.12);
-  });
+    expect(getINSSRate(2666.69)).toBe(0.12)
+    expect(getINSSRate(3000)).toBe(0.12)
+    expect(getINSSRate(4000.03)).toBe(0.12)
+  })
 
   it('should return 0.14 for salary in the fourth bracket (4000.04 and above)', () => {
-    expect(getINSSRate(4000.04)).toBe(0.14);
-    expect(getINSSRate(6000)).toBe(0.14);
-    expect(getINSSRate(10000)).toBe(0.14); // Above ceiling
-  });
+    expect(getINSSRate(4000.04)).toBe(0.14)
+    expect(getINSSRate(6000)).toBe(0.14)
+    expect(getINSSRate(10000)).toBe(0.14) // Above ceiling
+  })
 
   it('should return 0 for negative salary', () => {
-    expect(getINSSRate(-100)).toBe(0);
-  });
-});
+    expect(getINSSRate(-100)).toBe(0)
+  })
+})
 
 describe('calculateINSS', () => {
   it('should calculate INSS for salary within the first bracket', () => {
     // 0 to 1412.0 @ 7.5%
     // 1412.0 * 0.075 = 105.90
-    const inss = calculateINSS(1412.00);
-    expect(inss).toBeCloseTo(105.90, 2);
-  });
+    const inss = calculateINSS(1412.0)
+    expect(inss).toBeCloseTo(105.9, 2)
+  })
 
   it('should calculate INSS for salary within the second bracket', () => {
     // 0 to 1412.0 @ 7.5% (105.90)
@@ -45,9 +52,9 @@ describe('calculateINSS', () => {
     // Second bracket amount: 2000.00 - 1412.00 = 588.00
     // 588.00 * 0.09 = 52.92
     // Total INSS: 105.90 + 52.92 = 158.82
-    const inss = calculateINSS(2000.00);
-    expect(inss).toBeCloseTo(158.82, 2);
-  });
+    const inss = calculateINSS(2000.0)
+    expect(inss).toBeCloseTo(158.82, 2)
+  })
 
   it('should calculate INSS for salary within the third bracket', () => {
     // 0 to 1412.0 @ 7.5% (105.90)
@@ -57,9 +64,9 @@ describe('calculateINSS', () => {
     // Third bracket amount: 3000.00 - 2666.68 = 333.32
     // 333.32 * 0.12 = 39.9984 -> 40.00
     // Total INSS: 105.90 + 112.92 + 40.00 = 258.82
-    const inss = calculateINSS(3000.00);
-    expect(inss).toBeCloseTo(258.82, 2);
-  });
+    const inss = calculateINSS(3000.0)
+    expect(inss).toBeCloseTo(258.82, 2)
+  })
 
   it('should calculate INSS for salary within the fourth bracket', () => {
     // 0 to 1412.0 @ 7.5% (105.90)
@@ -70,9 +77,9 @@ describe('calculateINSS', () => {
     // Fourth bracket amount: 5000.00 - 4000.03 = 999.97
     // 999.97 * 0.14 = 139.9958 -> 140.00
     // Total INSS: 105.90 + 112.92 + 160.00 + 140.00 = 518.82
-    const inss = calculateINSS(5000.00);
-    expect(inss).toBeCloseTo(518.82, 2);
-  });
+    const inss = calculateINSS(5000.0)
+    expect(inss).toBeCloseTo(518.82, 2)
+  })
 
   it('should cap INSS calculation to the ceiling', () => {
     // Max progressive INSS is the sum of maximums of all brackets
@@ -81,92 +88,92 @@ describe('calculateINSS', () => {
     // B3: (4000.03 - 2666.68) * 0.12 = 160.002
     // B4: (7786.02 - 4000.03) * 0.14 = 530.0386
     // Total = 908.8618
-    const ceiling = 908.8618;
-    const inss = calculateINSS(10000.00); // Salary well above ceiling
-    expect(inss).toBeCloseTo(ceiling, 2);
-  });
+    const ceiling = 908.8618
+    const inss = calculateINSS(10000.0) // Salary well above ceiling
+    expect(inss).toBeCloseTo(ceiling, 2)
+  })
 
   it('should return 0 for 0 salary', () => {
-    const inss = calculateINSS(0);
-    expect(inss).toBe(0);
-  });
+    const inss = calculateINSS(0)
+    expect(inss).toBe(0)
+  })
 
   it('should return 0 for negative salary', () => {
-    const inss = calculateINSS(-1000);
-    expect(inss).toBe(0);
-  });
-});
+    const inss = calculateINSS(-1000)
+    expect(inss).toBe(0)
+  })
+})
 
 describe('validateTransportVoucher', () => {
   it('should return the transport value when it is less than 6% of gross salary', () => {
     // 6% of 2000 is 120
-    const result = validateTransportVoucher(100, 2000);
-    expect(result).toBe(100);
-  });
+    const result = validateTransportVoucher(100, 2000)
+    expect(result).toBe(100)
+  })
 
   it('should return the transport value when it is exactly 6% of gross salary', () => {
     // 6% of 2000 is 120
-    const result = validateTransportVoucher(120, 2000);
-    expect(result).toBe(120);
-  });
+    const result = validateTransportVoucher(120, 2000)
+    expect(result).toBe(120)
+  })
 
   it('should cap the transport value at 6% of gross salary', () => {
     // 6% of 2000 is 120
-    const result = validateTransportVoucher(200, 2000);
-    expect(result).toBe(120);
-  });
+    const result = validateTransportVoucher(200, 2000)
+    expect(result).toBe(120)
+  })
 
   it('should return 0 when transport value is 0', () => {
-    const result = validateTransportVoucher(0, 2000);
-    expect(result).toBe(0);
-  });
+    const result = validateTransportVoucher(0, 2000)
+    expect(result).toBe(0)
+  })
 
   it('should return 0 when gross salary is 0', () => {
-    const result = validateTransportVoucher(100, 0);
-    expect(result).toBe(0);
-  });
-});
+    const result = validateTransportVoucher(100, 0)
+    expect(result).toBe(0)
+  })
+})
 
 describe('calculateIRRF', () => {
   it('should return 0 for income in the first bracket (exempt)', () => {
-    const irrf = calculateIRRF(2000.00);
-    expect(irrf).toBe(0);
-  });
+    const irrf = calculateIRRF(2000.0)
+    expect(irrf).toBe(0)
+  })
 
   it('should calculate IRRF for income in the second bracket (7.5%)', () => {
     // 2500.00 * 0.075 - 169.44 = 18.06
-    const irrf = calculateIRRF(2500.00);
-    expect(irrf).toBeCloseTo(18.06, 2);
-  });
+    const irrf = calculateIRRF(2500.0)
+    expect(irrf).toBeCloseTo(18.06, 2)
+  })
 
   it('should calculate IRRF for income in the third bracket (15%)', () => {
     // 3000.00 * 0.15 - 381.44 = 68.56
-    const irrf = calculateIRRF(3000.00);
-    expect(irrf).toBeCloseTo(68.56, 2);
-  });
+    const irrf = calculateIRRF(3000.0)
+    expect(irrf).toBeCloseTo(68.56, 2)
+  })
 
   it('should calculate IRRF for income in the fourth bracket (22.5%)', () => {
     // 4000.00 * 0.225 - 662.77 = 237.23
-    const irrf = calculateIRRF(4000.00);
-    expect(irrf).toBeCloseTo(237.23, 2);
-  });
+    const irrf = calculateIRRF(4000.0)
+    expect(irrf).toBeCloseTo(237.23, 2)
+  })
 
   it('should calculate IRRF for income in the fifth bracket (27.5%)', () => {
     // 5000.00 * 0.275 - 896.00 = 479.00
-    const irrf = calculateIRRF(5000.00);
-    expect(irrf).toBeCloseTo(479.00, 2);
-  });
+    const irrf = calculateIRRF(5000.0)
+    expect(irrf).toBeCloseTo(479.0, 2)
+  })
 
   it('should return 0 for 0 income', () => {
-    const irrf = calculateIRRF(0);
-    expect(irrf).toBe(0);
-  });
+    const irrf = calculateIRRF(0)
+    expect(irrf).toBe(0)
+  })
 
   it('should return 0 for negative income', () => {
-    const irrf = calculateIRRF(-1000.00);
-    expect(irrf).toBe(0);
-  });
-});
+    const irrf = calculateIRRF(-1000.0)
+    expect(irrf).toBe(0)
+  })
+})
 
 describe('calculateNetSalary', () => {
   it('should calculate net salary correctly without optional deductions', () => {
@@ -183,17 +190,17 @@ describe('calculateNetSalary', () => {
       healthPlan: 0,
       mealVoucher: 0,
       transportVoucher: 0,
-      otherDeductions: 0
-    };
+      otherDeductions: 0,
+    }
 
-    const result = calculateNetSalary(data);
+    const result = calculateNetSalary(data)
 
-    expect(result.grossSalary).toBe(3000);
-    expect(result.inss.value).toBeCloseTo(258.82, 2);
-    expect(result.irrf.value).toBeCloseTo(36.15, 2);
-    expect(result.netSalary).toBeCloseTo(2705.03, 2);
-    expect(result.hasOptionalDeductions).toBe(false);
-  });
+    expect(result.grossSalary).toBe(3000)
+    expect(result.inss.value).toBeCloseTo(258.82, 2)
+    expect(result.irrf.value).toBeCloseTo(36.15, 2)
+    expect(result.netSalary).toBeCloseTo(2705.03, 2)
+    expect(result.hasOptionalDeductions).toBe(false)
+  })
 
   it('should calculate net salary correctly with dependents', () => {
     // Dependents affect the IRRF base
@@ -212,14 +219,14 @@ describe('calculateNetSalary', () => {
       healthPlan: 0,
       mealVoucher: 0,
       transportVoucher: 0,
-      otherDeductions: 0
-    };
+      otherDeductions: 0,
+    }
 
-    const result = calculateNetSalary(data);
+    const result = calculateNetSalary(data)
 
-    expect(result.irrf.value).toBeCloseTo(7.71, 2);
-    expect(result.netSalary).toBeCloseTo(2733.47, 2);
-  });
+    expect(result.irrf.value).toBeCloseTo(7.71, 2)
+    expect(result.netSalary).toBeCloseTo(2733.47, 2)
+  })
 
   it('should calculate net salary with optional deductions', () => {
     // Health Plan affects the IRRF base
@@ -239,17 +246,17 @@ describe('calculateNetSalary', () => {
       healthPlan: 200,
       mealVoucher: 50,
       transportVoucher: 0,
-      otherDeductions: 100
-    };
+      otherDeductions: 100,
+    }
 
-    const result = calculateNetSalary(data);
+    const result = calculateNetSalary(data)
 
-    expect(result.irrf.value).toBeCloseTo(300.50, 2);
-    expect(result.optional.total).toBe(350);
-    expect(result.totalDeductions).toBeCloseTo(1169.3155, 2);
-    expect(result.netSalary).toBeCloseTo(3830.6845, 2);
-    expect(result.hasOptionalDeductions).toBe(true);
-  });
+    expect(result.irrf.value).toBeCloseTo(300.5, 2)
+    expect(result.optional.total).toBe(350)
+    expect(result.totalDeductions).toBeCloseTo(1169.3155, 2)
+    expect(result.netSalary).toBeCloseTo(3830.6845, 2)
+    expect(result.hasOptionalDeductions).toBe(true)
+  })
 
   it('should cap the transport voucher to 6% of gross salary', () => {
     // 2000 gross salary
@@ -261,45 +268,45 @@ describe('calculateNetSalary', () => {
       healthPlan: 0,
       mealVoucher: 0,
       transportVoucher: 200,
-      otherDeductions: 0
-    };
+      otherDeductions: 0,
+    }
 
-    const result = calculateNetSalary(data);
+    const result = calculateNetSalary(data)
 
-    expect(result.optional.transportVoucher).toBe(120);
-    expect(result.hasOptionalDeductions).toBe(true);
-  });
-});
+    expect(result.optional.transportVoucher).toBe(120)
+    expect(result.hasOptionalDeductions).toBe(true)
+  })
+})
 
 describe('getIRRFRate', () => {
   it('should return 0 for income in the first bracket (<= 2259.20)', () => {
-    expect(getIRRFRate(2259.20)).toBe(0);
-    expect(getIRRFRate(1000)).toBe(0);
-    expect(getIRRFRate(0)).toBe(0);
-    expect(getIRRFRate(-500)).toBe(0);
-  });
+    expect(getIRRFRate(2259.2)).toBe(0)
+    expect(getIRRFRate(1000)).toBe(0)
+    expect(getIRRFRate(0)).toBe(0)
+    expect(getIRRFRate(-500)).toBe(0)
+  })
 
   it('should return 0.075 for income in the second bracket (2259.21 to 2826.65)', () => {
-    expect(getIRRFRate(2259.21)).toBe(0.075);
-    expect(getIRRFRate(2500)).toBe(0.075);
-    expect(getIRRFRate(2826.65)).toBe(0.075);
-  });
+    expect(getIRRFRate(2259.21)).toBe(0.075)
+    expect(getIRRFRate(2500)).toBe(0.075)
+    expect(getIRRFRate(2826.65)).toBe(0.075)
+  })
 
   it('should return 0.15 for income in the third bracket (2826.66 to 3751.05)', () => {
-    expect(getIRRFRate(2826.66)).toBe(0.15);
-    expect(getIRRFRate(3000)).toBe(0.15);
-    expect(getIRRFRate(3751.05)).toBe(0.15);
-  });
+    expect(getIRRFRate(2826.66)).toBe(0.15)
+    expect(getIRRFRate(3000)).toBe(0.15)
+    expect(getIRRFRate(3751.05)).toBe(0.15)
+  })
 
   it('should return 0.225 for income in the fourth bracket (3751.06 to 4664.68)', () => {
-    expect(getIRRFRate(3751.06)).toBe(0.225);
-    expect(getIRRFRate(4000)).toBe(0.225);
-    expect(getIRRFRate(4664.68)).toBe(0.225);
-  });
+    expect(getIRRFRate(3751.06)).toBe(0.225)
+    expect(getIRRFRate(4000)).toBe(0.225)
+    expect(getIRRFRate(4664.68)).toBe(0.225)
+  })
 
   it('should return 0.275 for income in the fifth bracket (>= 4664.69)', () => {
-    expect(getIRRFRate(4664.69)).toBe(0.275);
-    expect(getIRRFRate(5000)).toBe(0.275);
-    expect(getIRRFRate(10000)).toBe(0.275);
-  });
-});
+    expect(getIRRFRate(4664.69)).toBe(0.275)
+    expect(getIRRFRate(5000)).toBe(0.275)
+    expect(getIRRFRate(10000)).toBe(0.275)
+  })
+})
