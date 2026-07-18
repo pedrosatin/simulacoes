@@ -427,6 +427,17 @@ small {
   margin-bottom: 8px;
 }
 
+.footer-credito {
+  font-size: 0.85rem;
+  color: #808080;
+  margin-top: 12px;
+}
+
+.footer-credito a {
+  color: #a0a0a0;
+  text-decoration: underline;
+}
+
 .disclaimer {
   font-size: 0.8rem !important;
   color: #666 !important;
