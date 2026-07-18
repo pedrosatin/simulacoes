@@ -4,7 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
+    "format": "oxfmt '**/*.{js,mjs,cjs,css}'",
+    "format:check": "oxfmt --check '**/*.{js,mjs,cjs,css}'"
   },
   "repository": {
     "type": "git",
@@ -20,6 +24,8 @@
   "homepage": "https://github.com/pedrosatin/simulacoes#readme",
   "devDependencies": {
     "jest": "^30.4.2",
-    "jest-environment-jsdom": "^30.4.1"
+    "jest-environment-jsdom": "^30.4.1",
+    "oxfmt": "^0.59.0",
+    "oxlint": "^1.74.0"
   }
 }
