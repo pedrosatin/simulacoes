@@ -23,13 +23,13 @@ function calculateINSS(grossSalary) {
 
     const bracketSalary = Math.min(
       remainingSalary,
-      bracketMax - bracketMin + (bracketMin === 0 ? 0 : 0.01)
+      bracketMax - bracketMin + (bracketMin === 0 ? 0 : 0.01),
     )
 
     if (grossSalary > bracketMin) {
       const taxableInThisBracket = Math.min(
         grossSalary - bracketMin,
-        bracketMax - bracketMin + (bracketMin === 0 ? 0 : 0.01)
+        bracketMax - bracketMin + (bracketMin === 0 ? 0 : 0.01),
       )
       inss += taxableInThisBracket * bracketRate
     }
@@ -219,24 +219,23 @@ document.addEventListener('DOMContentLoaded', function () {
   function displayResults(results) {
     // Salário bruto e líquido
     document.getElementById('displayGrossSalary').textContent = formatCurrency(
-      results.grossSalary
+      results.grossSalary,
     )
     document.getElementById('displayNetSalary').textContent = formatCurrency(
-      results.netSalary
+      results.netSalary,
     )
     document.getElementById('displayTotalDeductions').textContent =
       formatCurrency(results.totalDeductions)
 
     // Descontos obrigatórios
     document.getElementById('inssDeduction').textContent = formatCurrency(
-      results.inss.value
+      results.inss.value,
     )
-    document.getElementById('inssRate').textContent = `(${(
-      results.inss.rate * 100
-    ).toFixed(1)}%)`
+    document.getElementById('inssRate').textContent =
+      `(${(results.inss.rate * 100).toFixed(1)}%)`
 
     document.getElementById('irrfDeduction').textContent = formatCurrency(
-      results.irrf.value
+      results.irrf.value,
     )
     document.getElementById('irrfRate').textContent =
       results.irrf.rate > 0
@@ -270,7 +269,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       // Vale transporte
       const transportVoucherDiv = document.getElementById(
-        'transportVoucherDeduction'
+        'transportVoucherDeduction',
       )
       if (results.optional.transportVoucher > 0) {
         transportVoucherDiv.style.display = 'flex'
@@ -282,7 +281,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       // Outros descontos
       const otherDeductionsDiv = document.getElementById(
-        'otherDeductionsDeduction'
+        'otherDeductionsDeduction',
       )
       if (results.optional.otherDeductions > 0) {
         otherDeductionsDiv.style.display = 'flex'
@@ -311,10 +310,10 @@ document.addEventListener('DOMContentLoaded', function () {
       healthPlan: parseCurrency(document.getElementById('healthPlan').value),
       mealVoucher: parseCurrency(document.getElementById('mealVoucher').value),
       transportVoucher: parseCurrency(
-        document.getElementById('transportVoucher').value
+        document.getElementById('transportVoucher').value,
       ),
       otherDeductions: parseCurrency(
-        document.getElementById('otherDeductions').value
+        document.getElementById('otherDeductions').value,
       ),
     }
 
@@ -340,5 +339,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // Exportar para testes (apenas se estiver em ambiente Node.js)
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { calculateINSS, getINSSRate, inssTable, calculateNetSalary, calculateIRRF, getIRRFRate, validateTransportVoucher }
+  module.exports = {
+    calculateINSS,
+    getINSSRate,
+    inssTable,
+    calculateNetSalary,
+    calculateIRRF,
+    getIRRFRate,
+    validateTransportVoucher,
+  }
 }

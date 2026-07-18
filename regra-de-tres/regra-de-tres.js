@@ -68,7 +68,7 @@ class RegraDeTresCalculadora {
       const input = document.getElementById(id)
       if (input) {
         input.addEventListener('input', () =>
-          this.calcularProporcaoPorcentual()
+          this.calcularProporcaoPorcentual(),
         )
       }
     })
@@ -173,10 +173,13 @@ class RegraDeTresCalculadora {
     }
 
     if (!this._numberFormatters.has(decimals)) {
-      this._numberFormatters.set(decimals, new Intl.NumberFormat('pt-BR', {
-        minimumFractionDigits: decimals,
-        maximumFractionDigits: decimals,
-      }))
+      this._numberFormatters.set(
+        decimals,
+        new Intl.NumberFormat('pt-BR', {
+          minimumFractionDigits: decimals,
+          maximumFractionDigits: decimals,
+        }),
+      )
     }
 
     return this._numberFormatters.get(decimals).format(value)
@@ -214,7 +217,7 @@ class RegraDeTresCalculadora {
    */
   calcularPorcentagem1() {
     const percentual = this.parseNumber(
-      document.getElementById('percentual1').value
+      document.getElementById('percentual1').value,
     )
     const valor = this.parseNumber(document.getElementById('valor1').value)
 
@@ -222,7 +225,7 @@ class RegraDeTresCalculadora {
 
     document.getElementById('resultado1').textContent = this.formatNumber(
       resultado,
-      2
+      2,
     )
   }
 
@@ -231,10 +234,10 @@ class RegraDeTresCalculadora {
    */
   calcularAumentoDesconto() {
     const valorBase = this.parseNumber(
-      document.getElementById('valorBase').value
+      document.getElementById('valorBase').value,
     )
     const percentual = this.parseNumber(
-      document.getElementById('percentualMudanca').value
+      document.getElementById('percentualMudanca').value,
     )
 
     const isAumento =
@@ -248,18 +251,18 @@ class RegraDeTresCalculadora {
     // Atualizar elementos
     document.getElementById('valorOriginal').textContent = this.formatNumber(
       valorBase,
-      2
+      2,
     )
     document.getElementById('tipoMudanca').textContent = isAumento
       ? 'Aumento:'
       : 'Desconto:'
     document.getElementById('valorMudanca').textContent = this.formatNumber(
       valorMudanca,
-      2
+      2,
     )
     document.getElementById('valorFinal').textContent = this.formatNumber(
       valorFinal,
-      2
+      2,
     )
 
     // Colorir valor final baseado no tipo
@@ -286,10 +289,10 @@ class RegraDeTresCalculadora {
    */
   calcularProporcaoPorcentual() {
     const valorParte = this.parseNumber(
-      document.getElementById('valorParte').value
+      document.getElementById('valorParte').value,
     )
     const valorTotal = this.parseNumber(
-      document.getElementById('valorTotal').value
+      document.getElementById('valorTotal').value,
     )
 
     if (valorTotal === 0) {
@@ -306,15 +309,11 @@ class RegraDeTresCalculadora {
       this.formatNumber(porcentagem, 1) + '%'
 
     // Atualizar explicação
-    document.getElementById(
-      'explicacaoCalculo'
-    ).textContent = `${this.formatNumber(
-      valorParte,
-      2
-    )} representa ${this.formatNumber(porcentagem, 1)}% de ${this.formatNumber(
-      valorTotal,
-      2
-    )}`
+    document.getElementById('explicacaoCalculo').textContent =
+      `${this.formatNumber(
+        valorParte,
+        2,
+      )} representa ${this.formatNumber(porcentagem, 1)}% de ${this.formatNumber(valorTotal, 2)}`
 
     // Animar resultado
     this.animateResult(document.getElementById('resultadoPorcentagem'))
@@ -331,7 +330,6 @@ class RegraDeTresCalculadora {
       element.style.transform = 'scale(1)'
     }, 200)
   }
-
 }
 
 // Inicializar quando o DOM estiver carregado
