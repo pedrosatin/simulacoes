@@ -1,10 +1,17 @@
-const { calculateSalaryBalance, calculatePriorNotice, calculateFGTSPenalty, calculateProportionalVacation, calculateThirteenthSalary, CONSTANTS } = require('./rescisao-trabalhista.js')
+const {
+  calculateSalaryBalance,
+  calculatePriorNotice,
+  calculateFGTSPenalty,
+  calculateProportionalVacation,
+  calculateThirteenthSalary,
+  CONSTANTS,
+} = require('./rescisao-trabalhista.js')
 
 describe('calculateSalaryBalance', () => {
   it('should correctly calculate the salary balance for a mid-month rescision', () => {
     const dados = {
       salario: 3000,
-      dataRescisao: new Date(2023, 9, 15) // Oct 15
+      dataRescisao: new Date(2023, 9, 15), // Oct 15
     }
     // Expected: (3000 / 30) * 15 = 1500
     const result = calculateSalaryBalance(dados)
@@ -14,7 +21,7 @@ describe('calculateSalaryBalance', () => {
   it('should correctly calculate the salary balance for a rescision on the 1st day of the month', () => {
     const dados = {
       salario: 3000,
-      dataRescisao: new Date(2023, 9, 1) // Oct 1
+      dataRescisao: new Date(2023, 9, 1), // Oct 1
     }
     // Expected: (3000 / 30) * 1 = 100
     const result = calculateSalaryBalance(dados)
@@ -24,7 +31,7 @@ describe('calculateSalaryBalance', () => {
   it('should correctly calculate the salary balance for a rescision on the last day of a 31-day month', () => {
     const dados = {
       salario: 3000,
-      dataRescisao: new Date(2023, 9, 31) // Oct 31
+      dataRescisao: new Date(2023, 9, 31), // Oct 31
     }
     // Expected: (3000 / 30) * 31 = 3100
     const result = calculateSalaryBalance(dados)
@@ -34,7 +41,7 @@ describe('calculateSalaryBalance', () => {
   it('should correctly calculate the salary balance for a rescision on the last day of a 28-day month (February)', () => {
     const dados = {
       salario: 3000,
-      dataRescisao: new Date(2023, 1, 28) // Feb 28
+      dataRescisao: new Date(2023, 1, 28), // Feb 28
     }
     // Expected: (3000 / 30) * 28 = 2800
     const result = calculateSalaryBalance(dados)
@@ -43,8 +50,8 @@ describe('calculateSalaryBalance', () => {
 
   it('should correctly calculate the salary balance with a decimal salary', () => {
     const dados = {
-      salario: 1518.50,
-      dataRescisao: new Date(2023, 9, 15) // Oct 15
+      salario: 1518.5,
+      dataRescisao: new Date(2023, 9, 15), // Oct 15
     }
     // Expected: (1518.50 / 30) * 15 = 759.25
     const result = calculateSalaryBalance(dados)
@@ -54,7 +61,7 @@ describe('calculateSalaryBalance', () => {
   it('should correctly rely on CONSTANTS.DIAS_MES instead of the actual number of days in the month', () => {
     const dados = {
       salario: 3000,
-      dataRescisao: new Date(2023, 1, 15) // Feb 15
+      dataRescisao: new Date(2023, 1, 15), // Feb 15
     }
     // Despite being February (28 days), the formula uses CONSTANTS.DIAS_MES (30 days)
     // Expected: (3000 / 30) * 15 = 1500
@@ -65,7 +72,7 @@ describe('calculateSalaryBalance', () => {
   it('should return 0 when salary is 0', () => {
     const dados = {
       salario: 0,
-      dataRescisao: new Date(2023, 9, 15) // Oct 15
+      dataRescisao: new Date(2023, 9, 15), // Oct 15
     }
     const result = calculateSalaryBalance(dados)
     expect(result).toBe(0)
@@ -89,24 +96,41 @@ describe('calculateFGTSPenalty', () => {
   })
 
   it('should calculate 40% penalty for demissao-sem-justa-causa', () => {
-    const dados = { tipoRescisao: 'demissao-sem-justa-causa', saldoFGTS: 1000, saqueAniversario: false }
+    const dados = {
+      tipoRescisao: 'demissao-sem-justa-causa',
+      saldoFGTS: 1000,
+      saqueAniversario: false,
+    }
     expect(calculateFGTSPenalty(dados)).toBe(400) // 1000 * 0.4
   })
 
   it('should calculate 20% penalty for acordo', () => {
-    const dados = { tipoRescisao: 'acordo', saldoFGTS: 1000, saqueAniversario: false }
+    const dados = {
+      tipoRescisao: 'acordo',
+      saldoFGTS: 1000,
+      saqueAniversario: false,
+    }
     expect(calculateFGTSPenalty(dados)).toBe(200) // 1000 * 0.2
   })
 
   it('should calculate 20% penalty for demissao-sem-justa-causa when saqueAniversario is true', () => {
-    const dados = { tipoRescisao: 'demissao-sem-justa-causa', saldoFGTS: 1000, saqueAniversario: true }
+    const dados = {
+      tipoRescisao: 'demissao-sem-justa-causa',
+      saldoFGTS: 1000,
+      saqueAniversario: true,
+    }
     expect(calculateFGTSPenalty(dados)).toBe(200) // 1000 * 0.2
   })
 })
 
 describe('calculateThirteenthSalary', () => {
   it('should return 0 for demissao-justa-causa', () => {
-    const dados = { tipoRescisao: 'demissao-justa-causa', salario: 3000, dataAdmissao: new Date(2022, 0, 1), dataRescisao: new Date(2023, 11, 31) }
+    const dados = {
+      tipoRescisao: 'demissao-justa-causa',
+      salario: 3000,
+      dataAdmissao: new Date(2022, 0, 1),
+      dataRescisao: new Date(2023, 11, 31),
+    }
     expect(calculateThirteenthSalary(dados)).toBe(0)
   })
 
@@ -115,7 +139,7 @@ describe('calculateThirteenthSalary', () => {
       tipoRescisao: 'demissao-sem-justa-causa',
       salario: 1200,
       dataAdmissao: new Date(2023, 0, 1), // Jan 1st
-      dataRescisao: new Date(2023, 1, 15) // Feb 15th
+      dataRescisao: new Date(2023, 1, 15), // Feb 15th
     }
     // Expected: 2 months (Jan, Feb). 1200 / 12 * 2 = 200
     expect(calculateThirteenthSalary(dados)).toBe(200)
@@ -126,7 +150,7 @@ describe('calculateThirteenthSalary', () => {
       tipoRescisao: 'demissao-sem-justa-causa',
       salario: 1200,
       dataAdmissao: new Date(2023, 0, 1), // Jan 1st
-      dataRescisao: new Date(2023, 1, 14) // Feb 14th
+      dataRescisao: new Date(2023, 1, 14), // Feb 14th
     }
     // Expected: 1 month (Jan). Feb has < 15 days. 1200 / 12 * 1 = 100
     expect(calculateThirteenthSalary(dados)).toBe(100)
@@ -137,7 +161,7 @@ describe('calculateThirteenthSalary', () => {
       tipoRescisao: 'demissao-sem-justa-causa',
       salario: 1200,
       dataAdmissao: new Date(2022, 5, 10), // Jun 10, previous year
-      dataRescisao: new Date(2023, 2, 15) // Mar 15th
+      dataRescisao: new Date(2023, 2, 15), // Mar 15th
     }
     // Expected: 3 months (Jan, Feb, Mar). 1200 / 12 * 3 = 300
     expect(calculateThirteenthSalary(dados)).toBe(300)
@@ -148,7 +172,7 @@ describe('calculateThirteenthSalary', () => {
       tipoRescisao: 'demissao-sem-justa-causa',
       salario: 1200,
       dataAdmissao: new Date(2022, 5, 10), // Jun 10, previous year
-      dataRescisao: new Date(2023, 2, 14) // Mar 14th
+      dataRescisao: new Date(2023, 2, 14), // Mar 14th
     }
     // Expected: 2 months (Jan, Feb). 1200 / 12 * 2 = 200
     expect(calculateThirteenthSalary(dados)).toBe(200)
@@ -159,7 +183,7 @@ describe('calculateThirteenthSalary', () => {
       tipoRescisao: 'demissao-sem-justa-causa',
       salario: 1200,
       dataAdmissao: new Date(2023, 5, 1), // Jun 1st
-      dataRescisao: new Date(2023, 5, 14) // Jun 14th
+      dataRescisao: new Date(2023, 5, 14), // Jun 14th
     }
     // Expected: 0 months. 1200 / 12 * 0 = 0
     expect(calculateThirteenthSalary(dados)).toBe(0)
@@ -170,7 +194,7 @@ describe('calculateThirteenthSalary', () => {
       tipoRescisao: 'demissao-sem-justa-causa',
       salario: 2400,
       dataAdmissao: new Date(2023, 10, 1), // Nov 1st
-      dataRescisao: new Date(2023, 11, 31) // Dec 31st
+      dataRescisao: new Date(2023, 11, 31), // Dec 31st
     }
     // Expected: 2 months (Nov, Dec). 2400 / 12 * 2 = 400
     expect(calculateThirteenthSalary(dados)).toBe(400)
@@ -185,41 +209,65 @@ describe('calculatePriorNotice', () => {
   })
 
   it('should return 0 for pedido-demissao when 0 notice is given', () => {
-    const dados = { tipoRescisao: 'pedido-demissao', salario: 3000, diasAviso: 0 }
+    const dados = {
+      tipoRescisao: 'pedido-demissao',
+      salario: 3000,
+      diasAviso: 0,
+    }
     const periodo = { anos: 2 }
     expect(calculatePriorNotice(dados, periodo)).toBe(0)
   })
 
   it('should calculate correctly for pedido-demissao when notice is given partially', () => {
-    const dados = { tipoRescisao: 'pedido-demissao', salario: 3000, diasAviso: 10 }
+    const dados = {
+      tipoRescisao: 'pedido-demissao',
+      salario: 3000,
+      diasAviso: 10,
+    }
     const periodo = { anos: 2 } // 30 + 6 = 36 days. 36 - 10 = 26 days to be paid
     // expected: (3000 / 30) * 26 = 2600
     expect(calculatePriorNotice(dados, periodo)).toBe(2600)
   })
 
   it('should calculate base 30 days for demissao-sem-justa-causa with 0 years worked', () => {
-    const dados = { tipoRescisao: 'demissao-sem-justa-causa', salario: 3000, diasAviso: 0 }
+    const dados = {
+      tipoRescisao: 'demissao-sem-justa-causa',
+      salario: 3000,
+      diasAviso: 0,
+    }
     const periodo = { anos: 0 }
     // expected: (3000 / 30) * 30 = 3000
     expect(calculatePriorNotice(dados, periodo)).toBe(3000)
   })
 
   it('should add 3 days per year worked for demissao-sem-justa-causa', () => {
-    const dados = { tipoRescisao: 'demissao-sem-justa-causa', salario: 3000, diasAviso: 0 }
+    const dados = {
+      tipoRescisao: 'demissao-sem-justa-causa',
+      salario: 3000,
+      diasAviso: 0,
+    }
     const periodo = { anos: 5 } // 30 + 15 = 45 days
     // expected: (3000 / 30) * 45 = 4500
     expect(calculatePriorNotice(dados, periodo)).toBe(4500)
   })
 
   it('should cap the prior notice at 90 days', () => {
-    const dados = { tipoRescisao: 'demissao-sem-justa-causa', salario: 3000, diasAviso: 0 }
+    const dados = {
+      tipoRescisao: 'demissao-sem-justa-causa',
+      salario: 3000,
+      diasAviso: 0,
+    }
     const periodo = { anos: 25 } // 30 + 75 = 105 days, capped at 90
     // expected: (3000 / 30) * 90 = 9000
     expect(calculatePriorNotice(dados, periodo)).toBe(9000)
   })
 
   it('should subtract worked days from the total notice days', () => {
-    const dados = { tipoRescisao: 'demissao-sem-justa-causa', salario: 3000, diasAviso: 15 }
+    const dados = {
+      tipoRescisao: 'demissao-sem-justa-causa',
+      salario: 3000,
+      diasAviso: 15,
+    }
     const periodo = { anos: 3 } // 30 + 9 = 39 days. 39 - 15 = 24 days
     // expected: (3000 / 30) * 24 = 2400
     expect(calculatePriorNotice(dados, periodo)).toBe(2400)
@@ -246,7 +294,7 @@ describe('calculateProportionalVacation', () => {
       tipoRescisao: 'demissao-justa-causa',
       salario: 3000,
       dataAdmissao: new Date(2022, 0, 1),
-      dataRescisao: new Date(2023, 6, 1)
+      dataRescisao: new Date(2023, 6, 1),
     }
     const periodo = { anos: 1 }
     expect(calculateProportionalVacation(dados, periodo)).toBe(0)
@@ -257,7 +305,7 @@ describe('calculateProportionalVacation', () => {
       tipoRescisao: 'demissao-sem-justa-causa',
       salario: 3000,
       dataAdmissao: new Date(2022, 0, 1), // Jan 1, 2022
-      dataRescisao: new Date(2023, 0, 14) // Jan 14, 2023 (13 days diff since Jan 1)
+      dataRescisao: new Date(2023, 0, 14), // Jan 14, 2023 (13 days diff since Jan 1)
     }
     const periodo = { anos: 1 }
     // Expected: 0 months. (3000 / 12) * 0 = 0. + 1/3 = 0. Total = 0.
@@ -269,7 +317,7 @@ describe('calculateProportionalVacation', () => {
       tipoRescisao: 'demissao-sem-justa-causa',
       salario: 3000,
       dataAdmissao: new Date(2022, 0, 1), // Jan 1, 2022
-      dataRescisao: new Date(2023, 0, 16) // Jan 16, 2023 (15 days diff since Jan 1)
+      dataRescisao: new Date(2023, 0, 16), // Jan 16, 2023 (15 days diff since Jan 1)
     }
     const periodo = { anos: 1 }
     // Expected: 1 month. (3000 / 12) * 1 = 250. + 1/3 = 83.33. Total = 333.33...
@@ -283,7 +331,7 @@ describe('calculateProportionalVacation', () => {
       tipoRescisao: 'demissao-sem-justa-causa',
       salario: 3000,
       dataAdmissao: new Date(2022, 0, 1), // Jan 1, 2022
-      dataRescisao: new Date(2023, 2, 14) // Mar 14, 2023 (2 months, 13 days diff since Jan 1)
+      dataRescisao: new Date(2023, 2, 14), // Mar 14, 2023 (2 months, 13 days diff since Jan 1)
     }
     const periodo = { anos: 1 }
     // Note: Feb has 28 days usually. But let's see how the diff math is calculated:
@@ -301,7 +349,7 @@ describe('calculateProportionalVacation', () => {
       tipoRescisao: 'demissao-sem-justa-causa',
       salario: 3000,
       dataAdmissao: new Date(2022, 0, 1), // Jan 1, 2022
-      dataRescisao: new Date(2023, 2, 17) // Mar 17, 2023 (2 months, 16 days diff since Jan 1)
+      dataRescisao: new Date(2023, 2, 17), // Mar 17, 2023 (2 months, 16 days diff since Jan 1)
     }
     const periodo = { anos: 1 }
     // Mar 17 - Jan 1 = 75 days diff

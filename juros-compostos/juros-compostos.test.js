@@ -31,7 +31,7 @@ describe('JurosMath', () => {
       // 1000 * 1.01^12 ≈ 1126.825
       expect(JurosMath.compoundInterest(1000, 0.01, 12)).toBeCloseTo(
         1126.8250301,
-        5
+        5,
       )
     })
 
@@ -53,7 +53,7 @@ describe('JurosMath', () => {
       // 100 * ((1.01^12 - 1) / 0.01) ≈ 1268.250
       expect(JurosMath.futureValueOfContributions(100, 0.01, 12)).toBeCloseTo(
         1268.250301,
-        4
+        4,
       )
     })
 
@@ -68,7 +68,7 @@ describe('JurosMath', () => {
       const contrib = JurosMath.futureValueOfContributions(100, 0.01, 12)
       expect(JurosMath.futureValue(1000, 100, 0.01, 12)).toBeCloseTo(
         only + contrib,
-        6
+        6,
       )
     })
   })
