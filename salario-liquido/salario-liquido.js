@@ -87,7 +87,7 @@ function getIRRFRate(taxableIncome) {
 // Validar vale transporte (máximo 6% do salário bruto)
 function validateTransportVoucher(transportValue, grossSalary) {
   const maxTransport = grossSalary * 0.06
-  return Math.min(transportValue, maxTransport)
+  return Math.max(0, Math.min(transportValue, maxTransport))
 }
 
 // Calcular salário líquido
