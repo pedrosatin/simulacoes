@@ -35,6 +35,26 @@ describe('getINSSRate', () => {
   it('should return 0 for negative salary', () => {
     expect(getINSSRate(-100)).toBe(0)
   })
+
+  it('should handle edge case data types gracefully based on JS coercion', () => {
+    // null >= 0 is true, so it hits the first bracket
+    expect(getINSSRate(null)).toBe(0.075)
+
+    // undefined and NaN comparisons yield false, returning 0
+    expect(getINSSRate(undefined)).toBe(0)
+    expect(getINSSRate(NaN)).toBe(0)
+
+    // string '1000' >= 0 is true, treated as 1000
+    expect(getINSSRate('1000')).toBe(0.075)
+
+    // non-numeric string comparisons yield false
+    expect(getINSSRate('invalid')).toBe(0)
+  })
+
+  it('should return correct rates for very large numbers', () => {
+    expect(getINSSRate(1000000)).toBe(0.14)
+    expect(getINSSRate(Number.MAX_SAFE_INTEGER)).toBe(0.14)
+  })
 })
 
 describe('calculateINSS', () => {
