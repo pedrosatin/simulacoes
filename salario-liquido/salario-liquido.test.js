@@ -309,4 +309,8 @@ describe('getIRRFRate', () => {
     expect(getIRRFRate(5000)).toBe(0.275)
     expect(getIRRFRate(10000)).toBe(0.275)
   })
+
+  it('should return 0 for invalid inputs like NaN', () => {
+    expect(getIRRFRate(NaN)).toBe(0)
+  })
 })
