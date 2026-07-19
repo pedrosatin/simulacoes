@@ -1,6 +1,113 @@
-const { FinancialCalculator, SelicAPI } = require('../a-vista-vs-parcelado.js')
+const { FinancialCalculator, SelicAPI, Utils } = require('../a-vista-vs-parcelado.js')
+
+describe('Utils', () => {
+  describe('parseCurrencyInput', () => {
+    it('should correctly parse standard formatted strings', () => {
+      expect(Utils.parseCurrencyInput('1234,56')).toBe(1234.56)
+      expect(Utils.parseCurrencyInput('1.234,56')).toBe(1234.56)
+      expect(Utils.parseCurrencyInput('1.234.567,89')).toBe(1234567.89)
+    })
+
+    it('should correctly parse strings with currency symbols and spaces', () => {
+      expect(Utils.parseCurrencyInput('R$ 1.234,56')).toBe(1234.56)
+      expect(Utils.parseCurrencyInput('R$1234,56')).toBe(1234.56)
+      expect(Utils.parseCurrencyInput('  1234,56  ')).toBe(1234.56)
+      expect(Utils.parseCurrencyInput('R$ 1.234.567,89')).toBe(1234567.89)
+    })
+
+    it('should correctly parse integer strings without decimals', () => {
+      expect(Utils.parseCurrencyInput('1234')).toBe(1234)
+      expect(Utils.parseCurrencyInput('R$ 1234')).toBe(1234)
+      expect(Utils.parseCurrencyInput('1.234')).toBe(1234)
+    })
+
+    it('should handle zero values correctly', () => {
+      expect(Utils.parseCurrencyInput('0')).toBe(0)
+      expect(Utils.parseCurrencyInput('0,00')).toBe(0)
+      expect(Utils.parseCurrencyInput('R$ 0,00')).toBe(0)
+    })
+
+    it('should return 0 for non-numeric string formats', () => {
+      expect(Utils.parseCurrencyInput('abc')).toBe(0)
+      expect(Utils.parseCurrencyInput('R$ abc')).toBe(0)
+      expect(Utils.parseCurrencyInput('')).toBe(0)
+      expect(Utils.parseCurrencyInput('   ')).toBe(0)
+    })
+
+    it('should return the original value if not a string', () => {
+      expect(Utils.parseCurrencyInput(1234.56)).toBe(1234.56)
+      expect(Utils.parseCurrencyInput(null)).toBeNull()
+      expect(Utils.parseCurrencyInput(undefined)).toBeUndefined()
+      const obj = {}
+      expect(Utils.parseCurrencyInput(obj)).toBe(obj)
+    })
+  })
+})
 
 describe('FinancialCalculator', () => {
+  describe('annualToMonthlyRate', () => {
+    const { annualToMonthlyRate } = FinancialCalculator
+
+    it('should correctly convert 0% annual rate to 0% monthly rate', () => {
+      expect(annualToMonthlyRate(0)).toBeCloseTo(0, 10)
+    })
+
+    it('should correctly convert 100% annual rate to ~5.946% monthly rate', () => {
+      // (1 + 100/100)^(1/12) - 1 = 2^(1/12) - 1 ≈ 0.059463
+      expect(annualToMonthlyRate(100)).toBeCloseTo(0.059463, 6)
+    })
+
+    it('should correctly convert a typical Selic rate (e.g. 10.47%) to a monthly rate', () => {
+      // (1 + 10.47/100)^(1/12) - 1 ≈ 0.0083323...
+      expect(annualToMonthlyRate(10.47)).toBeCloseTo(0.0083323, 6)
+    })
+
+    it('should correctly convert a negative annual rate', () => {
+      // (1 + -10/100)^(1/12) - 1 = 0.9^(1/12) - 1 ≈ -0.0087416...
+      expect(annualToMonthlyRate(-10)).toBeCloseTo(-0.0087416, 6)
+    })
+  })
+
+  describe('generateRecommendation', () => {
+    const { generateRecommendation } = FinancialCalculator
+
+    it('should return correct recommendation when cash is better and savings > 10%', () => {
+      const savings = 500
+      const expectedText = `Comprar à vista é muito mais vantajoso! Você economizará ${Utils.formatCurrency(savings)} investindo a diferença na Selic durante 12 meses.`
+      expect(generateRecommendation(true, savings, 11, 12)).toBe(expectedText)
+    })
+
+    it('should return correct recommendation when cash is better and 5% < savings <= 10%', () => {
+      const savings = 300
+      const expectedText = `Comprar à vista é mais vantajoso. A economia de ${Utils.formatCurrency(savings)} compensa o investimento na Selic.`
+      expect(generateRecommendation(true, savings, 8, 12)).toBe(expectedText)
+    })
+
+    it('should return correct recommendation when cash is better and savings <= 5%', () => {
+      const savings = 100
+      const expectedText = `Comprar à vista é ligeiramente melhor, mas a diferença é pequena (${Utils.formatCurrency(savings)}). Considere sua disponibilidade de caixa.`
+      expect(generateRecommendation(true, savings, 4, 12)).toBe(expectedText)
+    })
+
+    it('should return correct recommendation when installment is better and savings > 10%', () => {
+      const savings = 600
+      const expectedText = `Parcelar é muito mais vantajoso! Você terá ${Utils.formatCurrency(savings)} a mais investindo na Selic ao invés de pagar à vista.`
+      expect(generateRecommendation(false, savings, 12, 12)).toBe(expectedText)
+    })
+
+    it('should return correct recommendation when installment is better and 5% < savings <= 10%', () => {
+      const savings = 350
+      const expectedText = `Parcelar é mais vantajoso. Você ganha ${Utils.formatCurrency(savings)} a mais mantendo o dinheiro investido.`
+      expect(generateRecommendation(false, savings, 7, 12)).toBe(expectedText)
+    })
+
+    it('should return correct recommendation when installment is better and savings <= 5%', () => {
+      const savings = 150
+      const expectedText = `Parcelar é ligeiramente melhor, mas a diferença é pequena (${Utils.formatCurrency(savings)}). Avalie sua preferência pessoal.`
+      expect(generateRecommendation(false, savings, 2, 12)).toBe(expectedText)
+    })
+  })
+
   describe('calculateCompoundInterest', () => {
     it('should correctly calculate compound interest for basic values', () => {
       // principal: 1000, monthlyRate: 1% (0.01), months: 12
