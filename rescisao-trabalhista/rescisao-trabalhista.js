@@ -570,52 +570,51 @@ function updateObservations(dados) {
   const observacoesList = document.getElementById('observacoes')
 
   // Limpa observações anteriores
-  observacoesList.innerHTML = ''
+  observacoesList.textContent = ''
+
+  const addObservation = (text) => {
+    const li = document.createElement('li')
+    li.textContent = text
+    observacoesList.appendChild(li)
+  }
 
   // Observações gerais
-  observacoesList.innerHTML +=
-    '<li>Os valores são brutos, antes dos descontos de INSS e IRRF</li>'
-  observacoesList.innerHTML +=
-    '<li>FGTS será depositado na conta vinculada</li>'
+  addObservation('Os valores são brutos, antes dos descontos de INSS e IRRF')
+  addObservation('FGTS será depositado na conta vinculada')
 
   // Observações específicas por tipo
   switch (dados.tipoRescisao) {
     case 'demissao-sem-justa-causa':
-      observacoesList.innerHTML += '<li>Direito ao seguro-desemprego</li>'
-      observacoesList.innerHTML +=
-        '<li>Liberação total do FGTS + multa de 40%</li>'
+      addObservation('Direito ao seguro-desemprego')
+      addObservation('Liberação total do FGTS + multa de 40%')
       if (dados.saqueAniversario) {
-        observacoesList.innerHTML +=
-          '<li>Como optante do saque-aniversário, multa reduzida para 20%</li>'
+        addObservation('Como optante do saque-aniversário, multa reduzida para 20%')
       }
       break
 
     case 'demissao-justa-causa':
-      observacoesList.innerHTML += '<li>Sem direito ao seguro-desemprego</li>'
-      observacoesList.innerHTML += '<li>Sem liberação do FGTS</li>'
-      observacoesList.innerHTML +=
-        '<li>Direito apenas ao saldo de salário e férias vencidas (se houver)</li>'
+      addObservation('Sem direito ao seguro-desemprego')
+      addObservation('Sem liberação do FGTS')
+      addObservation('Direito apenas ao saldo de salário e férias vencidas (se houver)')
       break
 
     case 'pedido-demissao':
-      observacoesList.innerHTML += '<li>Sem direito ao seguro-desemprego</li>'
-      observacoesList.innerHTML += '<li>Sem multa do FGTS</li>'
-      observacoesList.innerHTML += '<li>FGTS permanece na conta vinculada</li>'
+      addObservation('Sem direito ao seguro-desemprego')
+      addObservation('Sem multa do FGTS')
+      addObservation('FGTS permanece na conta vinculada')
       break
 
     case 'acordo':
-      observacoesList.innerHTML += '<li>Saque de até 80% do FGTS</li>'
-      observacoesList.innerHTML += '<li>Multa reduzida para 20% do FGTS</li>'
-      observacoesList.innerHTML += '<li>Sem direito ao seguro-desemprego</li>'
-      observacoesList.innerHTML += '<li>Aviso prévio reduzido pela metade</li>'
+      addObservation('Saque de até 80% do FGTS')
+      addObservation('Multa reduzida para 20% do FGTS')
+      addObservation('Sem direito ao seguro-desemprego')
+      addObservation('Aviso prévio reduzido pela metade')
       break
   }
 
   // Observação sobre férias vencidas
   if (dados.feriasVencidas > 0) {
-    const li = document.createElement('li')
-    li.textContent = `Consideradas ${dados.feriasVencidas.toFixed(1)} período(s) de férias vencidas`
-    observacoesList.appendChild(li)
+    addObservation(`Consideradas ${dados.feriasVencidas.toFixed(1)} período(s) de férias vencidas`)
   }
 }
 
