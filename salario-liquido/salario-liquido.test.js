@@ -173,6 +173,53 @@ describe('calculateIRRF', () => {
     const irrf = calculateIRRF(-1000.0)
     expect(irrf).toBe(0)
   })
+
+  it('should handle boundary values for the first bracket (max 2259.20)', () => {
+    const irrf = calculateIRRF(2259.2)
+    expect(irrf).toBe(0)
+  })
+
+  it('should handle boundary values for the second bracket (min 2259.21, max 2826.65)', () => {
+    const irrfMin = calculateIRRF(2259.21)
+    expect(irrfMin).toBeCloseTo(0.00075, 5) // (2259.21 * 0.075) - 169.44 = 169.44075 - 169.44 = 0.00075
+
+    const irrfMax = calculateIRRF(2826.65)
+    expect(irrfMax).toBeCloseTo(42.55875, 5) // (2826.65 * 0.075) - 169.44 = 211.99875 - 169.44 = 42.55875
+  })
+
+  it('should handle boundary values for the third bracket (min 2826.66, max 3751.05)', () => {
+    const irrfMin = calculateIRRF(2826.66)
+    expect(irrfMin).toBeCloseTo(42.559, 3) // (2826.66 * 0.15) - 381.44 = 423.999 - 381.44 = 42.559
+
+    const irrfMax = calculateIRRF(3751.05)
+    expect(irrfMax).toBeCloseTo(181.2175, 4) // (3751.05 * 0.15) - 381.44 = 562.6575 - 381.44 = 181.2175
+  })
+
+  it('should handle boundary values for the fourth bracket (min 3751.06, max 4664.68)', () => {
+    const irrfMin = calculateIRRF(3751.06)
+    expect(irrfMin).toBeCloseTo(181.2185, 4) // (3751.06 * 0.225) - 662.77 = 843.9885 - 662.77 = 181.2185
+
+    const irrfMax = calculateIRRF(4664.68)
+    expect(irrfMax).toBeCloseTo(386.783, 3) // (4664.68 * 0.225) - 662.77 = 1049.553 - 662.77 = 386.783
+  })
+
+  it('should handle boundary values for the fifth bracket (min 4664.69, max Infinity)', () => {
+    const irrfMin = calculateIRRF(4664.69)
+    expect(irrfMin).toBeCloseTo(386.78975, 5) // (4664.69 * 0.275) - 896.0 = 1282.78975 - 896.0 = 386.78975
+
+    const irrfMax = calculateIRRF(Infinity)
+    expect(irrfMax).toBe(Infinity) // Infinity * 0.275 - 896.0 = Infinity
+  })
+
+  it('should return 0 for NaN', () => {
+    const irrf = calculateIRRF(NaN)
+    expect(irrf).toBe(0)
+  })
+
+  it('should return 0 for non-numeric strings', () => {
+    const irrf = calculateIRRF('invalid')
+    expect(irrf).toBe(0)
+  })
 })
 
 describe('calculateNetSalary', () => {

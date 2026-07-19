@@ -1,8 +1,8 @@
 node_modules/
 graphify-out/
+coverage/
 
 # Local workflow and generated artifacts
 .github/instructions/
-coverage/
 fallow.md
 .fallowrc.json
