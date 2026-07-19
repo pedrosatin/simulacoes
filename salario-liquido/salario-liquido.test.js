@@ -35,6 +35,12 @@ describe('getINSSRate', () => {
   it('should return 0 for negative salary', () => {
     expect(getINSSRate(-100)).toBe(0)
   })
+
+  it('should handle edge cases like NaN, null, and undefined', () => {
+    expect(getINSSRate(NaN)).toBe(0)
+    expect(getINSSRate(null)).toBe(0)
+    expect(getINSSRate(undefined)).toBe(0)
+  })
 })
 
 describe('calculateINSS', () => {
