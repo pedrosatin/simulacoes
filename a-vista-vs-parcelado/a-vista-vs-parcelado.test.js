@@ -4,6 +4,47 @@
 const { FinancialCalculator, Utils } = require('./a-vista-vs-parcelado.js')
 
 describe('Utils', () => {
+  describe('formatCurrencyInput', () => {
+    it('should return empty string for falsy values', () => {
+      expect(Utils.formatCurrencyInput('')).toBe('')
+      expect(Utils.formatCurrencyInput(null)).toBe('')
+      expect(Utils.formatCurrencyInput(undefined)).toBe('')
+      expect(Utils.formatCurrencyInput(0)).toBe('')
+    })
+
+    it('should format numeric string values correctly', () => {
+      // Space is a non-breaking space (U+00A0) in standard Intl.NumberFormat for pt-BR
+      const nbsp = '\u00A0'
+      expect(Utils.formatCurrencyInput('1234')).toBe(`R$${nbsp}1.234,00`)
+      expect(Utils.formatCurrencyInput('1234,56')).toBe(`R$${nbsp}1.234,56`)
+      expect(Utils.formatCurrencyInput('0,00')).toBe(`R$${nbsp}0,00`)
+      expect(Utils.formatCurrencyInput('0')).toBe(`R$${nbsp}0,00`)
+    })
+
+    it('should format number values correctly', () => {
+      const nbsp = '\u00A0'
+      expect(Utils.formatCurrencyInput(1234.56)).toBe(`R$${nbsp}1.234,56`)
+      expect(Utils.formatCurrencyInput(1234)).toBe(`R$${nbsp}1.234,00`)
+    })
+
+    it('should handle non-numeric inputs gracefully (returning formatted 0 for some strings, original value if parsing returns NaN)', () => {
+      const nbsp = '\u00A0'
+      expect(Utils.formatCurrencyInput('abc')).toBe(`R$${nbsp}0,00`)
+
+      // when Utils.parseCurrencyInput returns NaN, Utils.formatCurrencyInput returns the original value.
+      // We can force parseCurrencyInput to return NaN by passing something it can't handle or we can mock it.
+      // Note: parseCurrencyInput('abc') returns 0, so numericValue is 0 (not NaN).
+      // Let's mock parseCurrencyInput to simulate returning NaN.
+
+      const parseSpy = jest.spyOn(Utils, 'parseCurrencyInput').mockReturnValue(NaN);
+      try {
+        expect(Utils.formatCurrencyInput('anything')).toBe('anything');
+      } finally {
+        parseSpy.mockRestore();
+      }
+    })
+  })
+
   describe('parseCurrencyInput', () => {
     const { parseCurrencyInput } = Utils
 
@@ -45,6 +86,26 @@ describe('Utils', () => {
       expect(parseCurrencyInput(undefined)).toBeUndefined()
       const obj = {}
       expect(parseCurrencyInput(obj)).toBe(obj)
+    })
+
+    it('should correctly parse negative values', () => {
+      expect(parseCurrencyInput('-1234,56')).toBe(-1234.56)
+      expect(parseCurrencyInput('R$ -1.234,56')).toBe(-1234.56)
+      expect(parseCurrencyInput('-0,50')).toBe(-0.5)
+    })
+
+    it('should strip multiple spaces and random spaces inside strings', () => {
+      expect(parseCurrencyInput(' 1 2 3 , 4 5 ')).toBe(123.45)
+      expect(parseCurrencyInput('R$   1.234  ,  56')).toBe(1234.56)
+    })
+
+    it('should handle small fractional values', () => {
+      expect(parseCurrencyInput('0,0001')).toBe(0.0001)
+      expect(parseCurrencyInput('R$ 0,0001')).toBe(0.0001)
+    })
+
+    it('should handle strings with multiple commas gracefully by dropping subsequent parts', () => {
+      expect(parseCurrencyInput('1.234,56,78')).toBe(1234.56)
     })
   })
 })
