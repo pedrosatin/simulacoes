@@ -441,14 +441,20 @@ function calculateThirteenthSalary(dados, _periodo) {
 }
 
 /**
+ * Aplica o terço constitucional sobre o valor das férias
+ */
+function applyVacationBonus(valorFerias) {
+  const adicionalUmTerco = valorFerias * CONSTANTS.ADICIONAL_FERIAS
+  return valorFerias + adicionalUmTerco
+}
+
+/**
  * Calcula férias vencidas
  */
 function calculateVacationDue(dados) {
   // Justa causa só tem direito se as férias já estavam vencidas
   const valorFerias = dados.salario * dados.feriasVencidas
-  const adicionalUmTerco = valorFerias * CONSTANTS.ADICIONAL_FERIAS
-
-  return valorFerias + adicionalUmTerco
+  return applyVacationBonus(valorFerias)
 }
 
 /**
@@ -480,9 +486,7 @@ function calculateProportionalVacation(dados, _periodo) {
   const mesesAjustados = mesesProporcionais + (diasRestantes >= 15 ? 1 : 0)
 
   const valorFerias = (dados.salario / 12) * mesesAjustados
-  const adicionalUmTerco = valorFerias * CONSTANTS.ADICIONAL_FERIAS
-
-  return valorFerias + adicionalUmTerco
+  return applyVacationBonus(valorFerias)
 }
 
 /**
@@ -568,12 +572,6 @@ function updateObservations(dados) {
 
   // Limpa observações anteriores
   observacoesList.textContent = ''
-
-  const addObservation = (text) => {
-    const li = document.createElement('li')
-    li.textContent = text
-    observacoesList.appendChild(li)
-  }
 
   // Função auxiliar para adicionar observações de forma segura
   const addObservation = (text) => {
