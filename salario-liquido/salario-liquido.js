@@ -55,6 +55,10 @@ const dependentDeduction = 189.59 // Valor por dependente em 2025
 
 // Determinar alíquota do INSS para exibição
 function getINSSRate(grossSalary) {
+  if (typeof grossSalary !== 'number' || isNaN(grossSalary)) {
+    return 0
+  }
+
   for (let i = inssTable.length - 1; i >= 0; i--) {
     if (grossSalary >= inssTable[i].min) {
       return inssTable[i].rate
