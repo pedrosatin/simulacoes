@@ -365,11 +365,6 @@ function calculateRescisionBenefits(dados, periodo) {
  * Calcula saldo de salário (dias trabalhados no mês da rescisão)
  */
 function calculateSalaryBalance(dados) {
-  const _diasNoMes = new Date(
-    dados.dataRescisao.getFullYear(),
-    dados.dataRescisao.getMonth() + 1,
-    0,
-  ).getDate()
   const diaRescisao = dados.dataRescisao.getDate()
 
   return (dados.salario / CONSTANTS.DIAS_MES) * diaRescisao
@@ -568,12 +563,6 @@ function updateObservations(dados) {
 
   // Limpa observações anteriores
   observacoesList.textContent = ''
-
-  const addObservation = (text) => {
-    const li = document.createElement('li')
-    li.textContent = text
-    observacoesList.appendChild(li)
-  }
 
   // Função auxiliar para adicionar observações de forma segura
   const addObservation = (text) => {
