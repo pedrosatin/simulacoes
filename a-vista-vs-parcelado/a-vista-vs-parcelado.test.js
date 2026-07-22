@@ -134,6 +134,31 @@ describe('FinancialCalculator', () => {
     })
   })
 
+  describe('calculateCashCost', () => {
+    const { calculateCashCost } = FinancialCalculator
+
+    it('should correctly calculate costs and monthly rate with a standard SELIC rate', () => {
+      // Mocking the context or using the actual this behavior from the object since it's just a method
+      // In tests, if we extract `calculateCashCost` and call it directly, `this` might be undefined.
+      // So we should call it on the object `FinancialCalculator.calculateCashCost`.
+
+      const result = FinancialCalculator.calculateCashCost(900, 1000, 10.47, 12)
+
+      expect(result.cashPayment).toBe(900)
+      expect(result.effectiveCost).toBe(900)
+      // monthlyRate of 10.47% approx 0.0083323
+      expect(result.monthlyRate).toBeCloseTo(0.0083323, 6)
+    })
+
+    it('should correctly handle a 0 SELIC rate', () => {
+      const result = FinancialCalculator.calculateCashCost(1000, 1000, 0, 12)
+
+      expect(result.cashPayment).toBe(1000)
+      expect(result.effectiveCost).toBe(1000)
+      expect(result.monthlyRate).toBe(0)
+    })
+  })
+
   describe('generateRecommendation', () => {
     const { generateRecommendation } = FinancialCalculator
 
