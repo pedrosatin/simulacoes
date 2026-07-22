@@ -10,8 +10,9 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-    Ubuntu, Cantarell, sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+    Cantarell, sans-serif;
   background: #0f0f0f;
   color: #e1e1e1;
   line-height: 1.6;
@@ -425,6 +426,17 @@ small {
   color: #808080;
   font-size: 0.9rem;
   margin-bottom: 8px;
+}
+
+.footer-credito {
+  font-size: 0.85rem;
+  color: #808080;
+  margin-top: 12px;
+}
+
+.footer-credito a {
+  color: #a0a0a0;
+  text-decoration: underline;
 }
 
 .disclaimer {

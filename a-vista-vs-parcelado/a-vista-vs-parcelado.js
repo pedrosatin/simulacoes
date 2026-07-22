@@ -4,6 +4,7 @@ const CONFIG = {
     'https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados/ultimos/1?formato=json', // Meta Selic COPOM
   FALLBACK_SELIC_RATE: 15.0, // Taxa de fallback caso a API falhe (atual)
   CACHE_DURATION: 60 * 60 * 1000, // 1 hora em milliseconds
+  FETCH_TIMEOUT: 5000, // 5 segundos de timeout para a API
 }
 
 // Cache para a taxa Selic
@@ -172,7 +173,7 @@ const FinancialCalculator = {
   },
 
   // Calcular custo total do pagamento à vista considerando rendimento Selic
-  calculateCashCost(cashValue, productValue, selicRate, installments) {
+  calculateCashCost(cashValue, productValue, selicRate, _installments) {
     const monthlyRate = this.annualToMonthlyRate(selicRate)
 
     return {
@@ -206,7 +207,7 @@ const FinancialCalculator = {
     const selicReturn = this.calculateCompoundInterest(
       investmentAmount,
       monthlyRate,
-      averagePeriod
+      averagePeriod,
     )
 
     // O custo efetivo do parcelamento é o valor presente das parcelas
@@ -243,7 +244,7 @@ const FinancialCalculator = {
         isCashBetter,
         difference,
         percentDifference,
-        installments
+        installments,
       ),
     }
   },
@@ -253,29 +254,29 @@ const FinancialCalculator = {
     if (isCashBetter) {
       if (savingsPercent > 10) {
         return `Comprar à vista é muito mais vantajoso! Você economizará ${Utils.formatCurrency(
-          savings
+          savings,
         )} investindo a diferença na Selic durante ${installments} meses.`
       } else if (savingsPercent > 5) {
         return `Comprar à vista é mais vantajoso. A economia de ${Utils.formatCurrency(
-          savings
+          savings,
         )} compensa o investimento na Selic.`
       } else {
         return `Comprar à vista é ligeiramente melhor, mas a diferença é pequena (${Utils.formatCurrency(
-          savings
+          savings,
         )}). Considere sua disponibilidade de caixa.`
       }
     } else {
       if (savingsPercent > 10) {
         return `Parcelar é muito mais vantajoso! Você terá ${Utils.formatCurrency(
-          savings
+          savings,
         )} a mais investindo na Selic ao invés de pagar à vista.`
       } else if (savingsPercent > 5) {
         return `Parcelar é mais vantajoso. Você ganha ${Utils.formatCurrency(
-          savings
+          savings,
         )} a mais mantendo o dinheiro investido.`
       } else {
         return `Parcelar é ligeiramente melhor, mas a diferença é pequena (${Utils.formatCurrency(
-          savings
+          savings,
         )}). Avalie sua preferência pessoal.`
       }
     }
@@ -299,8 +300,18 @@ const SelicAPI = {
       }
     }
 
+    // Support for AbortController in older Node.js versions if needed for testing,
+    // though native in modern browsers
+    const controller =
+      typeof AbortController !== 'undefined'
+        ? new AbortController()
+        : { abort: () => {}, signal: undefined }
+    const timeoutId = setTimeout(() => controller.abort(), CONFIG.FETCH_TIMEOUT)
+
     try {
-      const response = await fetch(CONFIG.API_SELIC_URL)
+      const response = await fetch(CONFIG.API_SELIC_URL, {
+        signal: controller.signal,
+      })
 
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`)
@@ -349,6 +360,8 @@ const SelicAPI = {
         rate: CONFIG.FALLBACK_SELIC_RATE,
         date: fallbackDate,
       }
+    } finally {
+      clearTimeout(timeoutId)
     }
   },
 
@@ -358,14 +371,12 @@ const SelicAPI = {
       elements.selicRate.textContent = 'Carregando...'
       elements.selicDate.textContent = ''
 
-      const { rate, date } = await this.getSelicRate()
+      const { rate } = await this.getSelicRate()
 
       elements.selicRate.textContent = `${rate.toFixed(2)}% a.a.`
     } catch (error) {
       console.error('Erro ao atualizar display da Selic:', error)
-      elements.selicRate.textContent = `${CONFIG.FALLBACK_SELIC_RATE.toFixed(
-        2
-      )}% a.a.`
+      elements.selicRate.textContent = `${CONFIG.FALLBACK_SELIC_RATE.toFixed(2)}% a.a.`
       elements.selicDate.textContent = 'Taxa de referência'
     }
   },
@@ -387,14 +398,14 @@ const SimulationController = {
     // Auto-preencher valor à vista quando valor do produto for alterado
     elements.productValue.addEventListener(
       'input',
-      this.handleProductValueChange.bind(this)
+      this.handleProductValueChange.bind(this),
     )
 
     // Validação em tempo real
     ;[elements.productValue, elements.cashValue, elements.installments].forEach(
       (input) => {
         input.addEventListener('input', this.validateInput.bind(this))
-      }
+      },
     )
   },
 
@@ -500,7 +511,7 @@ const SimulationController = {
 
     if (!Utils.isValidPositiveNumber(cashValue)) {
       Utils.showError(
-        'Por favor, insira um valor válido para pagamento à vista.'
+        'Por favor, insira um valor válido para pagamento à vista.',
       )
       return false
     }
@@ -513,7 +524,7 @@ const SimulationController = {
     // Validar se valor à vista não é maior que o produto
     if (cashValue > productValue) {
       Utils.showError(
-        'O valor à vista não pode ser maior que o valor do produto.'
+        'O valor à vista não pode ser maior que o valor do produto.',
       )
       return false
     }
@@ -521,7 +532,7 @@ const SimulationController = {
     // Validar se há diferença suficiente para investimento
     if (cashValue === productValue) {
       Utils.showError(
-        'Para a simulação funcionar, o valor à vista deve ser menor que o valor parcelado.'
+        'Para a simulação funcionar, o valor à vista deve ser menor que o valor parcelado.',
       )
       return false
     }
@@ -548,14 +559,14 @@ const SimulationController = {
         cashValue,
         productValue,
         selicRate,
-        installments
+        installments,
       )
 
       const installmentResult = FinancialCalculator.calculateInstallmentCost(
         productValue,
         cashValue,
         selicRate,
-        installments
+        installments,
       )
 
       // Comparar opções
@@ -563,7 +574,7 @@ const SimulationController = {
         cashResult,
         installmentResult,
         productValue,
-        installments
+        installments,
       )
 
       // Exibir resultados
@@ -572,7 +583,7 @@ const SimulationController = {
         installmentResult,
         comparison,
         selicRate,
-        installments
+        installments,
       )
     } catch (error) {
       Utils.showError('Erro ao realizar simulação. Tente novamente.')
@@ -588,25 +599,25 @@ const SimulationController = {
     installmentResult,
     comparison,
     selicRate,
-    installments
+    installments,
   ) {
     // Preencher valores do pagamento à vista
     elements.cashPayment.textContent = Utils.formatCurrency(
-      cashResult.cashPayment
+      cashResult.cashPayment,
     )
     elements.cashTotalCost.textContent = Utils.formatCurrency(
-      cashResult.effectiveCost
+      cashResult.effectiveCost,
     )
 
     // Preencher valores do parcelamento
     elements.installmentValue.textContent = Utils.formatCurrency(
-      installmentResult.installmentValue
+      installmentResult.installmentValue,
     )
     elements.installmentTotal.textContent = Utils.formatCurrency(
-      installmentResult.totalCost
+      installmentResult.totalCost,
     )
     elements.installmentTotalCost.textContent = Utils.formatCurrency(
-      installmentResult.effectiveCost
+      installmentResult.effectiveCost,
     )
 
     // Preencher recomendação
@@ -621,14 +632,12 @@ const SimulationController = {
       ? 'Economia total:'
       : 'Vantagem do parcelamento:'
     elements.savingsValue.textContent = Utils.formatCurrency(comparison.savings)
-    elements.savingsPercent.textContent = `(${Utils.formatPercent(
-      comparison.savingsPercent
-    )})`
+    elements.savingsPercent.textContent = `(${Utils.formatPercent(comparison.savingsPercent)})`
 
     // Preencher detalhes
     elements.monthlySelicRate.textContent = Utils.formatPercent(
       cashResult.monthlyRate * 100,
-      4
+      4,
     )
     elements.investmentPeriod.textContent = `${installments} meses`
     elements.grossReturn.textContent = 'Desconto das parcelas pela taxa Selic'
@@ -651,9 +660,12 @@ document.addEventListener('DOMContentLoaded', () => {
 })
 
 // Atualizar taxa Selic periodicamente (a cada 30 minutos)
-setInterval(() => {
-  SelicAPI.updateSelicDisplay()
-}, 30 * 60 * 1000)
+setInterval(
+  () => {
+    SelicAPI.updateSelicDisplay()
+  },
+  30 * 60 * 1000,
+)
 
 // Exportar para uso global (se necessário)
 if (typeof window !== 'undefined') {
@@ -672,4 +684,3 @@ if (typeof module !== 'undefined' && module.exports) {
     Utils,
   }
 }
-

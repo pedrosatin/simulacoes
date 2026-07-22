@@ -95,24 +95,24 @@ const JurosMath = {
    * Evolução ano a ano do patrimônio. Retorna array de objetos por ano.
    */
   buildYearlyEvolution(principal, monthlyContribution, monthlyRate, months) {
-    const rows = []
     const totalYears = Math.ceil(months / 12)
+    const rows = Array.from({ length: totalYears })
     for (let year = 1; year <= totalYears; year++) {
       const monthsElapsed = Math.min(year * 12, months)
       const balance = this.futureValue(
         principal,
         monthlyContribution,
         monthlyRate,
-        monthsElapsed
+        monthsElapsed,
       )
       const invested = principal + monthlyContribution * monthsElapsed
-      rows.push({
+      rows[year - 1] = {
         year,
         months: monthsElapsed,
         invested,
         interest: balance - invested,
         balance,
-      })
+      }
     }
     return rows
   },
@@ -146,7 +146,10 @@ const Format = {
   /** Converte "1.234,56" ou "1234,56" em número. */
   parseNumber(value) {
     if (typeof value !== 'string') return value || 0
-    const cleaned = value.replace(/\./g, '').replace(',', '.').replace(/[^0-9.\-]/g, '')
+    const cleaned = value
+      .replace(/\./g, '')
+      .replace(',', '.')
+      .replace(/[^0-9.-]/g, '')
     const parsed = parseFloat(cleaned)
     return isNaN(parsed) ? 0 : parsed
   },
@@ -273,11 +276,11 @@ class JurosCompostosCalculadora {
     this.setText('jurosJuros', Format.currency(interest))
     this.setText(
       'jurosTaxaMensalInfo',
-      `Taxa mensal equivalente: ${Format.number(rate * 100, 3)}%`
+      `Taxa mensal equivalente: ${Format.number(rate * 100, 3)}%`,
     )
 
     this.renderEvolution(
-      JurosMath.buildYearlyEvolution(principal, monthly, rate, months)
+      JurosMath.buildYearlyEvolution(principal, monthly, rate, months),
     )
     this.show('jurosResultado')
   }
@@ -293,7 +296,7 @@ class JurosCompostosCalculadora {
           <td>${Format.currency(r.invested)}</td>
           <td>${Format.currency(r.interest)}</td>
           <td>${Format.currency(r.balance)}</td>
-        </tr>`
+        </tr>`,
       )
       .join('')
   }
@@ -313,7 +316,7 @@ class JurosCompostosCalculadora {
     this.setText(
       'rendaExplicacao',
       `Com ${Format.number(rate * 100, 3)}% ao mês, esse patrimônio rende ` +
-        `${Format.currency(income)} por mês sem consumir o principal.`
+        `${Format.currency(income)} por mês sem consumir o principal.`,
     )
 
     // Tempo para atingir o patrimônio (opcional)
@@ -324,13 +327,13 @@ class JurosCompostosCalculadora {
         principal,
         monthly,
         rate,
-        capital
+        capital,
       )
       this.setText(
         'rendaTempo',
         `Aportando ${Format.currency(monthly)}/mês (início ${Format.currency(
-          principal
-        )}): ${Format.monthsToText(months)} para chegar lá.`
+          principal,
+        )}): ${Format.monthsToText(months)} para chegar lá.`,
       )
     } else {
       this.setText('rendaTempo', '')
@@ -365,9 +368,7 @@ class JurosCompostosCalculadora {
     if (!winner) {
       verdict = 'Os dois investimentos rendem o mesmo valor.'
     } else {
-      verdict = `Investimento ${winner} rende ${Format.currency(
-        diff
-      )} a mais no período.`
+      verdict = `Investimento ${winner} rende ${Format.currency(diff)} a mais no período.`
     }
     this.setText('compararVeredito', verdict)
 
@@ -401,7 +402,7 @@ class JurosCompostosCalculadora {
     const rendaGerada = patrimonio * rate
     const patrimonioNecessario = JurosMath.requiredCapitalForIncome(
       rendaDesejada,
-      rate
+      rate,
     )
 
     this.setText('aposPatrimonio', Format.currency(patrimonio))
@@ -410,7 +411,7 @@ class JurosCompostosCalculadora {
       'aposResumo',
       `Em ${anos} ${anos === 1 ? 'ano' : 'anos'} você acumula ` +
         `${Format.currency(patrimonio)}, gerando ` +
-        `${Format.currency(rendaGerada)}/mês de renda passiva.`
+        `${Format.currency(rendaGerada)}/mês de renda passiva.`,
     )
 
     if (rendaDesejada > 0) {
@@ -420,21 +421,21 @@ class JurosCompostosCalculadora {
           'aposMeta',
           `✅ Meta atingida! Seu patrimônio supera os ` +
             `${Format.currency(patrimonioNecessario)} necessários para uma ` +
-            `renda de ${Format.currency(rendaDesejada)}/mês.`
+            `renda de ${Format.currency(rendaDesejada)}/mês.`,
         )
       } else {
         const extra = this.aporteExtraParaMeta(
           principal,
           rate,
           months,
-          patrimonioNecessario
+          patrimonioNecessario,
         )
         this.setText(
           'aposMeta',
           `⚠️ Para ter ${Format.currency(rendaDesejada)}/mês você precisa de ` +
             `${Format.currency(patrimonioNecessario)} (faltam ` +
             `${Format.currency(falta)}). Aporte necessário: ` +
-            `${Format.currency(extra)}/mês.`
+            `${Format.currency(extra)}/mês.`,
         )
       }
     } else {
@@ -449,7 +450,7 @@ class JurosCompostosCalculadora {
     const fromPrincipal = JurosMath.compoundInterest(
       principal,
       monthlyRate,
-      months
+      months,
     )
     const remaining = target - fromPrincipal
     if (remaining <= 0) return 0
