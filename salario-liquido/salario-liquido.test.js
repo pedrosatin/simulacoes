@@ -41,6 +41,16 @@ describe('getINSSRate', () => {
     expect(getINSSRate(null)).toBe(0)
     expect(getINSSRate(undefined)).toBe(0)
   })
+
+  it('should return 0 for non-numeric string inputs', () => {
+    expect(getINSSRate('1000')).toBe(0)
+    expect(getINSSRate('invalid')).toBe(0)
+  })
+
+  it('should return correct rates for very large numbers', () => {
+    expect(getINSSRate(1000000)).toBe(0.14)
+    expect(getINSSRate(Number.MAX_SAFE_INTEGER)).toBe(0.14)
+  })
 })
 
 describe('calculateINSS', () => {
