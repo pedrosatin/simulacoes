@@ -41,6 +41,61 @@ describe('Utils', () => {
       const obj = {}
       expect(Utils.parseCurrencyInput(obj)).toBe(obj)
     })
+
+    it('should correctly parse negative values', () => {
+      expect(Utils.parseCurrencyInput('-1234,56')).toBe(-1234.56)
+      expect(Utils.parseCurrencyInput('R$ -1.234,56')).toBe(-1234.56)
+      expect(Utils.parseCurrencyInput('-0,50')).toBe(-0.5)
+    })
+
+    it('should strip multiple spaces and random spaces inside strings', () => {
+      expect(Utils.parseCurrencyInput(' 1 2 3 , 4 5 ')).toBe(123.45)
+      expect(Utils.parseCurrencyInput('R$   1.234  ,  56')).toBe(1234.56)
+    })
+
+    it('should handle small fractional values', () => {
+      expect(Utils.parseCurrencyInput('0,0001')).toBe(0.0001)
+      expect(Utils.parseCurrencyInput('R$ 0,0001')).toBe(0.0001)
+    })
+
+    it('should handle strings with multiple commas gracefully by dropping subsequent parts', () => {
+      expect(Utils.parseCurrencyInput('1.234,56,78')).toBe(1234.56)
+    })
+  })
+
+  describe('formatCurrencyInput', () => {
+    it('should return empty string for falsy values', () => {
+      expect(Utils.formatCurrencyInput('')).toBe('')
+      expect(Utils.formatCurrencyInput(null)).toBe('')
+      expect(Utils.formatCurrencyInput(undefined)).toBe('')
+      expect(Utils.formatCurrencyInput(0)).toBe('')
+    })
+
+    it('should format numeric string values correctly', () => {
+      const nbsp = ' '
+      expect(Utils.formatCurrencyInput('1234')).toBe(`R$${nbsp}1.234,00`)
+      expect(Utils.formatCurrencyInput('1234,56')).toBe(`R$${nbsp}1.234,56`)
+      expect(Utils.formatCurrencyInput('0,00')).toBe(`R$${nbsp}0,00`)
+      expect(Utils.formatCurrencyInput('0')).toBe(`R$${nbsp}0,00`)
+    })
+
+    it('should format number values correctly', () => {
+      const nbsp = ' '
+      expect(Utils.formatCurrencyInput(1234.56)).toBe(`R$${nbsp}1.234,56`)
+      expect(Utils.formatCurrencyInput(1234)).toBe(`R$${nbsp}1.234,00`)
+    })
+
+    it('should handle non-numeric inputs gracefully', () => {
+      const nbsp = ' '
+      expect(Utils.formatCurrencyInput('abc')).toBe(`R$${nbsp}0,00`)
+
+      const parseSpy = jest.spyOn(Utils, 'parseCurrencyInput').mockReturnValue(NaN)
+      try {
+        expect(Utils.formatCurrencyInput('anything')).toBe('anything')
+      } finally {
+        parseSpy.mockRestore()
+      }
+    })
   })
 })
 
