@@ -138,6 +138,16 @@ describe('validateTransportVoucher', () => {
     const result = validateTransportVoucher(100, 0)
     expect(result).toBe(0)
   })
+
+  it('should return 0 for negative transport value', () => {
+    const result = validateTransportVoucher(-50, 2000)
+    expect(result).toBe(0)
+  })
+
+  it('should return 0 for negative gross salary', () => {
+    const result = validateTransportVoucher(100, -2000)
+    expect(result).toBe(0)
+  })
 })
 
 describe('calculateIRRF', () => {
