@@ -1,8 +1,0 @@
-127.0.0.1 - - [19/Jul/2026 23:37:30] "GET /salario-liquido/index.html HTTP/1.1" 200 -
-127.0.0.1 - - [19/Jul/2026 23:37:30] "GET /salario-liquido/salario-liquido.css HTTP/1.1" 200 -
-127.0.0.1 - - [19/Jul/2026 23:37:30] "GET /assets/global.css HTTP/1.1" 200 -
-127.0.0.1 - - [19/Jul/2026 23:37:30] "GET /salario-liquido/salario-liquido.js HTTP/1.1" 200 -
-127.0.0.1 - - [19/Jul/2026 23:37:30] "GET /js/utils.js HTTP/1.1" 200 -
-127.0.0.1 - - [19/Jul/2026 23:37:34] "GET /rescisao-trabalhista/index.html HTTP/1.1" 200 -
-127.0.0.1 - - [19/Jul/2026 23:37:34] "GET /rescisao-trabalhista/rescisao-trabalhista.css HTTP/1.1" 200 -
-127.0.0.1 - - [19/Jul/2026 23:37:34] "GET /rescisao-trabalhista/rescisao-trabalhista.js HTTP/1.1" 200 -
