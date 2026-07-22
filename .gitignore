@@ -1,6 +1,7 @@
 node_modules/
 graphify-out/
 coverage/
+*.log
 
 # Local workflow and generated artifacts
 .github/instructions/
