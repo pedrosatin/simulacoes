@@ -94,6 +94,22 @@ function validateTransportVoucher(transportValue, grossSalary) {
   return Math.max(0, Math.min(transportValue, maxTransport))
 }
 
+// Calcular base de cálculo do IRRF
+function calculateIRRFBase(grossSalary, inssValue, dependents, healthPlan) {
+  const dependentDeductions = dependents * dependentDeduction
+  return grossSalary - inssValue - dependentDeductions - healthPlan
+}
+
+// Calcular total de descontos opcionais
+function calculateTotalOptionalDeductions(
+  healthPlan,
+  mealVoucher,
+  transportVoucher,
+  otherDeductions,
+) {
+  return healthPlan + mealVoucher + transportVoucher + otherDeductions
+}
+
 // Calcular salário líquido
 function calculateNetSalary(data) {
   const grossSalary = data.grossSalary
@@ -111,16 +127,24 @@ function calculateNetSalary(data) {
   const inssRate = getINSSRate(grossSalary)
 
   // Base de cálculo do IRRF (Salário bruto - INSS - dependentes - plano de saúde)
-  const dependentDeductions = dependents * dependentDeduction
-  const irrfBase = grossSalary - inssValue - dependentDeductions - healthPlan
+  const irrfBase = calculateIRRFBase(
+    grossSalary,
+    inssValue,
+    dependents,
+    healthPlan,
+  )
 
   // Calcular IRRF
   const irrfValue = calculateIRRF(Math.max(0, irrfBase))
   const irrfRate = getIRRFRate(Math.max(0, irrfBase))
 
   // Descontos totais
-  const totalOptionalDeductions =
-    healthPlan + mealVoucher + transportVoucher + otherDeductions
+  const totalOptionalDeductions = calculateTotalOptionalDeductions(
+    healthPlan,
+    mealVoucher,
+    transportVoucher,
+    otherDeductions,
+  )
   const totalDeductions = inssValue + irrfValue + totalOptionalDeductions
 
   // Salário líquido
@@ -317,5 +341,7 @@ if (typeof module !== 'undefined' && module.exports) {
     calculateIRRF,
     getIRRFRate,
     validateTransportVoucher,
+    calculateIRRFBase,
+    calculateTotalOptionalDeductions,
   }
 }
