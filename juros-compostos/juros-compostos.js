@@ -286,19 +286,25 @@ class JurosCompostosCalculadora {
   }
 
   renderEvolution(rows) {
-    const tbody = document.getElementById('jurosEvolucaoBody')
+    if (!this._tbodyEvolution) {
+      this._tbodyEvolution = document.getElementById('jurosEvolucaoBody')
+    }
+    const tbody = this._tbodyEvolution
     if (!tbody) return
-    tbody.innerHTML = rows
-      .map(
-        (r) => `
+
+    const len = rows.length
+    const parts = Array.from({ length: len })
+    for (let i = 0; i < len; i++) {
+      const r = rows[i]
+      parts[i] = `
         <tr>
           <td>${r.year}º</td>
           <td>${Format.currency(r.invested)}</td>
           <td>${Format.currency(r.interest)}</td>
           <td>${Format.currency(r.balance)}</td>
-        </tr>`,
-      )
-      .join('')
+        </tr>`
+    }
+    tbody.innerHTML = parts.join('')
   }
 
   /* ----------------------- Aba 2: Viver de renda ---------------------- */
