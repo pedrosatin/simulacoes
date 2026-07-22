@@ -25,6 +25,19 @@ class RegraDeTresCalculadora {
       valorB: document.getElementById('valorB'),
       valorC: document.getElementById('valorC'),
       valorX: document.getElementById('valorX'),
+      percentual1: document.getElementById('percentual1'),
+      valor1: document.getElementById('valor1'),
+      resultado1: document.getElementById('resultado1'),
+      valorBase: document.getElementById('valorBase'),
+      percentualMudanca: document.getElementById('percentualMudanca'),
+      valorOriginal: document.getElementById('valorOriginal'),
+      tipoMudanca: document.getElementById('tipoMudanca'),
+      valorMudanca: document.getElementById('valorMudanca'),
+      valorFinal: document.getElementById('valorFinal'),
+      valorParte: document.getElementById('valorParte'),
+      valorTotal: document.getElementById('valorTotal'),
+      resultadoPorcentagem: document.getElementById('resultadoPorcentagem'),
+      explicacaoCalculo: document.getElementById('explicacaoCalculo'),
     }
   }
 
@@ -216,32 +229,25 @@ class RegraDeTresCalculadora {
    * Calcular quanto é X% de um valor
    */
   calcularPorcentagem1() {
-    const percentual = this.parseNumber(
-      document.getElementById('percentual1').value,
-    )
-    const valor = this.parseNumber(document.getElementById('valor1').value)
+    const percentual = this.parseNumber(this.elements.percentual1?.value)
+    const valor = this.parseNumber(this.elements.valor1?.value)
 
     const resultado = (percentual / 100) * valor
 
-    document.getElementById('resultado1').textContent = this.formatNumber(
-      resultado,
-      2,
-    )
+    if (this.elements.resultado1) {
+      this.elements.resultado1.textContent = this.formatNumber(resultado, 2)
+    }
   }
 
   /**
    * Calcular aumento ou desconto percentual
    */
   calcularAumentoDesconto() {
-    const valorBase = this.parseNumber(
-      document.getElementById('valorBase').value,
-    )
-    const percentual = this.parseNumber(
-      document.getElementById('percentualMudanca').value,
-    )
+    const valorBase = this.parseNumber(this.elements.valorBase?.value)
+    const percentual = this.parseNumber(this.elements.percentualMudanca?.value)
 
-    const isAumento =
-      document.querySelector('.toggle-btn.active').dataset.type === 'aumento'
+    const btnAtivo = document.querySelector('.toggle-btn.active')
+    const isAumento = btnAtivo ? btnAtivo.dataset.type === 'aumento' : true
 
     const valorMudanca = (percentual / 100) * valorBase
     const valorFinal = isAumento
@@ -249,25 +255,25 @@ class RegraDeTresCalculadora {
       : valorBase - valorMudanca
 
     // Atualizar elementos
-    document.getElementById('valorOriginal').textContent = this.formatNumber(
-      valorBase,
-      2,
-    )
-    document.getElementById('tipoMudanca').textContent = isAumento
-      ? 'Aumento:'
-      : 'Desconto:'
-    document.getElementById('valorMudanca').textContent = this.formatNumber(
-      valorMudanca,
-      2,
-    )
-    document.getElementById('valorFinal').textContent = this.formatNumber(
-      valorFinal,
-      2,
-    )
-
-    // Colorir valor final baseado no tipo
-    const valorFinalElement = document.getElementById('valorFinal')
-    valorFinalElement.style.color = isAumento ? '#2ed573' : '#ff4757'
+    if (this.elements.valorOriginal) {
+      this.elements.valorOriginal.textContent = this.formatNumber(valorBase, 2)
+    }
+    if (this.elements.tipoMudanca) {
+      this.elements.tipoMudanca.textContent = isAumento
+        ? 'Aumento:'
+        : 'Desconto:'
+    }
+    if (this.elements.valorMudanca) {
+      this.elements.valorMudanca.textContent = this.formatNumber(
+        valorMudanca,
+        2,
+      )
+    }
+    if (this.elements.valorFinal) {
+      this.elements.valorFinal.textContent = this.formatNumber(valorFinal, 2)
+      // Colorir valor final baseado no tipo
+      this.elements.valorFinal.style.color = isAumento ? '#2ed573' : '#ff4757'
+    }
   }
 
   /**
@@ -288,35 +294,37 @@ class RegraDeTresCalculadora {
    * Calcular que porcentagem um valor representa de outro
    */
   calcularProporcaoPorcentual() {
-    const valorParte = this.parseNumber(
-      document.getElementById('valorParte').value,
-    )
-    const valorTotal = this.parseNumber(
-      document.getElementById('valorTotal').value,
-    )
+    const valorParte = this.parseNumber(this.elements.valorParte?.value)
+    const valorTotal = this.parseNumber(this.elements.valorTotal?.value)
 
     if (valorTotal === 0) {
-      document.getElementById('resultadoPorcentagem').textContent = '0%'
-      document.getElementById('explicacaoCalculo').textContent =
-        'Informe o valor total'
+      if (this.elements.resultadoPorcentagem) {
+        this.elements.resultadoPorcentagem.textContent = '0%'
+      }
+      if (this.elements.explicacaoCalculo) {
+        this.elements.explicacaoCalculo.textContent = 'Informe o valor total'
+      }
       return
     }
 
     const porcentagem = (valorParte / valorTotal) * 100
 
     // Atualizar resultado
-    document.getElementById('resultadoPorcentagem').textContent =
-      this.formatNumber(porcentagem, 1) + '%'
+    if (this.elements.resultadoPorcentagem) {
+      this.elements.resultadoPorcentagem.textContent =
+        this.formatNumber(porcentagem, 1) + '%'
+
+      // Animar resultado
+      this.animateResult(this.elements.resultadoPorcentagem)
+    }
 
     // Atualizar explicação
-    document.getElementById('explicacaoCalculo').textContent =
-      `${this.formatNumber(
+    if (this.elements.explicacaoCalculo) {
+      this.elements.explicacaoCalculo.textContent = `${this.formatNumber(
         valorParte,
         2,
       )} representa ${this.formatNumber(porcentagem, 1)}% de ${this.formatNumber(valorTotal, 2)}`
-
-    // Animar resultado
-    this.animateResult(document.getElementById('resultadoPorcentagem'))
+    }
   }
 
   /**
