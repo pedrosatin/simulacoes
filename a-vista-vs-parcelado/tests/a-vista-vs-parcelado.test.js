@@ -542,4 +542,58 @@ describe('SelicAPI', () => {
       expect(result.date).toBe(getFormattedToday())
     })
   })
+
+  describe('updateSelicDisplay', () => {
+    let consoleErrorSpy
+    let getSelicRateSpy
+
+    beforeEach(() => {
+      consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
+      document.getElementById('selicRate').textContent = ''
+      document.getElementById('selicDate').textContent = ''
+    })
+
+    afterEach(() => {
+      consoleErrorSpy.mockRestore()
+      if (getSelicRateSpy) {
+        getSelicRateSpy.mockRestore()
+      }
+    })
+
+    it('should update display with API rate on success', async () => {
+      getSelicRateSpy = jest.spyOn(SelicAPI, 'getSelicRate').mockResolvedValue({
+        rate: 10.5,
+        date: '10/05/2024'
+      })
+
+      const updatePromise = SelicAPI.updateSelicDisplay()
+
+      // Before promise resolves, should show loading
+      expect(document.getElementById('selicRate').textContent).toBe('Carregando...')
+      expect(document.getElementById('selicDate').textContent).toBe('')
+
+      await updatePromise
+
+      expect(document.getElementById('selicRate').textContent).toBe('10.50% a.a.')
+      // updateSelicDisplay does not set selicDate on success
+      expect(document.getElementById('selicDate').textContent).toBe('')
+    })
+
+    it('should update display with fallback rate on error', async () => {
+      getSelicRateSpy = jest.spyOn(SelicAPI, 'getSelicRate').mockRejectedValue(new Error('API failure'))
+
+      const updatePromise = SelicAPI.updateSelicDisplay()
+
+      // Before promise resolves, should show loading
+      expect(document.getElementById('selicRate').textContent).toBe('Carregando...')
+      expect(document.getElementById('selicDate').textContent).toBe('')
+
+      await updatePromise
+
+      expect(consoleErrorSpy).toHaveBeenCalledWith('Erro ao atualizar display da Selic:', expect.any(Error))
+
+      expect(document.getElementById('selicRate').textContent).toBe('15.00% a.a.')
+      expect(document.getElementById('selicDate').textContent).toBe('Taxa de referência')
+    })
+  })
 })
