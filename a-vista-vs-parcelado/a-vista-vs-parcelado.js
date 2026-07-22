@@ -5,6 +5,7 @@ const CONFIG = {
   FALLBACK_SELIC_RATE: 15.0, // Taxa de fallback caso a API falhe (atual)
   CACHE_DURATION: 60 * 60 * 1000, // 1 hora em milliseconds
   FETCH_TIMEOUT: 5000, // 5 segundos de timeout para a API
+  MAX_INSTALLMENTS: 60, // Número máximo de parcelas
 }
 
 // Cache para a taxa Selic
@@ -445,7 +446,7 @@ const SimulationController = {
       let value = e.target.value.replace(/\D/g, '') // Apenas números
       value = parseInt(value) || ''
 
-      if (value > 60) value = 60
+      if (value > CONFIG.MAX_INSTALLMENTS) value = CONFIG.MAX_INSTALLMENTS
       if (value < 0) value = ''
 
       e.target.value = value
@@ -516,8 +517,14 @@ const SimulationController = {
       return false
     }
 
-    if (!installments || installments < 1 || installments > 60) {
-      Utils.showError('Por favor, insira um número válido de parcelas (1-60).')
+    if (
+      !installments ||
+      installments < 1 ||
+      installments > CONFIG.MAX_INSTALLMENTS
+    ) {
+      Utils.showError(
+        `Por favor, insira um número válido de parcelas (1-${CONFIG.MAX_INSTALLMENTS}).`,
+      )
       return false
     }
 

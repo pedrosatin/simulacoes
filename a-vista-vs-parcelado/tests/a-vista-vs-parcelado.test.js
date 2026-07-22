@@ -1,4 +1,8 @@
-const { FinancialCalculator, SelicAPI, Utils } = require('../a-vista-vs-parcelado.js')
+const {
+  FinancialCalculator,
+  SelicAPI,
+  Utils,
+} = require('../a-vista-vs-parcelado.js')
 
 describe('Utils', () => {
   describe('parseCurrencyInput', () => {
@@ -89,7 +93,9 @@ describe('Utils', () => {
       const nbsp = ' '
       expect(Utils.formatCurrencyInput('abc')).toBe(`R$${nbsp}0,00`)
 
-      const parseSpy = jest.spyOn(Utils, 'parseCurrencyInput').mockReturnValue(NaN)
+      const parseSpy = jest
+        .spyOn(Utils, 'parseCurrencyInput')
+        .mockReturnValue(NaN)
       try {
         expect(Utils.formatCurrencyInput('anything')).toBe('anything')
       } finally {
