@@ -569,12 +569,6 @@ function updateObservations(dados) {
   // Limpa observações anteriores
   observacoesList.textContent = ''
 
-  const addObservation = (text) => {
-    const li = document.createElement('li')
-    li.textContent = text
-    observacoesList.appendChild(li)
-  }
-
   // Função auxiliar para adicionar observações de forma segura
   const addObservation = (text) => {
     const li = document.createElement('li')
@@ -698,6 +692,7 @@ if (typeof module !== 'undefined' && module.exports) {
     calculatePriorNotice,
     calculateFGTSPenalty,
     calculateProportionalVacation,
+    calculateVacationDue,
     calculateThirteenthSalary,
     CONSTANTS,
   }
