@@ -1,7 +1,7 @@
 /**
  * @jest-environment node
  */
-const { JurosMath, Format } = require('./juros-compostos.js')
+const { JurosMath, Format, JurosCompostosCalculadora } = require('./juros-compostos.js')
 
 describe('JurosMath', () => {
   describe('annualToMonthly', () => {
@@ -124,6 +124,38 @@ describe('JurosMath', () => {
       rows.forEach((r) => {
         expect(r.balance).toBeCloseTo(r.invested + r.interest, 6)
       })
+    })
+  })
+})
+
+describe('JurosCompostosCalculadora', () => {
+  describe('aporteExtraParaMeta', () => {
+    let calc
+
+    beforeEach(() => {
+      // Instantiate without triggering DOM-dependent constructor
+      calc = Object.create(JurosCompostosCalculadora.prototype)
+    })
+
+    it('retorna 0 se a meta já foi atingida pelo principal', () => {
+      // 1000 a 1% ao mês por 10 meses > 1000
+      expect(calc.aporteExtraParaMeta(1000, 0.01, 10, 1000)).toBe(0)
+    })
+
+    it('calcula o aporte necessário corretamente', () => {
+      // 1000 a 1% ao mês por 12 meses. Meta: 2000
+      // Fator de contribuição = (1.01^12 - 1) / 0.01 ≈ 12.68
+      // Juros sobre principal = 1000 * 1.01^12 ≈ 1126.83
+      // Restante = 2000 - 1126.83 = 873.17
+      // Aporte = 873.17 / 12.68 ≈ 68.85
+      expect(calc.aporteExtraParaMeta(1000, 0.01, 12, 2000)).toBeCloseTo(
+        68.84878867834169,
+        5,
+      )
+    })
+
+    it('retorna Infinity se o prazo for 0 e a meta não foi atingida', () => {
+      expect(calc.aporteExtraParaMeta(1000, 0.01, 0, 2000)).toBe(Infinity)
     })
   })
 })
