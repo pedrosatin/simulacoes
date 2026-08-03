@@ -3,6 +3,7 @@ const {
   calculatePriorNotice,
   calculateFGTSPenalty,
   calculateProportionalVacation,
+  calculateVacationDue,
   calculateThirteenthSalary,
   CONSTANTS,
 } = require('./rescisao-trabalhista.js')
@@ -357,5 +358,42 @@ describe('calculateProportionalVacation', () => {
     // 15 days >= 15 days, so 3 months adjusted.
     const expected = (3000 / 12) * 3 * (1 + CONSTANTS.ADICIONAL_FERIAS)
     expect(calculateProportionalVacation(dados, periodo)).toBeCloseTo(expected)
+  })
+})
+
+describe('calculateVacationDue', () => {
+  it('should return 0 when there are no vacations due', () => {
+    const dados = {
+      salario: 3000,
+      feriasVencidas: 0
+    }
+    expect(calculateVacationDue(dados)).toBe(0)
+  })
+
+  it('should correctly calculate for 1 period of vacation due', () => {
+    const dados = {
+      salario: 3000,
+      feriasVencidas: 1
+    }
+    // 3000 + 1/3 of 3000 (1000) = 4000
+    expect(calculateVacationDue(dados)).toBe(4000)
+  })
+
+  it('should correctly calculate for multiple periods of vacation due', () => {
+    const dados = {
+      salario: 3000,
+      feriasVencidas: 2
+    }
+    // 6000 + 1/3 of 6000 (2000) = 8000
+    expect(calculateVacationDue(dados)).toBe(8000)
+  })
+
+  it('should correctly calculate for fractional periods of vacation due', () => {
+    const dados = {
+      salario: 3000,
+      feriasVencidas: 1.5
+    }
+    // 4500 + 1/3 of 4500 (1500) = 6000
+    expect(calculateVacationDue(dados)).toBe(6000)
   })
 })
