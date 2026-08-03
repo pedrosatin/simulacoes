@@ -58,7 +58,7 @@ describe('calculateINSS', () => {
     // 0 to 1412.0 @ 7.5%
     // 1412.0 * 0.075 = 105.90
     const inss = calculateINSS(1412.0)
-    expect(inss).toBeCloseTo(105.9, 2)
+    expect(inss.value).toBeCloseTo(105.9, 2)
   })
 
   it('should calculate INSS for salary within the second bracket', () => {
@@ -69,7 +69,7 @@ describe('calculateINSS', () => {
     // 588.00 * 0.09 = 52.92
     // Total INSS: 105.90 + 52.92 = 158.82
     const inss = calculateINSS(2000.0)
-    expect(inss).toBeCloseTo(158.82, 2)
+    expect(inss.value).toBeCloseTo(158.82, 2)
   })
 
   it('should calculate INSS for salary within the third bracket', () => {
@@ -81,7 +81,7 @@ describe('calculateINSS', () => {
     // 333.32 * 0.12 = 39.9984 -> 40.00
     // Total INSS: 105.90 + 112.92 + 40.00 = 258.82
     const inss = calculateINSS(3000.0)
-    expect(inss).toBeCloseTo(258.82, 2)
+    expect(inss.value).toBeCloseTo(258.82, 2)
   })
 
   it('should calculate INSS for salary within the fourth bracket', () => {
@@ -94,7 +94,7 @@ describe('calculateINSS', () => {
     // 999.97 * 0.14 = 139.9958 -> 140.00
     // Total INSS: 105.90 + 112.92 + 160.00 + 140.00 = 518.82
     const inss = calculateINSS(5000.0)
-    expect(inss).toBeCloseTo(518.82, 2)
+    expect(inss.value).toBeCloseTo(518.82, 2)
   })
 
   it('should cap INSS calculation to the ceiling', () => {
@@ -106,17 +106,17 @@ describe('calculateINSS', () => {
     // Total = 908.8618
     const ceiling = 908.8618
     const inss = calculateINSS(10000.0) // Salary well above ceiling
-    expect(inss).toBeCloseTo(ceiling, 2)
+    expect(inss.value).toBeCloseTo(ceiling, 2)
   })
 
   it('should return 0 for 0 salary', () => {
     const inss = calculateINSS(0)
-    expect(inss).toBe(0)
+    expect(inss.value).toBe(0)
   })
 
   it('should return 0 for negative salary', () => {
     const inss = calculateINSS(-1000)
-    expect(inss).toBe(0)
+    expect(inss.value).toBe(0)
   })
 })
 
