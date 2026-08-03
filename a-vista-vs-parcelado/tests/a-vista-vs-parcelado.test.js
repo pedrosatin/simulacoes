@@ -495,6 +495,78 @@ describe('SelicAPI', () => {
         .padStart(2, '0')}/${today.getFullYear()}`
     }
 
+    it('should return cached rate if cache is valid', async () => {
+      // First, set the mock to false to allow the cache to be populated
+      isCacheValidSpy.mockReturnValue(false)
+
+      // Mock successful fetch to set up the cache
+      global.fetch = jest.fn(() =>
+        Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve([{ valor: '10.5', data: '01/01/2023' }]),
+        })
+      )
+
+      // First call (cache is invalid) - it will fetch and set cache
+      const firstResult = await SelicAPI.getSelicRate()
+
+      // Now change the mock so next call thinks cache is valid
+      isCacheValidSpy.mockReturnValue(true)
+
+      // Change fetch mock to reject, so if it tries to fetch it will fail
+      global.fetch = jest.fn(() => Promise.reject(new Error('Should not be called')))
+
+      // Second call (cache is valid)
+      const cachedResult = await SelicAPI.getSelicRate()
+
+      expect(cachedResult).toEqual({
+        rate: 10.5,
+        date: '01/01/2023',
+      })
+      expect(global.fetch).not.toHaveBeenCalled()
+    })
+
+    it('should fetch and return rate from API successfully', async () => {
+      global.fetch = jest.fn(() =>
+        Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve([{ valor: '11.25', data: '15/05/2023' }]),
+        })
+      )
+
+      const result = await SelicAPI.getSelicRate()
+
+      expect(global.fetch).toHaveBeenCalledTimes(1)
+      expect(global.fetch).toHaveBeenCalledWith(
+        expect.any(String),
+        expect.objectContaining({
+          signal: expect.any(Object),
+        })
+      )
+      expect(result.rate).toBe(11.25)
+      expect(result.date).toBe('15/05/2023')
+      expect(consoleWarnSpy).not.toHaveBeenCalled()
+    })
+
+    it('should use fallback rate when API returns invalid rate (NaN)', async () => {
+      global.fetch = jest.fn(() =>
+        Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve([{ valor: 'not-a-number', data: '01/01/2023' }]),
+        })
+      )
+
+      const result = await SelicAPI.getSelicRate()
+
+      expect(global.fetch).toHaveBeenCalledTimes(1)
+      expect(consoleWarnSpy).toHaveBeenCalledWith(
+        'Erro ao buscar taxa Selic:',
+        'Taxa Selic inválida recebida da API'
+      )
+      expect(result.rate).toBe(15.0)
+      expect(result.date).toBe(getFormattedToday())
+    })
+
     it('should use fallback rate when API fetch fails', async () => {
       global.fetch = jest.fn(() => Promise.reject(new Error('Network error')))
 
@@ -546,6 +618,60 @@ describe('SelicAPI', () => {
       )
       expect(result.rate).toBe(15.0)
       expect(result.date).toBe(getFormattedToday())
+    })
+  })
+
+  describe('updateSelicDisplay', () => {
+    let consoleErrorSpy
+    let getSelicRateSpy
+
+    beforeEach(() => {
+      consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
+      document.getElementById('selicRate').textContent = ''
+      document.getElementById('selicDate').textContent = ''
+    })
+
+    afterEach(() => {
+      consoleErrorSpy.mockRestore()
+      if (getSelicRateSpy) {
+        getSelicRateSpy.mockRestore()
+      }
+    })
+
+    it('should update display with API rate on success', async () => {
+      getSelicRateSpy = jest.spyOn(SelicAPI, 'getSelicRate').mockResolvedValue({
+        rate: 10.5,
+        date: '10/05/2024'
+      })
+
+      const updatePromise = SelicAPI.updateSelicDisplay()
+
+      // Before promise resolves, should show loading
+      expect(document.getElementById('selicRate').textContent).toBe('Carregando...')
+      expect(document.getElementById('selicDate').textContent).toBe('')
+
+      await updatePromise
+
+      expect(document.getElementById('selicRate').textContent).toBe('10.50% a.a.')
+      // updateSelicDisplay does not set selicDate on success
+      expect(document.getElementById('selicDate').textContent).toBe('')
+    })
+
+    it('should update display with fallback rate on error', async () => {
+      getSelicRateSpy = jest.spyOn(SelicAPI, 'getSelicRate').mockRejectedValue(new Error('API failure'))
+
+      const updatePromise = SelicAPI.updateSelicDisplay()
+
+      // Before promise resolves, should show loading
+      expect(document.getElementById('selicRate').textContent).toBe('Carregando...')
+      expect(document.getElementById('selicDate').textContent).toBe('')
+
+      await updatePromise
+
+      expect(consoleErrorSpy).toHaveBeenCalledWith('Erro ao atualizar display da Selic:', expect.any(Error))
+
+      expect(document.getElementById('selicRate').textContent).toBe('15.00% a.a.')
+      expect(document.getElementById('selicDate').textContent).toBe('Taxa de referência')
     })
   })
 })
