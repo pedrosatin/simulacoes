@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://satinp.github.io/simulacoes/sitemap.xml
+Sitemap: https://pedrosatin.github.io/simulacoes/sitemap.xml
