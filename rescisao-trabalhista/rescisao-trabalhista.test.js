@@ -365,7 +365,7 @@ describe('calculateVacationDue', () => {
   it('should return 0 when there are no vacations due', () => {
     const dados = {
       salario: 3000,
-      feriasVencidas: 0
+      feriasVencidas: 0,
     }
     expect(calculateVacationDue(dados)).toBe(0)
   })
@@ -373,7 +373,7 @@ describe('calculateVacationDue', () => {
   it('should correctly calculate for 1 period of vacation due', () => {
     const dados = {
       salario: 3000,
-      feriasVencidas: 1
+      feriasVencidas: 1,
     }
     // 3000 + 1/3 of 3000 (1000) = 4000
     expect(calculateVacationDue(dados)).toBe(4000)
@@ -382,7 +382,7 @@ describe('calculateVacationDue', () => {
   it('should correctly calculate for multiple periods of vacation due', () => {
     const dados = {
       salario: 3000,
-      feriasVencidas: 2
+      feriasVencidas: 2,
     }
     // 6000 + 1/3 of 6000 (2000) = 8000
     expect(calculateVacationDue(dados)).toBe(8000)
@@ -391,7 +391,7 @@ describe('calculateVacationDue', () => {
   it('should correctly calculate for fractional periods of vacation due', () => {
     const dados = {
       salario: 3000,
-      feriasVencidas: 1.5
+      feriasVencidas: 1.5,
     }
     // 4500 + 1/3 of 4500 (1500) = 6000
     expect(calculateVacationDue(dados)).toBe(6000)
