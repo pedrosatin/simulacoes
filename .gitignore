@@ -1,6 +1,7 @@
 node_modules/
 graphify-out/
 coverage/
+_site/
 *.log
 
 # Local workflow and generated artifacts
