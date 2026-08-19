@@ -282,7 +282,7 @@ VP_total = Soma de todas as VP_parcela_i
 - **Keywords**: calculadoras online, financeiras, matemáticas, regra de três, porcentagem, etc.
 - **Open Graph**: Meta tags para compartilhamento em redes sociais
 - **Twitter Cards**: Otimização para compartilhamento no Twitter
-- **Canonical URL**: https://satinp.github.io/simulacoes/
+- **Canonical URL**: https://pedrosatin.github.io/simulacoes/
 
 #### Páginas Específicas
 
@@ -424,7 +424,7 @@ VP_total = Soma de todas as VP_parcela_i
   content="Calculadora Financeira: À Vista vs Parcelado com Taxa Selic"
 />
 <meta property="og:description" content="Calculadora online gratuita..." />
-<meta property="og:url" content="https://satinp.github.io/simulacoes/" />
+<meta property="og:url" content="https://pedrosatin.github.io/simulacoes/" />
 
 <!-- Twitter Cards -->
 <meta property="twitter:card" content="summary_large_image" />
