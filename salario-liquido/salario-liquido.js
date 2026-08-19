@@ -50,7 +50,7 @@ function calculateINSS(grossSalary) {
   const inssCeiling = 7786.02 * 0.14 // R$ 1.090.04
   return {
     value: Math.min(inss, inssCeiling),
-    rate: grossSalary < 0 ? 0 : currentRate
+    rate: grossSalary < 0 ? 0 : currentRate,
   }
 }
 

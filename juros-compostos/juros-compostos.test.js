@@ -1,7 +1,11 @@
 /**
  * @jest-environment node
  */
-const { JurosMath, Format, JurosCompostosCalculadora } = require('./juros-compostos.js')
+const {
+  JurosMath,
+  Format,
+  JurosCompostosCalculadora,
+} = require('./juros-compostos.js')
 
 describe('JurosMath', () => {
   describe('annualToMonthly', () => {
