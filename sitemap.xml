@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://satinp.github.io/simulacoes/</loc>
+    <loc>https://pedrosatin.github.io/simulacoes/</loc>
     <lastmod>2025-01-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://satinp.github.io/simulacoes/a-vista-vs-parcelado/</loc>
+    <loc>https://pedrosatin.github.io/simulacoes/a-vista-vs-parcelado/</loc>
     <lastmod>2025-01-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://satinp.github.io/simulacoes/salario-liquido/</loc>
+    <loc>https://pedrosatin.github.io/simulacoes/salario-liquido/</loc>
     <lastmod>2025-01-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://satinp.github.io/simulacoes/rescisao-trabalhista/</loc>
+    <loc>https://pedrosatin.github.io/simulacoes/rescisao-trabalhista/</loc>
     <lastmod>2025-01-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://satinp.github.io/simulacoes/regra-de-tres/</loc>
+    <loc>https://pedrosatin.github.io/simulacoes/regra-de-tres/</loc>
     <lastmod>2025-08-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://satinp.github.io/simulacoes/juros-compostos/</loc>
+    <loc>https://pedrosatin.github.io/simulacoes/juros-compostos/</loc>
     <lastmod>2026-07-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
