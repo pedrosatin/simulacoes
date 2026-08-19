@@ -27,10 +27,42 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v6
 
+      # Monta o diretório publicado usando LISTA DE PERMISSÃO: só entra no
+      # _site/ o que é conteúdo do site. Artefatos de desenvolvimento
+      # (package*.json, configs de jest/oxlint/oxfmt, *.test.js, benchmarks,
+      # README, favicon-data.txt) ficam de fora.
+      # O `set -e` + `cp` explícito faz o build FALHAR caso um arquivo do site
+      # seja renomeado ou removido, em vez de publicar um site quebrado.
+      - name: Monta o diretório _site
+        run: |
+          set -euo pipefail
+          rm -rf _site
+          mkdir -p _site/assets _site/js
+
+          # Arquivos da raiz servidos pelo site
+          cp index.html favicon.svg manifest.json robots.txt sitemap.xml _site/
+
+          # Recursos compartilhados entre as páginas
+          cp assets/global.css _site/assets/
+          cp js/utils.js _site/js/
+
+          # Cada simulador: index.html + CSS + JS de produção
+          for dir in a-vista-vs-parcelado juros-compostos regra-de-tres rescisao-trabalhista salario-liquido; do
+            mkdir -p "_site/$dir"
+            cp "$dir/index.html" "_site/$dir/"
+            cp "$dir/$dir.css" "_site/$dir/"
+            cp "$dir/$dir.js" "_site/$dir/"
+          done
+
+          echo "::group::Arquivos publicados"
+          find _site -type f | sort
+          echo "::endgroup::"
+          echo "Total: $(find _site -type f | wc -l) arquivos, $(du -sh _site | cut -f1)"
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v5
         with:
-          path: .
+          path: ./_site
 
       - name: Deploy to GitHub Pages
         id: deployment
