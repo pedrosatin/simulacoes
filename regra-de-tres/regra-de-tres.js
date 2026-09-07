@@ -170,32 +170,17 @@ class RegraDeTresCalculadora {
   }
 
   /**
-   * Converter string para número
+   * Converter string para número (js/utils.js)
    */
   parseNumber(value) {
-    if (!value) return 0
-    return parseFloat(value.replace(',', '.')) || 0
+    return parseLocaleNumber(value)
   }
 
   /**
-   * Formatar número para exibição simples
+   * Formatar número para exibição simples (js/utils.js)
    */
   formatNumber(value, decimals = 2) {
-    if (!this._numberFormatters) {
-      this._numberFormatters = new Map()
-    }
-
-    if (!this._numberFormatters.has(decimals)) {
-      this._numberFormatters.set(
-        decimals,
-        new Intl.NumberFormat('pt-BR', {
-          minimumFractionDigits: decimals,
-          maximumFractionDigits: decimals,
-        }),
-      )
-    }
-
-    return this._numberFormatters.get(decimals).format(value)
+    return formatNumber(value, decimals)
   }
 
   /**
