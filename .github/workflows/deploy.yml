@@ -39,6 +39,9 @@ jobs:
       - name: Formatação
         run: npm run format:check
 
+      - name: Navegação sincronizada
+        run: npm run check:nav
+
   deploy:
     # O deploy só acontece se a suíte passar: nada vai ao ar sem gate.
     needs: quality

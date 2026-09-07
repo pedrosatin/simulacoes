@@ -5,6 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
+    "build:nav": "node scripts/build-nav.js",
+    "check:nav": "node scripts/build-nav.js --check",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
     "format": "oxfmt '**/*.{js,mjs,cjs,css}'",
