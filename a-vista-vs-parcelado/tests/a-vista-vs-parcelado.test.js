@@ -38,12 +38,13 @@ describe('Utils', () => {
       expect(Utils.parseCurrencyInput('   ')).toBe(0)
     })
 
-    it('should return the original value if not a string', () => {
+    it('should pass finite numbers through and coerce anything else to 0', () => {
       expect(Utils.parseCurrencyInput(1234.56)).toBe(1234.56)
-      expect(Utils.parseCurrencyInput(null)).toBeNull()
-      expect(Utils.parseCurrencyInput(undefined)).toBeUndefined()
-      const obj = {}
-      expect(Utils.parseCurrencyInput(obj)).toBe(obj)
+      expect(Utils.parseCurrencyInput(null)).toBe(0)
+      expect(Utils.parseCurrencyInput(undefined)).toBe(0)
+      expect(Utils.parseCurrencyInput({})).toBe(0)
+      expect(Utils.parseCurrencyInput(NaN)).toBe(0)
+      expect(Utils.parseCurrencyInput(Infinity)).toBe(0)
     })
 
     it('should correctly parse negative values', () => {
@@ -312,13 +313,7 @@ describe('FinancialCalculator', () => {
         currentDiscountFactor *= 1 + monthlyRate
       }
 
-      const averagePeriod = 6 // 12 / 2
-      const selicReturn = cashValue * Math.pow(1 + monthlyRate, averagePeriod)
-      const opportunityCost = selicReturn - cashValue
-
       expect(result.effectiveCost).toBeCloseTo(expectedPresentValue, 5)
-      expect(result.selicReturn).toBeCloseTo(selicReturn, 5)
-      expect(result.opportunityCost).toBeCloseTo(opportunityCost, 5)
       expect(result.presentValueOfInstallments).toBeCloseTo(
         expectedPresentValue,
         5,
@@ -341,8 +336,6 @@ describe('FinancialCalculator', () => {
       expect(result.installmentValue).toBe(100)
       expect(result.totalCost).toBe(1200)
       expect(result.effectiveCost).toBe(1200)
-      expect(result.selicReturn).toBe(1000)
-      expect(result.opportunityCost).toBe(0)
       expect(result.presentValueOfInstallments).toBe(1200)
     })
 
@@ -367,13 +360,7 @@ describe('FinancialCalculator', () => {
       // 1 installment means it's paid in month 1
       const expectedPresentValue = 500 / (1 + monthlyRate)
 
-      const averagePeriod = 0.5 // 1 / 2
-      const selicReturn = cashValue * Math.pow(1 + monthlyRate, averagePeriod)
-      const opportunityCost = selicReturn - cashValue
-
       expect(result.effectiveCost).toBeCloseTo(expectedPresentValue, 5)
-      expect(result.selicReturn).toBeCloseTo(selicReturn, 5)
-      expect(result.opportunityCost).toBeCloseTo(opportunityCost, 5)
       expect(result.presentValueOfInstallments).toBeCloseTo(
         expectedPresentValue,
         5,

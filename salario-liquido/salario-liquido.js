@@ -1,13 +1,23 @@
 // Calculadora de Salário Líquido
-// Tabelas atualizadas para 2025
+// Atualizar anualmente conforme as portarias vigentes (INSS/Receita Federal)
 
-// Tabelas de INSS 2025
+// Tabela de INSS 2026 — salário mínimo R$ 1.621,00, teto R$ 8.475,55
+// Fonte: portaria interministerial de reajuste do RGPS para 2026
 const inssTable = [
-  { min: 0, max: 1412.0, rate: 0.075 },
-  { min: 1412.01, max: 2666.68, rate: 0.09 },
-  { min: 2666.69, max: 4000.03, rate: 0.12 },
-  { min: 4000.04, max: 7786.02, rate: 0.14 },
+  { min: 0, max: 1621.0, rate: 0.075 },
+  { min: 1621.01, max: 2902.84, rate: 0.09 },
+  { min: 2902.85, max: 4354.27, rate: 0.12 },
+  { min: 4354.28, max: 8475.55, rate: 0.14 },
 ]
+
+// Contribuição máxima: soma progressiva de cada faixa dentro do seu próprio
+// intervalo. Derivada da tabela para nunca sair de sincronia com ela.
+const inssCeiling = inssTable.reduce(
+  (total, bracket, index) =>
+    total +
+    (bracket.max - (index === 0 ? 0 : inssTable[index - 1].max)) * bracket.rate,
+  0,
+)
 
 // Calcular INSS progressivo
 function calculateINSS(grossSalary) {
@@ -46,45 +56,71 @@ function calculateINSS(grossSalary) {
     remainingSalary -= bracketSalary
   }
 
-  // Teto do INSS 2025
-  const inssCeiling = 7786.02 * 0.14 // R$ 1.090.04
   return {
     value: Math.min(inss, inssCeiling),
     rate: grossSalary < 0 ? 0 : currentRate,
   }
 }
 
-// Tabelas de IRRF 2025
+// Tabela progressiva de IRRF 2026
 const irrfTable = [
-  { min: 0, max: 2259.2, rate: 0, deduction: 0 },
-  { min: 2259.21, max: 2826.65, rate: 0.075, deduction: 169.44 },
-  { min: 2826.66, max: 3751.05, rate: 0.15, deduction: 381.44 },
-  { min: 3751.06, max: 4664.68, rate: 0.225, deduction: 662.77 },
-  { min: 4664.69, max: Infinity, rate: 0.275, deduction: 896.0 },
+  { min: 0, max: 2428.8, rate: 0, deduction: 0 },
+  { min: 2428.81, max: 2826.65, rate: 0.075, deduction: 182.16 },
+  { min: 2826.66, max: 3751.05, rate: 0.15, deduction: 394.16 },
+  { min: 3751.06, max: 4664.68, rate: 0.225, deduction: 675.49 },
+  { min: 4664.69, max: Infinity, rate: 0.275, deduction: 908.73 },
 ]
 
-const dependentDeduction = 189.59 // Valor por dependente em 2025
+const dependentDeduction = 189.59 // Valor por dependente
+const simplifiedDiscount = 607.2 // Desconto simplificado mensal
+
+// Redutor da Lei 15.270/2025, aplicado sobre os rendimentos tributáveis:
+// isenção total até R$ 5.000,00 e redução decrescente até R$ 7.350,00.
+const REDUCTION_FULL_EXEMPTION_LIMIT = 5000.0
+const REDUCTION_UPPER_LIMIT = 7350.0
+const REDUCTION_BASE = 978.62
+const REDUCTION_COEFFICIENT = 0.133145
 
 // Determinar alíquota do INSS para exibição
 function getINSSRate(grossSalary) {
   return calculateINSS(grossSalary).rate
 }
 
-// Calcular IRRF
-function calculateIRRF(taxableIncome) {
+// Imposto pela tabela progressiva, antes do redutor da Lei 15.270/2025
+function calculateProgressiveIRRF(taxableBase) {
   for (const bracket of irrfTable) {
-    if (taxableIncome >= bracket.min && taxableIncome <= bracket.max) {
-      const irrf = taxableIncome * bracket.rate - bracket.deduction
-      return Math.max(0, irrf)
+    if (taxableBase >= bracket.min && taxableBase <= bracket.max) {
+      return Math.max(0, taxableBase * bracket.rate - bracket.deduction)
     }
   }
   return 0
 }
 
-// Determinar alíquota do IRRF para exibição
-function getIRRFRate(taxableIncome) {
+// Redutor da Lei 15.270/2025 sobre o imposto apurado.
+// Só faz sentido na faixa de redução; fora dela o chamador não o aplica.
+function calculateIRRFReduction(grossIncome) {
+  return Math.max(0, REDUCTION_BASE - REDUCTION_COEFFICIENT * grossIncome)
+}
+
+// Calcular IRRF: tabela progressiva sobre a base de cálculo, ajustada pelo
+// redutor da Lei 15.270/2025, que olha para os rendimentos tributáveis brutos.
+function calculateIRRF(taxableBase, grossIncome) {
+  const progressiveIRRF = calculateProgressiveIRRF(taxableBase)
+  if (progressiveIRRF === 0) return 0
+
+  if (grossIncome <= REDUCTION_FULL_EXEMPTION_LIMIT) return 0
+  if (grossIncome > REDUCTION_UPPER_LIMIT) return progressiveIRRF
+
+  return Math.max(0, progressiveIRRF - calculateIRRFReduction(grossIncome))
+}
+
+// Determinar alíquota do IRRF para exibição. Retorna 0 (isento) quando o
+// redutor zera o imposto, para não exibir alíquota sobre imposto inexistente.
+function getIRRFRate(taxableBase, grossIncome) {
+  if (calculateIRRF(taxableBase, grossIncome) === 0) return 0
+
   for (const bracket of irrfTable) {
-    if (taxableIncome >= bracket.min && taxableIncome <= bracket.max) {
+    if (taxableBase >= bracket.min && taxableBase <= bracket.max) {
       return bracket.rate
     }
   }
@@ -97,10 +133,12 @@ function validateTransportVoucher(transportValue, grossSalary) {
   return Math.max(0, Math.min(transportValue, maxTransport))
 }
 
-// Calcular base de cálculo do IRRF
+// Calcular base de cálculo do IRRF. Na retenção mensal aplica-se o desconto
+// simplificado quando ele for mais vantajoso que as deduções legais.
 function calculateIRRFBase(grossSalary, inssValue, dependents, healthPlan) {
-  const dependentDeductions = dependents * dependentDeduction
-  return grossSalary - inssValue - dependentDeductions - healthPlan
+  const legalDeductions =
+    inssValue + dependents * dependentDeduction + healthPlan
+  return grossSalary - Math.max(legalDeductions, simplifiedDiscount)
 }
 
 // Calcular total de descontos opcionais
@@ -130,7 +168,7 @@ function calculateNetSalary(data) {
   const inssValue = inssResult.value
   const inssRate = inssResult.rate
 
-  // Base de cálculo do IRRF (Salário bruto - INSS - dependentes - plano de saúde)
+  // Base de cálculo do IRRF (maior entre deduções legais e desconto simplificado)
   const irrfBase = calculateIRRFBase(
     grossSalary,
     inssValue,
@@ -138,9 +176,9 @@ function calculateNetSalary(data) {
     healthPlan,
   )
 
-  // Calcular IRRF
-  const irrfValue = calculateIRRF(Math.max(0, irrfBase))
-  const irrfRate = getIRRFRate(Math.max(0, irrfBase))
+  // Calcular IRRF (o redutor da Lei 15.270/2025 olha para o rendimento bruto)
+  const irrfValue = calculateIRRF(Math.max(0, irrfBase), grossSalary)
+  const irrfRate = getIRRFRate(Math.max(0, irrfBase), grossSalary)
 
   // Descontos totais
   const totalOptionalDeductions = calculateTotalOptionalDeductions(
@@ -181,21 +219,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const salaryForm = document.getElementById('salaryForm')
   const resultsSection = document.getElementById('salaryResults')
 
-  // Formatação monetária
-  const currencyFormatter = new Intl.NumberFormat('pt-BR', {
-    style: 'currency',
-    currency: 'BRL',
-  })
-
-  function formatCurrency(value) {
-    return currencyFormatter.format(value)
-  }
-
-  // Converter string monetária para número
-  function parseCurrency(value) {
-    if (!value) return 0
-    return parseFloat(value.replace(/[^\d,]/g, '').replace(',', '.')) || 0
-  }
+  // Moeda e parse vêm de js/utils.js (formatCurrency, parseLocaleNumber)
 
   // Adicionar máscaras monetárias aos inputs
   const moneyInputs = [
@@ -303,14 +327,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Coletar dados do formulário
     const formData = {
-      grossSalary: parseCurrency(document.getElementById('grossSalary').value),
+      grossSalary: parseLocaleNumber(
+        document.getElementById('grossSalary').value,
+      ),
       dependents: parseInt(document.getElementById('dependents').value) || 0,
-      healthPlan: parseCurrency(document.getElementById('healthPlan').value),
-      mealVoucher: parseCurrency(document.getElementById('mealVoucher').value),
-      transportVoucher: parseCurrency(
+      healthPlan: parseLocaleNumber(
+        document.getElementById('healthPlan').value,
+      ),
+      mealVoucher: parseLocaleNumber(
+        document.getElementById('mealVoucher').value,
+      ),
+      transportVoucher: parseLocaleNumber(
         document.getElementById('transportVoucher').value,
       ),
-      otherDeductions: parseCurrency(
+      otherDeductions: parseLocaleNumber(
         document.getElementById('otherDeductions').value,
       ),
     }
@@ -341,6 +371,9 @@ if (typeof module !== 'undefined' && module.exports) {
     calculateINSS,
     getINSSRate,
     inssTable,
+    irrfTable,
+    calculateProgressiveIRRF,
+    calculateIRRFReduction,
     calculateNetSalary,
     calculateIRRF,
     getIRRFRate,

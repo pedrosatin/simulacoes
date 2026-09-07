@@ -3,3 +3,7 @@ graphify-out/
 coverage/
 _site/
 *.log
+
+# Relatório de code health gerado localmente, fora do versionamento
+fallow.md
+.fallowrc.json
