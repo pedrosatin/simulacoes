@@ -149,19 +149,22 @@ header h1 {
 }
 
 /* ===== CARDS ===== */
-/* Base visual compartilhada por todo card do site. As classes abaixo só
-   acrescentam o que difere (padding, margem, alinhamento). */
+/* Base visual compartilhada pelos cards do site. As classes abaixo só
+   acrescentam o que difere (padding, margem, alinhamento).
+
+   Só entram aqui classes cujo visual de card vale em TODA página que as usa.
+   Ficam de fora, de propósito, `.tabs-container`, `.calculator-section` e
+   `.info-card`: as duas primeiras aparecem em páginas onde não são cards, e
+   `.info-card` tem uma segunda regra mais abaixo neste arquivo que a
+   sobrescreve. Agrupá-las aqui vazaria estilo para onde não deve. */
 .card-base,
 .card,
-.info-card,
 .form-container,
 .calculator-card,
 .result-card,
 .salary-card,
 .deductions-breakdown,
 .tax-info,
-.tabs-container,
-.calculator-section,
 .opcao-card,
 .selic-card,
 .option-card,
@@ -185,7 +188,11 @@ header h1 {
 }
 
 .info-card {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  border: 1px solid #333;
+  border-radius: 12px;
   padding: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 .info-card h3 {
