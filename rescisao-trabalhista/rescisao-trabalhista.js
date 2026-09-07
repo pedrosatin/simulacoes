@@ -23,7 +23,8 @@ const CONSTANTS = {
   MULTA_FGTS_DEMISSAO: 0.4, // 40%
   MULTA_FGTS_ACORDO: 0.2, // 20%
   MULTA_FGTS_SAQUE_ANIVERSARIO: 0.2, // 20% para optantes do saque-aniversário
-  SALARIO_MINIMO_2025: 1518, // Salário mínimo 2025
+  // Atualizar anualmente conforme decreto do salário mínimo nacional
+  SALARIO_MINIMO_VIGENTE: 1621, // Salário mínimo 2026
 }
 
 // Inicialização da aplicação
@@ -194,13 +195,13 @@ function calculateRescision() {
     const dados = collectFormData()
 
     // Validações adicionais
-    if (dados.salario < CONSTANTS.SALARIO_MINIMO_2025) {
+    if (dados.salario < CONSTANTS.SALARIO_MINIMO_VIGENTE) {
       if (
         !confirm(
           `O salário informado (${formatMoney(
             dados.salario,
           )}) está abaixo do salário mínimo (${formatMoney(
-            CONSTANTS.SALARIO_MINIMO_2025,
+            CONSTANTS.SALARIO_MINIMO_VIGENTE,
           )}). Deseja continuar?`,
         )
       ) {
@@ -610,29 +611,9 @@ function updateObservations(dados) {
  * Utilitários para formatação e manipulação de dados
  */
 
-// Converte valor monetário para float
-function parseMoneyToFloat(moneyString) {
-  if (!moneyString) return 0
-
-  return (
-    parseFloat(
-      moneyString
-        .replace(/R\$\s?/g, '')
-        .replace(/\./g, '')
-        .replace(',', '.'),
-    ) || 0
-  )
-}
-
-// Formata número para formato monetário brasileiro
-const moneyFormatter = new Intl.NumberFormat('pt-BR', {
-  style: 'currency',
-  currency: 'BRL',
-})
-
-function formatMoney(value) {
-  return moneyFormatter.format(value)
-}
+// Moeda vem de js/utils.js (window.* no browser, global no Jest via jest.setup.js)
+const parseMoneyToFloat = parseLocaleNumber
+const formatMoney = formatCurrency
 
 // Formata data para input type="date"
 function formatDateForInput(date) {

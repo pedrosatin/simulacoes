@@ -41,24 +41,12 @@ const elements = {
   grossReturn: document.getElementById('grossReturn'),
 }
 
-// Formatadores de moeda (cache para otimização de performance)
-const currencyFormatter = new Intl.NumberFormat('pt-BR', {
-  style: 'currency',
-  currency: 'BRL',
-})
-
-const currencyInputFormatter = new Intl.NumberFormat('pt-BR', {
-  style: 'currency',
-  currency: 'BRL',
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 2,
-})
-
 // Utilitários
+// Moeda vem de js/utils.js (window.* no browser, global no Jest via jest.setup.js)
 const Utils = {
   // Formatar valor monetário
   formatCurrency(value) {
-    return currencyFormatter.format(value)
+    return formatCurrency(value)
   },
 
   // Formatar valor para input (R$ 1.234,56)
@@ -68,36 +56,17 @@ const Utils = {
     const numericValue = this.parseCurrencyInput(value)
     if (isNaN(numericValue)) return value
 
-    return currencyInputFormatter.format(numericValue)
+    return formatCurrency(numericValue)
   },
 
   // Converter valor formatado para número
   parseCurrencyInput(value) {
-    if (typeof value !== 'string') return value
-
-    // Remove símbolos monetários e espaços
-    let cleaned = value.replace(/[R$\s]/g, '')
-
-    // Substitui vírgula decimal por ponto
-    cleaned = cleaned.replace(/\./g, '').replace(',', '.')
-
-    return parseFloat(cleaned) || 0
+    return parseLocaleNumber(value)
   },
 
   // Aplicar máscara monetária em tempo real
   applyCurrencyMask(input) {
-    let value = input.value
-
-    // Remove tudo exceto números
-    value = value.replace(/\D/g, '')
-
-    // Converte para centavos
-    value = (parseInt(value) || 0) / 100
-
-    // Formata como moeda
-    input.value = this.formatCurrencyInput(value)
-
-    return value
+    return applyMoneyMask(input)
   },
 
   // Formatar porcentagem
