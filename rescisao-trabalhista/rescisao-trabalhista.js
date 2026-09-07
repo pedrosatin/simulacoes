@@ -626,29 +626,9 @@ function updateObservations(dados) {
  * Utilitários para formatação e manipulação de dados
  */
 
-// Converte valor monetário para float
-function parseMoneyToFloat(moneyString) {
-  if (!moneyString) return 0
-
-  return (
-    parseFloat(
-      moneyString
-        .replace(/R\$\s?/g, '')
-        .replace(/\./g, '')
-        .replace(',', '.'),
-    ) || 0
-  )
-}
-
-// Formata número para formato monetário brasileiro
-const moneyFormatter = new Intl.NumberFormat('pt-BR', {
-  style: 'currency',
-  currency: 'BRL',
-})
-
-function formatMoney(value) {
-  return moneyFormatter.format(value)
-}
+// Moeda vem de js/utils.js (window.* no browser, global no Jest via jest.setup.js)
+const parseMoneyToFloat = parseLocaleNumber
+const formatMoney = formatCurrency
 
 // Formata data para input type="date"
 function formatDateForInput(date) {

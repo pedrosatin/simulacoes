@@ -219,21 +219,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const salaryForm = document.getElementById('salaryForm')
   const resultsSection = document.getElementById('salaryResults')
 
-  // Formatação monetária
-  const currencyFormatter = new Intl.NumberFormat('pt-BR', {
-    style: 'currency',
-    currency: 'BRL',
-  })
-
-  function formatCurrency(value) {
-    return currencyFormatter.format(value)
-  }
-
-  // Converter string monetária para número
-  function parseCurrency(value) {
-    if (!value) return 0
-    return parseFloat(value.replace(/[^\d,]/g, '').replace(',', '.')) || 0
-  }
+  // Moeda e parse vêm de js/utils.js (formatCurrency, parseLocaleNumber)
 
   // Adicionar máscaras monetárias aos inputs
   const moneyInputs = [
@@ -341,14 +327,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Coletar dados do formulário
     const formData = {
-      grossSalary: parseCurrency(document.getElementById('grossSalary').value),
+      grossSalary: parseLocaleNumber(
+        document.getElementById('grossSalary').value,
+      ),
       dependents: parseInt(document.getElementById('dependents').value) || 0,
-      healthPlan: parseCurrency(document.getElementById('healthPlan').value),
-      mealVoucher: parseCurrency(document.getElementById('mealVoucher').value),
-      transportVoucher: parseCurrency(
+      healthPlan: parseLocaleNumber(
+        document.getElementById('healthPlan').value,
+      ),
+      mealVoucher: parseLocaleNumber(
+        document.getElementById('mealVoucher').value,
+      ),
+      transportVoucher: parseLocaleNumber(
         document.getElementById('transportVoucher').value,
       ),
-      otherDeductions: parseCurrency(
+      otherDeductions: parseLocaleNumber(
         document.getElementById('otherDeductions').value,
       ),
     }
