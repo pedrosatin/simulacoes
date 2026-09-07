@@ -3,6 +3,9 @@ const {
   getINSSRate,
   calculateNetSalary,
   calculateIRRF,
+  calculateProgressiveIRRF,
+  calculateIRRFReduction,
+  calculateIRRFBase,
   getIRRFRate,
   validateTransportVoucher,
 } = require('./salario-liquido')
@@ -151,103 +154,138 @@ describe('validateTransportVoucher', () => {
   })
 })
 
-describe('calculateIRRF', () => {
-  it('should return 0 for income in the first bracket (exempt)', () => {
-    const irrf = calculateIRRF(2000.0)
-    expect(irrf).toBe(0)
+describe('calculateProgressiveIRRF', () => {
+  it('should return 0 within the exempt bracket (up to 2428.80)', () => {
+    expect(calculateProgressiveIRRF(0)).toBe(0)
+    expect(calculateProgressiveIRRF(2000)).toBe(0)
+    expect(calculateProgressiveIRRF(2428.8)).toBe(0)
   })
 
-  it('should calculate IRRF for income in the second bracket (7.5%)', () => {
-    // 2500.00 * 0.075 - 169.44 = 18.06
-    const irrf = calculateIRRF(2500.0)
-    expect(irrf).toBeCloseTo(18.06, 2)
+  it('should apply each bracket rate and deduction', () => {
+    // 2428.81 * 0.075 - 182.16 = 0.00075
+    expect(calculateProgressiveIRRF(2428.81)).toBeCloseTo(0.00075, 5)
+    // 3000 * 0.15 - 394.16 = 55.84
+    expect(calculateProgressiveIRRF(3000)).toBeCloseTo(55.84, 2)
+    // 4000 * 0.225 - 675.49 = 224.51
+    expect(calculateProgressiveIRRF(4000)).toBeCloseTo(224.51, 2)
+    // 5000 * 0.275 - 908.73 = 466.27
+    expect(calculateProgressiveIRRF(5000)).toBeCloseTo(466.27, 2)
   })
 
-  it('should calculate IRRF for income in the third bracket (15%)', () => {
-    // 3000.00 * 0.15 - 381.44 = 68.56
-    const irrf = calculateIRRF(3000.0)
-    expect(irrf).toBeCloseTo(68.56, 2)
+  it('should return 0 for invalid or negative input', () => {
+    expect(calculateProgressiveIRRF(-1000)).toBe(0)
+    expect(calculateProgressiveIRRF(NaN)).toBe(0)
+    expect(calculateProgressiveIRRF('invalid')).toBe(0)
+  })
+})
+
+describe('calculateIRRFReduction', () => {
+  it('should follow the formula 978.62 - 0.133145 * income', () => {
+    expect(calculateIRRFReduction(5000)).toBeCloseTo(312.895, 3)
+    expect(calculateIRRFReduction(6000)).toBeCloseTo(179.75, 2)
   })
 
-  it('should calculate IRRF for income in the fourth bracket (22.5%)', () => {
-    // 4000.00 * 0.225 - 662.77 = 237.23
-    const irrf = calculateIRRF(4000.0)
-    expect(irrf).toBeCloseTo(237.23, 2)
+  it('should reach approximately zero at the upper limit of 7350.00', () => {
+    expect(calculateIRRFReduction(7350)).toBeCloseTo(0, 2)
   })
 
-  it('should calculate IRRF for income in the fifth bracket (27.5%)', () => {
-    // 5000.00 * 0.275 - 896.00 = 479.00
-    const irrf = calculateIRRF(5000.0)
-    expect(irrf).toBeCloseTo(479.0, 2)
+  it('should never be negative', () => {
+    expect(calculateIRRFReduction(20000)).toBe(0)
+  })
+})
+
+describe('calculateIRRF (Lei 15.270/2025)', () => {
+  describe('band 1 — full exemption up to gross income of 5000.00', () => {
+    it('should return 0 even when the progressive table would charge tax', () => {
+      // Base 4392.80 cairia na faixa de 22.5%, mas o bruto esta na isencao total
+      expect(calculateProgressiveIRRF(4392.8)).toBeGreaterThan(0)
+      expect(calculateIRRF(4392.8, 5000.0)).toBe(0)
+      expect(calculateIRRF(4392.8, 3000.0)).toBe(0)
+    })
+
+    it('should return 0 at the exact boundary of 5000.00', () => {
+      expect(calculateIRRF(4392.8, 5000.0)).toBe(0)
+    })
   })
 
-  it('should return 0 for 0 income', () => {
-    const irrf = calculateIRRF(0)
-    expect(irrf).toBe(0)
+  describe('band 2 — decreasing reduction from 5000.01 to 7350.00', () => {
+    it('should stay continuous just past the exemption boundary', () => {
+      // progressivo(4392.81) = 312.89225 | redutor(5000.01) = 312.893669
+      // O redutor foi calibrado para anular o imposto no inicio da banda:
+      // nao ha salto de imposto entre 5000.00 e 5000.01.
+      expect(calculateIRRF(4392.81, 5000.01)).toBe(0)
+    })
+
+    it('should subtract the reduction in the middle of the band', () => {
+      // progressivo(5000) = 466.27 | redutor(6000) = 179.75
+      expect(calculateIRRF(5000, 6000)).toBeCloseTo(286.52, 2)
+    })
+
+    it('should be nearly the full progressive tax at 7350.00', () => {
+      // redutor(7350) ~ 0.00425
+      expect(calculateIRRF(6000, 7350)).toBeCloseTo(
+        calculateProgressiveIRRF(6000) - 0.00425,
+        4,
+      )
+    })
+
+    it('should never go below zero', () => {
+      // Redutor maior que o imposto apurado
+      expect(calculateIRRF(2429, 5000.01)).toBe(0)
+    })
   })
 
-  it('should return 0 for negative income', () => {
-    const irrf = calculateIRRF(-1000.0)
-    expect(irrf).toBe(0)
+  describe('band 3 — full progressive table above 7350.01', () => {
+    it('should apply the progressive tax with no reduction', () => {
+      expect(calculateIRRF(6000, 7350.01)).toBeCloseTo(
+        calculateProgressiveIRRF(6000),
+        6,
+      )
+      expect(calculateIRRF(9000, 12000)).toBeCloseTo(
+        calculateProgressiveIRRF(9000),
+        6,
+      )
+    })
   })
 
-  it('should handle boundary values for the first bracket (max 2259.20)', () => {
-    const irrf = calculateIRRF(2259.2)
-    expect(irrf).toBe(0)
+  describe('edge cases', () => {
+    it('should return 0 when the base is in the exempt bracket', () => {
+      expect(calculateIRRF(2000, 20000)).toBe(0)
+      expect(calculateIRRF(2428.8, 20000)).toBe(0)
+    })
+
+    it('should return 0 for 0, negative, NaN and non-numeric input', () => {
+      expect(calculateIRRF(0, 0)).toBe(0)
+      expect(calculateIRRF(-1000, -1000)).toBe(0)
+      expect(calculateIRRF(NaN, NaN)).toBe(0)
+      expect(calculateIRRF('invalid', 'invalid')).toBe(0)
+    })
+
+    it('should return Infinity for infinite income', () => {
+      expect(calculateIRRF(Infinity, Infinity)).toBe(Infinity)
+    })
+  })
+})
+
+describe('calculateIRRFBase', () => {
+  it('should subtract the legal deductions when they beat the simplified discount', () => {
+    // 501.51 + 2 * 189.59 + 300 = 1180.69 > 607.20
+    expect(calculateIRRFBase(5000, 501.51, 2, 300)).toBeCloseTo(3819.31, 2)
   })
 
-  it('should handle boundary values for the second bracket (min 2259.21, max 2826.65)', () => {
-    const irrfMin = calculateIRRF(2259.21)
-    expect(irrfMin).toBeCloseTo(0.00075, 5) // (2259.21 * 0.075) - 169.44 = 169.44075 - 169.44 = 0.00075
-
-    const irrfMax = calculateIRRF(2826.65)
-    expect(irrfMax).toBeCloseTo(42.55875, 5) // (2826.65 * 0.075) - 169.44 = 211.99875 - 169.44 = 42.55875
-  })
-
-  it('should handle boundary values for the third bracket (min 2826.66, max 3751.05)', () => {
-    const irrfMin = calculateIRRF(2826.66)
-    expect(irrfMin).toBeCloseTo(42.559, 3) // (2826.66 * 0.15) - 381.44 = 423.999 - 381.44 = 42.559
-
-    const irrfMax = calculateIRRF(3751.05)
-    expect(irrfMax).toBeCloseTo(181.2175, 4) // (3751.05 * 0.15) - 381.44 = 562.6575 - 381.44 = 181.2175
-  })
-
-  it('should handle boundary values for the fourth bracket (min 3751.06, max 4664.68)', () => {
-    const irrfMin = calculateIRRF(3751.06)
-    expect(irrfMin).toBeCloseTo(181.2185, 4) // (3751.06 * 0.225) - 662.77 = 843.9885 - 662.77 = 181.2185
-
-    const irrfMax = calculateIRRF(4664.68)
-    expect(irrfMax).toBeCloseTo(386.783, 3) // (4664.68 * 0.225) - 662.77 = 1049.553 - 662.77 = 386.783
-  })
-
-  it('should handle boundary values for the fifth bracket (min 4664.69, max Infinity)', () => {
-    const irrfMin = calculateIRRF(4664.69)
-    expect(irrfMin).toBeCloseTo(386.78975, 5) // (4664.69 * 0.275) - 896.0 = 1282.78975 - 896.0 = 386.78975
-
-    const irrfMax = calculateIRRF(Infinity)
-    expect(irrfMax).toBe(Infinity) // Infinity * 0.275 - 896.0 = Infinity
-  })
-
-  it('should return 0 for NaN', () => {
-    const irrf = calculateIRRF(NaN)
-    expect(irrf).toBe(0)
-  })
-
-  it('should return 0 for non-numeric strings', () => {
-    const irrf = calculateIRRF('invalid')
-    expect(irrf).toBe(0)
+  it('should subtract the simplified discount when it is more advantageous', () => {
+    // Deducoes legais 248.60 < 607.20
+    expect(calculateIRRFBase(3000, 248.5986, 0, 0)).toBeCloseTo(2392.8, 2)
   })
 })
 
 describe('calculateNetSalary', () => {
   it('should calculate net salary correctly without optional deductions', () => {
     // 3000 gross salary
-    // INSS: 248.5986
-    // IRRF Base: 3000 - 248.5986 = 2751.4014
-    // IRRF Bracket: 2259.21 a 2826.65 @ 7.5% com deducao de 169.44
-    // IRRF Value: (2751.4014 * 0.075) - 169.44 = 36.915105
-    // Total Deductions = 248.5986 + 36.915105 = 285.513705
-    // Net Salary: 3000 - 285.513705 = 2714.486295
+    // INSS: 248.5986 | deducoes legais 248.5986 < 607.20 (simplificado vence)
+    // IRRF Base: 3000 - 607.20 = 2392.80 -> faixa isenta
+    // Bruto de 3000 tambem esta na isencao total da Lei 15.270/2025
+    // Net Salary: 3000 - 248.5986 = 2751.4014
     const data = {
       grossSalary: 3000,
       dependents: 0,
@@ -261,42 +299,73 @@ describe('calculateNetSalary', () => {
 
     expect(result.grossSalary).toBe(3000)
     expect(result.inss.value).toBeCloseTo(248.5986, 4)
-    expect(result.irrf.value).toBeCloseTo(36.9151, 4)
-    expect(result.netSalary).toBeCloseTo(2714.4863, 4)
+    expect(result.irrf.value).toBe(0)
+    expect(result.irrf.rate).toBe(0)
+    expect(result.netSalary).toBeCloseTo(2751.4014, 4)
     expect(result.hasOptionalDeductions).toBe(false)
   })
 
-  it('should calculate net salary correctly with dependents', () => {
-    // 3000 gross salary, 2 dependentes
-    // INSS: 248.5986
-    // Dependentes: 2 * 189.59 = 379.18
-    // IRRF Base: 3000 - 248.5986 - 379.18 = 2372.2214
-    // IRRF Value: (2372.2214 * 0.075) - 169.44 = 8.476605
-    // Net Salary: 3000 - 248.5986 - 8.476605 = 2742.924795
-    const data = {
-      grossSalary: 3000,
-      dependents: 2,
+  it('should exempt any salary up to 5000.00', () => {
+    const base = {
+      dependents: 0,
       healthPlan: 0,
       mealVoucher: 0,
       transportVoucher: 0,
       otherDeductions: 0,
     }
 
-    const result = calculateNetSalary(data)
+    expect(
+      calculateNetSalary({ ...base, grossSalary: 4999.99 }).irrf.value,
+    ).toBe(0)
+    expect(calculateNetSalary({ ...base, grossSalary: 5000 }).irrf.value).toBe(
+      0,
+    )
+    // 5000 - INSS 501.513 = 4498.487
+    expect(
+      calculateNetSalary({ ...base, grossSalary: 5000 }).netSalary,
+    ).toBeCloseTo(4498.487, 3)
+  })
 
-    expect(result.irrf.value).toBeCloseTo(8.4766, 4)
-    expect(result.netSalary).toBeCloseTo(2742.9248, 4)
+  it('should charge tax inside the reduction band', () => {
+    // 6000 bruto | INSS 641.513 | base 6000 - 641.513 = 5358.487
+    // progressivo: 5358.487 * 0.275 - 908.73 = 564.853925
+    // redutor(6000) = 179.75 -> IRRF = 385.103925
+    const result = calculateNetSalary({
+      grossSalary: 6000,
+      dependents: 0,
+      healthPlan: 0,
+      mealVoucher: 0,
+      transportVoucher: 0,
+      otherDeductions: 0,
+    })
+
+    expect(result.inss.value).toBeCloseTo(641.513, 3)
+    expect(result.irrf.value).toBeCloseTo(385.1039, 4)
+    expect(result.netSalary).toBeCloseTo(4973.3831, 4)
+  })
+
+  it('should apply the full progressive table above 7350.00', () => {
+    // 10000 bruto | INSS no teto 988.0914 | base 10000 - 988.0914 = 9011.9086
+    // 9011.9086 * 0.275 - 908.73 = 1569.544865, sem redutor
+    const result = calculateNetSalary({
+      grossSalary: 10000,
+      dependents: 0,
+      healthPlan: 0,
+      mealVoucher: 0,
+      transportVoucher: 0,
+      otherDeductions: 0,
+    })
+
+    expect(result.inss.value).toBeCloseTo(988.0914, 4)
+    expect(result.irrf.value).toBeCloseTo(1569.5449, 4)
+    expect(result.irrf.rate).toBe(0.275)
+    expect(result.netSalary).toBeCloseTo(7442.3637, 4)
   })
 
   it('should calculate net salary with optional deductions', () => {
-    // 5000 gross salary, plano 200, refeicao 50, outros 100
-    // INSS: 501.513
-    // IRRF Base: 5000 - 501.513 - 200 = 4298.487
-    // IRRF Bracket: 3751.06 a 4664.68 @ 22.5% com deducao de 662.77
-    // IRRF Value: (4298.487 * 0.225) - 662.77 = 304.389575
-    // Total Optional = 350
-    // Total Deductions = 501.513 + 304.389575 + 350 = 1155.902575
-    // Net Salary: 5000 - 1155.902575 = 3844.097425
+    // 5000 bruto, plano 200, refeicao 50, outros 100
+    // Bruto na isencao total -> IRRF 0
+    // Total Deductions = 501.513 + 0 + 350 = 851.513
     const data = {
       grossSalary: 5000,
       dependents: 0,
@@ -308,10 +377,10 @@ describe('calculateNetSalary', () => {
 
     const result = calculateNetSalary(data)
 
-    expect(result.irrf.value).toBeCloseTo(304.3896, 4)
+    expect(result.irrf.value).toBe(0)
     expect(result.optional.total).toBe(350)
-    expect(result.totalDeductions).toBeCloseTo(1155.9026, 4)
-    expect(result.netSalary).toBeCloseTo(3844.0974, 4)
+    expect(result.totalDeductions).toBeCloseTo(851.513, 3)
+    expect(result.netSalary).toBeCloseTo(4148.487, 3)
     expect(result.hasOptionalDeductions).toBe(true)
   })
 
@@ -336,38 +405,35 @@ describe('calculateNetSalary', () => {
 })
 
 describe('getIRRFRate', () => {
-  it('should return 0 for income in the first bracket (<= 2259.20)', () => {
-    expect(getIRRFRate(2259.2)).toBe(0)
-    expect(getIRRFRate(1000)).toBe(0)
-    expect(getIRRFRate(0)).toBe(0)
-    expect(getIRRFRate(-500)).toBe(0)
+  it('should return 0 when the base is in the exempt bracket', () => {
+    expect(getIRRFRate(2428.8, 20000)).toBe(0)
+    expect(getIRRFRate(1000, 20000)).toBe(0)
+    expect(getIRRFRate(0, 0)).toBe(0)
+    expect(getIRRFRate(-500, -500)).toBe(0)
   })
 
-  it('should return 0.075 for income in the second bracket (2259.21 to 2826.65)', () => {
-    expect(getIRRFRate(2259.21)).toBe(0.075)
-    expect(getIRRFRate(2500)).toBe(0.075)
-    expect(getIRRFRate(2826.65)).toBe(0.075)
+  it('should return 0 when the Lei 15.270/2025 reduction zeroes the tax', () => {
+    // A base cairia em 22.5%, mas o bruto esta na isencao total
+    expect(getIRRFRate(4392.8, 5000)).toBe(0)
   })
 
-  it('should return 0.15 for income in the third bracket (2826.66 to 3751.05)', () => {
-    expect(getIRRFRate(2826.66)).toBe(0.15)
-    expect(getIRRFRate(3000)).toBe(0.15)
-    expect(getIRRFRate(3751.05)).toBe(0.15)
+  it('should return the bracket rate when tax is actually due', () => {
+    expect(getIRRFRate(2500, 20000)).toBe(0.075)
+    expect(getIRRFRate(3000, 20000)).toBe(0.15)
+    expect(getIRRFRate(4000, 20000)).toBe(0.225)
+    expect(getIRRFRate(5000, 20000)).toBe(0.275)
   })
 
-  it('should return 0.225 for income in the fourth bracket (3751.06 to 4664.68)', () => {
-    expect(getIRRFRate(3751.06)).toBe(0.225)
-    expect(getIRRFRate(4000)).toBe(0.225)
-    expect(getIRRFRate(4664.68)).toBe(0.225)
-  })
-
-  it('should return 0.275 for income in the fifth bracket (>= 4664.69)', () => {
-    expect(getIRRFRate(4664.69)).toBe(0.275)
-    expect(getIRRFRate(5000)).toBe(0.275)
-    expect(getIRRFRate(10000)).toBe(0.275)
+  it('should honour the bracket boundaries', () => {
+    expect(getIRRFRate(2826.65, 20000)).toBe(0.075)
+    expect(getIRRFRate(2826.66, 20000)).toBe(0.15)
+    expect(getIRRFRate(3751.05, 20000)).toBe(0.15)
+    expect(getIRRFRate(3751.06, 20000)).toBe(0.225)
+    expect(getIRRFRate(4664.68, 20000)).toBe(0.225)
+    expect(getIRRFRate(4664.69, 20000)).toBe(0.275)
   })
 
   it('should return 0 for invalid inputs like NaN', () => {
-    expect(getIRRFRate(NaN)).toBe(0)
+    expect(getIRRFRate(NaN, NaN)).toBe(0)
   })
 })
