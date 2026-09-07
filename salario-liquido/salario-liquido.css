@@ -72,12 +72,8 @@
 }
 
 .salary-card {
-  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-  border: 1px solid #333;
-  border-radius: 12px;
   padding: 20px;
   text-align: center;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 .salary-card h3 {
@@ -106,12 +102,8 @@
 
 /* Breakdown dos Descontos */
 .deductions-breakdown {
-  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-  border: 1px solid #333;
-  border-radius: 12px;
   padding: 25px;
   margin-bottom: 25px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 .deductions-breakdown h3 {
@@ -163,11 +155,7 @@
 
 /* Informações Tributárias */
 .tax-info {
-  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-  border: 1px solid #333;
-  border-radius: 12px;
   padding: 25px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 .tax-info h3 {
