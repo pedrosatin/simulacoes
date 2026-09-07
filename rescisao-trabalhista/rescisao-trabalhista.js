@@ -23,7 +23,8 @@ const CONSTANTS = {
   MULTA_FGTS_DEMISSAO: 0.4, // 40%
   MULTA_FGTS_ACORDO: 0.2, // 20%
   MULTA_FGTS_SAQUE_ANIVERSARIO: 0.2, // 20% para optantes do saque-aniversário
-  SALARIO_MINIMO_2025: 1518, // Salário mínimo 2025
+  // Atualizar anualmente conforme decreto do salário mínimo nacional
+  SALARIO_MINIMO_VIGENTE: 1621, // Salário mínimo 2026
 }
 
 // Inicialização da aplicação
@@ -194,13 +195,13 @@ function calculateRescision() {
     const dados = collectFormData()
 
     // Validações adicionais
-    if (dados.salario < CONSTANTS.SALARIO_MINIMO_2025) {
+    if (dados.salario < CONSTANTS.SALARIO_MINIMO_VIGENTE) {
       if (
         !confirm(
           `O salário informado (${formatMoney(
             dados.salario,
           )}) está abaixo do salário mínimo (${formatMoney(
-            CONSTANTS.SALARIO_MINIMO_2025,
+            CONSTANTS.SALARIO_MINIMO_VIGENTE,
           )}). Deseja continuar?`,
         )
       ) {

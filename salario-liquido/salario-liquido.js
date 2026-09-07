@@ -1,13 +1,23 @@
 // Calculadora de Salário Líquido
-// Tabelas atualizadas para 2025
+// Atualizar anualmente conforme as portarias vigentes (INSS/Receita Federal)
 
-// Tabelas de INSS 2025
+// Tabela de INSS 2026 — salário mínimo R$ 1.621,00, teto R$ 8.475,55
+// Fonte: portaria interministerial de reajuste do RGPS para 2026
 const inssTable = [
-  { min: 0, max: 1412.0, rate: 0.075 },
-  { min: 1412.01, max: 2666.68, rate: 0.09 },
-  { min: 2666.69, max: 4000.03, rate: 0.12 },
-  { min: 4000.04, max: 7786.02, rate: 0.14 },
+  { min: 0, max: 1621.0, rate: 0.075 },
+  { min: 1621.01, max: 2902.84, rate: 0.09 },
+  { min: 2902.85, max: 4354.27, rate: 0.12 },
+  { min: 4354.28, max: 8475.55, rate: 0.14 },
 ]
+
+// Contribuição máxima: soma progressiva de cada faixa dentro do seu próprio
+// intervalo. Derivada da tabela para nunca sair de sincronia com ela.
+const inssCeiling = inssTable.reduce(
+  (total, bracket, index) =>
+    total +
+    (bracket.max - (index === 0 ? 0 : inssTable[index - 1].max)) * bracket.rate,
+  0,
+)
 
 // Calcular INSS progressivo
 function calculateINSS(grossSalary) {
@@ -46,8 +56,6 @@ function calculateINSS(grossSalary) {
     remainingSalary -= bracketSalary
   }
 
-  // Teto do INSS 2025
-  const inssCeiling = 7786.02 * 0.14 // R$ 1.090.04
   return {
     value: Math.min(inss, inssCeiling),
     rate: grossSalary < 0 ? 0 : currentRate,
