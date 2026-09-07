@@ -149,12 +149,35 @@ header h1 {
 }
 
 /* ===== CARDS ===== */
-.card {
+/* Base visual compartilhada pelos cards do site. As classes abaixo só
+   acrescentam o que difere (padding, margem, alinhamento).
+
+   Só entram aqui classes cujo visual de card vale em TODA página que as usa.
+   Ficam de fora, de propósito, `.tabs-container`, `.calculator-section` e
+   `.info-card`: as duas primeiras aparecem em páginas onde não são cards, e
+   `.info-card` tem uma segunda regra mais abaixo neste arquivo que a
+   sobrescreve. Agrupá-las aqui vazaria estilo para onde não deve. */
+.card-base,
+.card,
+.form-container,
+.calculator-card,
+.result-card,
+.salary-card,
+.deductions-breakdown,
+.tax-info,
+.opcao-card,
+.selic-card,
+.option-card,
+.recommendation-card,
+.details-section {
   background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
   border: 1px solid #333;
   border-radius: 12px;
-  padding: 20px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.card {
+  padding: 20px;
 }
 
 .info-cards {
@@ -214,12 +237,8 @@ header h1 {
 /* ===== FORMULÁRIOS ===== */
 .form-container,
 .calculator-card {
-  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-  border: 1px solid #333;
-  border-radius: 12px;
   padding: 30px;
   margin-bottom: 30px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 .input-group {
@@ -369,11 +388,7 @@ small {
 }
 
 .result-card {
-  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-  border: 1px solid #333;
-  border-radius: 12px;
   padding: 30px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 .result-summary {
