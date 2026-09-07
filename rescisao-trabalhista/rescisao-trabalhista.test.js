@@ -1,4 +1,8 @@
 const {
+  calculateWorkPeriod,
+  calculateCompleteYears,
+  calculateCompleteMonths,
+  calculateRemainingDays,
   calculateSalaryBalance,
   calculatePriorNotice,
   calculateFGTSPenalty,
@@ -395,5 +399,139 @@ describe('calculateVacationDue', () => {
     }
     // 4500 + 1/3 of 4500 (1500) = 6000
     expect(calculateVacationDue(dados)).toBe(6000)
+  })
+})
+
+// Datas locais a meia-noite, para nao depender do fuso do ambiente
+const d = (iso) => new Date(`${iso}T00:00:00`)
+
+describe('calculateCompleteYears', () => {
+  it('should count whole years and advance the cursor', () => {
+    const cursor = d('2020-01-15')
+    expect(calculateCompleteYears(cursor, d('2023-01-15'))).toBe(3)
+    expect(cursor).toEqual(d('2023-01-15'))
+  })
+
+  it('should not count a year that has not closed yet', () => {
+    const cursor = d('2020-01-15')
+    expect(calculateCompleteYears(cursor, d('2023-01-14'))).toBe(2)
+    expect(cursor).toEqual(d('2022-01-15'))
+  })
+
+  it('should count the year on the exact anniversary', () => {
+    expect(calculateCompleteYears(d('2022-03-10'), d('2023-03-10'))).toBe(1)
+    expect(calculateCompleteYears(d('2022-03-10'), d('2023-03-09'))).toBe(0)
+  })
+
+  it('should return 0 when the dates are the same', () => {
+    expect(calculateCompleteYears(d('2023-05-01'), d('2023-05-01'))).toBe(0)
+  })
+})
+
+describe('calculateCompleteMonths', () => {
+  it('should count whole months within the same year', () => {
+    const cursor = d('2023-01-10')
+    expect(calculateCompleteMonths(cursor, d('2023-04-10'))).toBe(3)
+    expect(cursor).toEqual(d('2023-04-10'))
+  })
+
+  it('should count months across a year boundary', () => {
+    // Regressao: a versao anterior comparava so getMonth(), entao dezembro ->
+    // fevereiro devolvia 0 meses e distorcia 13o e ferias proporcionais.
+    expect(calculateCompleteMonths(d('2022-12-20'), d('2023-02-19'))).toBe(1)
+    expect(calculateCompleteMonths(d('2022-12-20'), d('2023-02-20'))).toBe(2)
+    expect(calculateCompleteMonths(d('2022-11-05'), d('2023-10-05'))).toBe(11)
+  })
+
+  it('should not count a month that has not closed yet', () => {
+    expect(calculateCompleteMonths(d('2023-01-10'), d('2023-04-09'))).toBe(2)
+  })
+
+  it('should return 0 when the dates are the same', () => {
+    expect(calculateCompleteMonths(d('2023-05-01'), d('2023-05-01'))).toBe(0)
+  })
+})
+
+describe('calculateRemainingDays', () => {
+  it('should count the full days between the cursor and the end date', () => {
+    expect(calculateRemainingDays(d('2023-05-01'), d('2023-05-16'))).toBe(15)
+    expect(calculateRemainingDays(d('2023-05-01'), d('2023-05-01'))).toBe(0)
+  })
+})
+
+describe('calculateWorkPeriod', () => {
+  it('should break the period into years, months and days', () => {
+    expect(calculateWorkPeriod(d('2022-06-10'), d('2023-08-25'))).toEqual({
+      anos: 1,
+      meses: 2,
+      dias: 15,
+      totalDias: 441,
+      totalMeses: 15,
+    })
+  })
+
+  it('should handle termination exactly on the admission anniversary', () => {
+    expect(calculateWorkPeriod(d('2020-01-15'), d('2023-01-15'))).toEqual({
+      anos: 3,
+      meses: 0,
+      dias: 0,
+      totalDias: 1096,
+      totalMeses: 36,
+    })
+  })
+
+  it('should handle termination one day after the anniversary', () => {
+    const periodo = calculateWorkPeriod(d('2020-01-15'), d('2023-01-16'))
+    expect(periodo.anos).toBe(3)
+    expect(periodo.meses).toBe(0)
+    expect(periodo.dias).toBe(1)
+  })
+
+  it('should handle termination one day before the anniversary', () => {
+    // Regressao: antes devolvia 2 anos, 0 meses e 364 dias, e um totalMeses
+    // de 25 em vez de 36 — erro direto no 13o e nas ferias proporcionais.
+    expect(calculateWorkPeriod(d('2020-01-15'), d('2023-01-14'))).toEqual({
+      anos: 2,
+      meses: 11,
+      dias: 30,
+      totalDias: 1095,
+      totalMeses: 36,
+    })
+  })
+
+  it('should count an extra month from 15 remaining days (regra dos 15 dias)', () => {
+    expect(
+      calculateWorkPeriod(d('2023-01-01'), d('2023-01-15')).totalMeses,
+    ).toBe(0)
+    expect(
+      calculateWorkPeriod(d('2023-01-01'), d('2023-01-16')).totalMeses,
+    ).toBe(1)
+  })
+
+  it('should handle a leap-day admission', () => {
+    expect(calculateWorkPeriod(d('2020-02-29'), d('2021-02-28'))).toEqual({
+      anos: 0,
+      meses: 11,
+      dias: 30,
+      totalDias: 365,
+      totalMeses: 12,
+    })
+  })
+
+  it('should handle month-end admission rolling over a short month', () => {
+    const periodo = calculateWorkPeriod(d('2023-01-31'), d('2023-02-28'))
+    expect(periodo.anos).toBe(0)
+    expect(periodo.meses).toBe(0)
+    expect(periodo.dias).toBe(28)
+  })
+
+  it('should return a zeroed period when both dates are the same', () => {
+    expect(calculateWorkPeriod(d('2023-01-01'), d('2023-01-01'))).toEqual({
+      anos: 0,
+      meses: 0,
+      dias: 0,
+      totalDias: 0,
+      totalMeses: 0,
+    })
   })
 })
