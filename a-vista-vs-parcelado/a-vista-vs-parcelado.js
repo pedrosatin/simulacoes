@@ -26,7 +26,6 @@ const elements = {
   selicDate: document.getElementById('selicDate'),
   // Resultados
   cashPayment: document.getElementById('cashPayment'),
-  selicInvestment: document.getElementById('selicInvestment'),
   cashTotalCost: document.getElementById('cashTotalCost'),
   installmentValue: document.getElementById('installmentValue'),
   installmentTotal: document.getElementById('installmentTotal'),
@@ -189,9 +188,6 @@ const FinancialCalculator = {
     const installmentValue = productValue / installments
     const monthlyRate = this.annualToMonthlyRate(selicRate)
 
-    // Valor que seria investido na Selic (diferença entre total parcelado e à vista)
-    const investmentAmount = cashValue
-
     // Calcular o valor presente das parcelas descontado pela Selic
     // Cada parcela é paga em um mês diferente, então temos que descontar cada uma
     let presentValueOfInstallments = 0
@@ -202,26 +198,13 @@ const FinancialCalculator = {
       currentDiscountFactor *= discountMultiplier
     }
 
-    // Calcular quanto o valor à vista renderia se investido na Selic
-    // Considerando que seria investido por um período médio de metade das parcelas
-    const averagePeriod = installments / 2
-    const selicReturn = this.calculateCompoundInterest(
-      investmentAmount,
-      monthlyRate,
-      averagePeriod,
-    )
-
     // O custo efetivo do parcelamento é o valor presente das parcelas
-    // menos o rendimento que teria com o investimento
     const effectiveCost = presentValueOfInstallments
-    const opportunityCost = selicReturn - investmentAmount // rendimento líquido perdido
 
     return {
       installmentValue: installmentValue,
       totalCost: productValue,
       effectiveCost: effectiveCost,
-      selicReturn: selicReturn,
-      opportunityCost: opportunityCost,
       presentValueOfInstallments: presentValueOfInstallments,
     }
   },
