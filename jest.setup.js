@@ -8,7 +8,6 @@ if (typeof document !== 'undefined') {
   <span id="selicRate"></span>
   <span id="selicDate"></span>
   <span id="cashPayment"></span>
-  <span id="selicInvestment"></span>
   <span id="cashTotalCost"></span>
   <span id="installmentValue"></span>
   <span id="installmentTotal"></span>
@@ -23,5 +22,10 @@ if (typeof document !== 'undefined') {
   <span id="grossReturn"></span>
 `
 }
+// js/utils.js e carregado via <script> nas paginas, entao suas funcoes sao
+// globais no browser. Replicamos isso no Jest.
 const utils = require('./js/utils.js')
+global.formatCurrency = utils.formatCurrency
+global.formatNumber = utils.formatNumber
+global.parseLocaleNumber = utils.parseLocaleNumber
 global.applyMoneyMask = utils.applyMoneyMask

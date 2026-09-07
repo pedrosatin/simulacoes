@@ -26,7 +26,6 @@ const elements = {
   selicDate: document.getElementById('selicDate'),
   // Resultados
   cashPayment: document.getElementById('cashPayment'),
-  selicInvestment: document.getElementById('selicInvestment'),
   cashTotalCost: document.getElementById('cashTotalCost'),
   installmentValue: document.getElementById('installmentValue'),
   installmentTotal: document.getElementById('installmentTotal'),
@@ -41,24 +40,12 @@ const elements = {
   grossReturn: document.getElementById('grossReturn'),
 }
 
-// Formatadores de moeda (cache para otimização de performance)
-const currencyFormatter = new Intl.NumberFormat('pt-BR', {
-  style: 'currency',
-  currency: 'BRL',
-})
-
-const currencyInputFormatter = new Intl.NumberFormat('pt-BR', {
-  style: 'currency',
-  currency: 'BRL',
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 2,
-})
-
 // Utilitários
+// Moeda vem de js/utils.js (window.* no browser, global no Jest via jest.setup.js)
 const Utils = {
   // Formatar valor monetário
   formatCurrency(value) {
-    return currencyFormatter.format(value)
+    return formatCurrency(value)
   },
 
   // Formatar valor para input (R$ 1.234,56)
@@ -68,36 +55,17 @@ const Utils = {
     const numericValue = this.parseCurrencyInput(value)
     if (isNaN(numericValue)) return value
 
-    return currencyInputFormatter.format(numericValue)
+    return formatCurrency(numericValue)
   },
 
   // Converter valor formatado para número
   parseCurrencyInput(value) {
-    if (typeof value !== 'string') return value
-
-    // Remove símbolos monetários e espaços
-    let cleaned = value.replace(/[R$\s]/g, '')
-
-    // Substitui vírgula decimal por ponto
-    cleaned = cleaned.replace(/\./g, '').replace(',', '.')
-
-    return parseFloat(cleaned) || 0
+    return parseLocaleNumber(value)
   },
 
   // Aplicar máscara monetária em tempo real
   applyCurrencyMask(input) {
-    let value = input.value
-
-    // Remove tudo exceto números
-    value = value.replace(/\D/g, '')
-
-    // Converte para centavos
-    value = (parseInt(value) || 0) / 100
-
-    // Formata como moeda
-    input.value = this.formatCurrencyInput(value)
-
-    return value
+    return applyMoneyMask(input)
   },
 
   // Formatar porcentagem
@@ -189,9 +157,6 @@ const FinancialCalculator = {
     const installmentValue = productValue / installments
     const monthlyRate = this.annualToMonthlyRate(selicRate)
 
-    // Valor que seria investido na Selic (diferença entre total parcelado e à vista)
-    const investmentAmount = cashValue
-
     // Calcular o valor presente das parcelas descontado pela Selic
     // Cada parcela é paga em um mês diferente, então temos que descontar cada uma
     let presentValueOfInstallments = 0
@@ -202,26 +167,13 @@ const FinancialCalculator = {
       currentDiscountFactor *= discountMultiplier
     }
 
-    // Calcular quanto o valor à vista renderia se investido na Selic
-    // Considerando que seria investido por um período médio de metade das parcelas
-    const averagePeriod = installments / 2
-    const selicReturn = this.calculateCompoundInterest(
-      investmentAmount,
-      monthlyRate,
-      averagePeriod,
-    )
-
     // O custo efetivo do parcelamento é o valor presente das parcelas
-    // menos o rendimento que teria com o investimento
     const effectiveCost = presentValueOfInstallments
-    const opportunityCost = selicReturn - investmentAmount // rendimento líquido perdido
 
     return {
       installmentValue: installmentValue,
       totalCost: productValue,
       effectiveCost: effectiveCost,
-      selicReturn: selicReturn,
-      opportunityCost: opportunityCost,
       presentValueOfInstallments: presentValueOfInstallments,
     }
   },
