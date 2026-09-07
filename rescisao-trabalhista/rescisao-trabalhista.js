@@ -248,23 +248,14 @@ function collectFormData() {
  */
 function calculateCompleteYears(tempDate, dataRescisao) {
   let anos = 0
-  while (
-    tempDate.getFullYear() < dataRescisao.getFullYear() ||
-    (tempDate.getFullYear() === dataRescisao.getFullYear() &&
-      tempDate.getMonth() < dataRescisao.getMonth()) ||
-    (tempDate.getFullYear() === dataRescisao.getFullYear() &&
-      tempDate.getMonth() === dataRescisao.getMonth() &&
-      tempDate.getDate() <= dataRescisao.getDate())
-  ) {
+  for (;;) {
     const nextYear = new Date(tempDate)
     nextYear.setFullYear(tempDate.getFullYear() + 1)
 
-    if (nextYear <= dataRescisao) {
-      anos++
-      tempDate.setTime(nextYear.getTime())
-    } else {
-      break
-    }
+    if (nextYear > dataRescisao) break
+
+    anos++
+    tempDate.setTime(nextYear.getTime())
   }
   return anos
 }
@@ -274,20 +265,14 @@ function calculateCompleteYears(tempDate, dataRescisao) {
  */
 function calculateCompleteMonths(tempDate, dataRescisao) {
   let meses = 0
-  while (
-    tempDate.getMonth() < dataRescisao.getMonth() ||
-    (tempDate.getMonth() === dataRescisao.getMonth() &&
-      tempDate.getDate() <= dataRescisao.getDate())
-  ) {
+  for (;;) {
     const nextMonth = new Date(tempDate)
     nextMonth.setMonth(tempDate.getMonth() + 1)
 
-    if (nextMonth <= dataRescisao) {
-      meses++
-      tempDate.setTime(nextMonth.getTime())
-    } else {
-      break
-    }
+    if (nextMonth > dataRescisao) break
+
+    meses++
+    tempDate.setTime(nextMonth.getTime())
   }
   return meses
 }
@@ -693,6 +678,10 @@ if (typeof module !== 'undefined' && module.exports) {
     calculateProportionalVacation,
     calculateVacationDue,
     calculateThirteenthSalary,
+    calculateWorkPeriod,
+    calculateCompleteYears,
+    calculateCompleteMonths,
+    calculateRemainingDays,
     CONSTANTS,
   }
 }
