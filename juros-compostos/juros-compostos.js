@@ -121,38 +121,12 @@ const JurosMath = {
 /* =====================================================================
    UTILITÁRIOS DE FORMATAÇÃO / PARSING
    ===================================================================== */
-const currencyFormatter = new Intl.NumberFormat('pt-BR', {
-  style: 'currency',
-  currency: 'BRL',
-})
-
-const numberFormatter = new Intl.NumberFormat('pt-BR', {
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 2,
-})
-
+// Moeda vem de js/utils.js (window.* no browser, global no Jest via jest.setup.js)
 const Format = {
-  currency(value) {
-    if (!isFinite(value)) return '—'
-    return currencyFormatter.format(value)
-  },
-  number(value, decimals = 2) {
-    if (!isFinite(value)) return '—'
-    return value.toLocaleString('pt-BR', {
-      minimumFractionDigits: decimals,
-      maximumFractionDigits: decimals,
-    })
-  },
-  /** Converte "1.234,56" ou "1234,56" em número. */
-  parseNumber(value) {
-    if (typeof value !== 'string') return value || 0
-    const cleaned = value
-      .replace(/\./g, '')
-      .replace(',', '.')
-      .replace(/[^0-9.-]/g, '')
-    const parsed = parseFloat(cleaned)
-    return isNaN(parsed) ? 0 : parsed
-  },
+  currency: formatCurrency,
+  number: formatNumber,
+  /** Converte "R$ 1.234,56", "1.234,56" ou "1234,56" em número. */
+  parseNumber: parseLocaleNumber,
   /** Converte meses (possivelmente fracionários) em texto "X anos e Y meses". */
   monthsToText(months) {
     if (!isFinite(months)) return 'nunca (juros insuficientes)'
@@ -197,15 +171,7 @@ class JurosCompostosCalculadora {
   /** Máscara de moeda (R$) para campos marcados com data-money. */
   setupMoneyMasks() {
     document.querySelectorAll('input[data-money]').forEach((input) => {
-      input.addEventListener('input', () => {
-        const digits = input.value.replace(/\D/g, '')
-        if (!digits) {
-          input.value = ''
-          return
-        }
-        const value = parseInt(digits, 10) / 100
-        input.value = numberFormatter.format(value)
-      })
+      input.addEventListener('input', () => applyMoneyMask(input))
     })
   }
 
