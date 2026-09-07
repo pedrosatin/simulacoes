@@ -4,7 +4,9 @@ coverage/
 _site/
 *.log
 
-# Local workflow and generated artifacts
-.github/instructions/
+# Relatório de code health gerado localmente, fora do versionamento
 fallow.md
 .fallowrc.json
+
+# Local workflow and generated artifacts
+.github/instructions/
