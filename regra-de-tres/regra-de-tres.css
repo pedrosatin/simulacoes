@@ -6,13 +6,9 @@
 
 .tabs-container {
   display: flex;
-  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-  border: 1px solid #333;
-  border-radius: 12px;
   padding: 6px;
   margin-bottom: 30px;
   overflow-x: auto;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 .tab-button {
@@ -54,12 +50,8 @@
    ========================================================================== */
 
 .calculator-section {
-  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-  border: 1px solid #333;
-  border-radius: 12px;
   padding: 30px;
   margin-bottom: 30px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 .calculator-section h2 {
@@ -177,11 +169,7 @@
 }
 
 .opcao-card {
-  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-  border: 1px solid #333;
-  border-radius: 12px;
   padding: 30px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 .opcao-card h3 {

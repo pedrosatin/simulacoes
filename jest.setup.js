@@ -8,7 +8,6 @@ if (typeof document !== 'undefined') {
   <span id="selicRate"></span>
   <span id="selicDate"></span>
   <span id="cashPayment"></span>
-  <span id="selicInvestment"></span>
   <span id="cashTotalCost"></span>
   <span id="installmentValue"></span>
   <span id="installmentTotal"></span>

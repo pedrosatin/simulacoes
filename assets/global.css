@@ -149,12 +149,32 @@ header h1 {
 }
 
 /* ===== CARDS ===== */
-.card {
+/* Base visual compartilhada por todo card do site. As classes abaixo só
+   acrescentam o que difere (padding, margem, alinhamento). */
+.card-base,
+.card,
+.info-card,
+.form-container,
+.calculator-card,
+.result-card,
+.salary-card,
+.deductions-breakdown,
+.tax-info,
+.tabs-container,
+.calculator-section,
+.opcao-card,
+.selic-card,
+.option-card,
+.recommendation-card,
+.details-section {
   background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
   border: 1px solid #333;
   border-radius: 12px;
-  padding: 20px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.card {
+  padding: 20px;
 }
 
 .info-cards {
@@ -165,11 +185,7 @@ header h1 {
 }
 
 .info-card {
-  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-  border: 1px solid #333;
-  border-radius: 12px;
   padding: 20px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 .info-card h3 {
@@ -214,12 +230,8 @@ header h1 {
 /* ===== FORMULÁRIOS ===== */
 .form-container,
 .calculator-card {
-  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-  border: 1px solid #333;
-  border-radius: 12px;
   padding: 30px;
   margin-bottom: 30px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 .input-group {
@@ -369,11 +381,7 @@ small {
 }
 
 .result-card {
-  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-  border: 1px solid #333;
-  border-radius: 12px;
   padding: 30px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 .result-summary {
