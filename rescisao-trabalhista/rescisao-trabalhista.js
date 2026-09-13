@@ -283,7 +283,7 @@ function calculateCompleteMonths(tempDate, dataRescisao) {
  */
 function calculateRemainingDays(tempDate, dataRescisao) {
   const diffFinal = dataRescisao.getTime() - tempDate.getTime()
-  return Math.floor(diffFinal / (1000 * 60 * 60 * 24))
+  return Math.round(diffFinal / (1000 * 60 * 60 * 24))
 }
 
 /**
@@ -291,7 +291,7 @@ function calculateRemainingDays(tempDate, dataRescisao) {
  */
 function calculateWorkPeriod(dataAdmissao, dataRescisao) {
   const diffTime = dataRescisao.getTime() - dataAdmissao.getTime()
-  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24))
+  const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24))
 
   // Cálculo mais preciso usando datas
   let tempDate = new Date(dataAdmissao)
@@ -441,30 +441,19 @@ function calculateVacationDue(dados) {
 /**
  * Calcula férias proporcionais
  */
-function calculateProportionalVacation(dados, _periodo) {
+function calculateProportionalVacation(dados, periodo) {
   // Justa causa não tem direito a férias proporcionais
   if (dados.tipoRescisao === 'demissao-justa-causa') {
     return 0
   }
 
-  // Calcula meses trabalhados no período aquisitivo atual
-  const ultimoAniversario = new Date(dados.dataAdmissao)
+  const p =
+    periodo && typeof periodo.meses === 'number'
+      ? periodo
+      : calculateWorkPeriod(dados.dataAdmissao, dados.dataRescisao)
 
-  // Encontra o último aniversário de contrato antes da rescisão
-  while (ultimoAniversario.getTime() <= dados.dataRescisao.getTime()) {
-    ultimoAniversario.setFullYear(ultimoAniversario.getFullYear() + 1)
-  }
-  ultimoAniversario.setFullYear(ultimoAniversario.getFullYear() - 1)
-
-  // Calcula meses desde o último aniversário
-  const diffTime = dados.dataRescisao.getTime() - ultimoAniversario.getTime()
-  const mesesProporcionais = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 30))
-
-  // Considera 15 dias ou mais como mês completo
-  const diasRestantes = Math.floor(
-    (diffTime % (1000 * 60 * 60 * 24 * 30)) / (1000 * 60 * 60 * 24),
-  )
-  const mesesAjustados = mesesProporcionais + (diasRestantes >= 15 ? 1 : 0)
+  const dias = typeof p.dias === 'number' ? p.dias : 0
+  const mesesAjustados = Math.min(12, p.meses + (dias > 14 ? 1 : 0))
 
   const valorFerias = (dados.salario / 12) * mesesAjustados
   return applyVacationBonus(valorFerias)
@@ -663,6 +652,7 @@ if (typeof module !== 'undefined' && module.exports) {
     calculateCompleteYears,
     calculateCompleteMonths,
     calculateRemainingDays,
+    calculateRescisionBenefits,
     CONSTANTS,
   }
 }

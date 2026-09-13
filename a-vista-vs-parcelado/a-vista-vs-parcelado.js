@@ -603,9 +603,11 @@ const SimulationController = {
 
     // Aplicar classes CSS para estilo
     const recommendationCard = document.querySelector('.recommendation-card')
-    recommendationCard.className =
-      'recommendation-card ' +
-      (comparison.isCashBetter ? 'better-cash' : 'better-installment')
+    if (recommendationCard) {
+      recommendationCard.className =
+        'recommendation-card ' +
+        (comparison.isCashBetter ? 'better-cash' : 'better-installment')
+    }
 
     // Mostrar resultados
     elements.results.style.display = 'block'
@@ -641,5 +643,8 @@ if (typeof module !== 'undefined' && module.exports) {
     FinancialCalculator,
     SelicAPI,
     Utils,
+    SimulationController,
+    CONFIG,
+    elements,
   }
 }

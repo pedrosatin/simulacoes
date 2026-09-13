@@ -1,3 +1,6 @@
+if (typeof Element !== 'undefined' && !Element.prototype.scrollIntoView) {
+  Element.prototype.scrollIntoView = () => {}
+}
 if (typeof document !== 'undefined') {
   document.body.innerHTML = `
   <form id="simulationForm"></form>
@@ -5,6 +8,7 @@ if (typeof document !== 'undefined') {
   <input id="cashValue">
   <input id="installments">
   <div id="results"></div>
+  <div class="recommendation-card"></div>
   <span id="selicRate"></span>
   <span id="selicDate"></span>
   <span id="cashPayment"></span>

@@ -9,8 +9,12 @@ const {
   calculateProportionalVacation,
   calculateVacationDue,
   calculateThirteenthSalary,
+  calculateRescisionBenefits,
   CONSTANTS,
 } = require('./rescisao-trabalhista.js')
+
+// Datas locais a meia-noite, para nao depender do fuso do ambiente
+const d = (iso) => new Date(`${iso}T00:00:00`)
 
 describe('calculateSalaryBalance', () => {
   it('should correctly calculate the salary balance for a mid-month rescision', () => {
@@ -402,9 +406,6 @@ describe('calculateVacationDue', () => {
   })
 })
 
-// Datas locais a meia-noite, para nao depender do fuso do ambiente
-const d = (iso) => new Date(`${iso}T00:00:00`)
-
 describe('calculateCompleteYears', () => {
   it('should count whole years and advance the cursor', () => {
     const cursor = d('2020-01-15')
@@ -533,5 +534,110 @@ describe('calculateWorkPeriod', () => {
       totalDias: 0,
       totalMeses: 0,
     })
+  })
+})
+
+describe('calculateRescisionBenefits', () => {
+  it('should calculate all benefits for demissao-sem-justa-causa', () => {
+    const dados = {
+      salario: 3000,
+      dataAdmissao: d('2021-01-01'),
+      dataRescisao: d('2023-01-16'),
+      tipoRescisao: 'demissao-sem-justa-causa',
+      diasAviso: 0,
+      feriasVencidas: 1,
+      saqueAniversario: false,
+      saldoFGTS: 5000,
+    }
+    const periodo = calculateWorkPeriod(dados.dataAdmissao, dados.dataRescisao)
+    const verbas = calculateRescisionBenefits(dados, periodo)
+
+    // Saldo salario: 3000 / 30 * 16 = 1600
+    expect(verbas.saldoSalario).toBe(1600)
+    // Aviso previo: 2 anos trabalhados -> 30 + 6 = 36 dias -> (3000 / 30) * 36 = 3600
+    expect(verbas.avisoPrevio).toBe(3600)
+    // 13o salario: Jan 16 -> 1 mes (>= 15 dias) -> (3000 / 12) * 1 = 250
+    expect(verbas.decimoTerceiro).toBe(250)
+    // Ferias vencidas: 1 periodo -> 3000 * 4/3 = 4000
+    expect(verbas.feriasVencidas).toBe(4000)
+    // Ferias proporcionais: periodo tem 2 anos, 0 meses, 15 dias -> 1 mes proporcional -> (3000 / 12) * 1 * 4/3 = 333.333...
+    expect(verbas.feriasProporcionais).toBeCloseTo(333.33, 2)
+    // Multa FGTS: 40% de 5000 = 2000
+    expect(verbas.multaFGTS).toBe(2000)
+    // Total: soma de todas as verbas
+    const soma =
+      verbas.saldoSalario +
+      verbas.avisoPrevio +
+      verbas.decimoTerceiro +
+      verbas.feriasVencidas +
+      verbas.feriasProporcionais +
+      verbas.multaFGTS
+    expect(verbas.total).toBeCloseTo(soma, 2)
+  })
+
+  it('should zero out penalty, notice and proportional benefits for demissao-justa-causa', () => {
+    const dados = {
+      salario: 3000,
+      dataAdmissao: d('2021-01-01'),
+      dataRescisao: d('2023-01-16'),
+      tipoRescisao: 'demissao-justa-causa',
+      diasAviso: 0,
+      feriasVencidas: 1,
+      saqueAniversario: false,
+      saldoFGTS: 5000,
+    }
+    const periodo = calculateWorkPeriod(dados.dataAdmissao, dados.dataRescisao)
+    const verbas = calculateRescisionBenefits(dados, periodo)
+
+    expect(verbas.saldoSalario).toBe(1600)
+    expect(verbas.avisoPrevio).toBe(0)
+    expect(verbas.decimoTerceiro).toBe(0)
+    expect(verbas.feriasProporcionais).toBe(0)
+    expect(verbas.multaFGTS).toBe(0)
+    expect(verbas.feriasVencidas).toBe(4000)
+    expect(verbas.total).toBe(5600)
+  })
+
+  it('should calculate pedido-demissao without notice and FGTS penalty', () => {
+    const dados = {
+      salario: 3000,
+      dataAdmissao: d('2022-01-01'),
+      dataRescisao: d('2023-01-16'),
+      tipoRescisao: 'pedido-demissao',
+      diasAviso: 0,
+      feriasVencidas: 0,
+      saqueAniversario: false,
+      saldoFGTS: 4000,
+    }
+    const periodo = calculateWorkPeriod(dados.dataAdmissao, dados.dataRescisao)
+    const verbas = calculateRescisionBenefits(dados, periodo)
+
+    expect(verbas.saldoSalario).toBe(1600)
+    expect(verbas.avisoPrevio).toBe(0)
+    expect(verbas.decimoTerceiro).toBe(250)
+    expect(verbas.feriasVencidas).toBe(0)
+    expect(verbas.feriasProporcionais).toBeCloseTo(333.33, 2)
+    expect(verbas.multaFGTS).toBe(0)
+    expect(verbas.total).toBeCloseTo(1600 + 250 + 333.33, 2)
+  })
+
+  it('should apply 50% notice and 20% penalty for acordo', () => {
+    const dados = {
+      salario: 3000,
+      dataAdmissao: d('2021-01-01'),
+      dataRescisao: d('2023-01-16'),
+      tipoRescisao: 'acordo',
+      diasAviso: 0,
+      feriasVencidas: 0,
+      saqueAniversario: false,
+      saldoFGTS: 5000,
+    }
+    const periodo = calculateWorkPeriod(dados.dataAdmissao, dados.dataRescisao)
+    const verbas = calculateRescisionBenefits(dados, periodo)
+
+    // Aviso previo 36 dias * 0.5 = 18 dias -> (3000 / 30) * 18 = 1800
+    expect(verbas.avisoPrevio).toBe(1800)
+    // Multa FGTS 20% de 5000 = 1000
+    expect(verbas.multaFGTS).toBe(1000)
   })
 })

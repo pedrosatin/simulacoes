@@ -2,6 +2,9 @@ const {
   FinancialCalculator,
   SelicAPI,
   Utils,
+  SimulationController,
+  CONFIG,
+  elements,
 } = require('../a-vista-vs-parcelado.js')
 
 describe('Utils', () => {
@@ -679,6 +682,182 @@ describe('SelicAPI', () => {
       expect(document.getElementById('selicDate').textContent).toBe(
         'Taxa de referência',
       )
+    })
+  })
+})
+
+describe('SimulationController', () => {
+  beforeEach(() => {
+    // Reset inputs and DOM state
+    elements.productValue.value = ''
+    elements.cashValue.value = ''
+    elements.installments.value = ''
+    elements.form.className = ''
+    elements.results.style.display = 'none'
+    const err = document.querySelector('.error')
+    if (err) err.remove()
+  })
+
+  describe('validateForm', () => {
+    it('should return false and show error when product value is invalid', () => {
+      elements.productValue.value = '0'
+      elements.cashValue.value = '100'
+      elements.installments.value = '10'
+
+      expect(SimulationController.validateForm()).toBe(false)
+      expect(document.querySelector('.error').textContent).toContain(
+        'valor válido para o produto',
+      )
+    })
+
+    it('should return false and show error when cash value is invalid', () => {
+      elements.productValue.value = '1000'
+      elements.cashValue.value = '0'
+      elements.installments.value = '10'
+
+      expect(SimulationController.validateForm()).toBe(false)
+      expect(document.querySelector('.error').textContent).toContain(
+        'valor válido para pagamento à vista',
+      )
+    })
+
+    it('should return false when installments are less than 1 or greater than max', () => {
+      elements.productValue.value = '1000'
+      elements.cashValue.value = '900'
+      elements.installments.value = '0'
+
+      expect(SimulationController.validateForm()).toBe(false)
+      expect(document.querySelector('.error').textContent).toContain(
+        'número válido de parcelas',
+      )
+
+      elements.installments.value = String(CONFIG.MAX_INSTALLMENTS + 1)
+      expect(SimulationController.validateForm()).toBe(false)
+    })
+
+    it('should return false when cash value is greater than product value', () => {
+      elements.productValue.value = '1000'
+      elements.cashValue.value = '1200'
+      elements.installments.value = '10'
+
+      expect(SimulationController.validateForm()).toBe(false)
+      expect(document.querySelector('.error').textContent).toContain(
+        'não pode ser maior que o valor do produto',
+      )
+    })
+
+    it('should return false when cash value equals product value', () => {
+      elements.productValue.value = '1000'
+      elements.cashValue.value = '1000'
+      elements.installments.value = '10'
+
+      expect(SimulationController.validateForm()).toBe(false)
+      expect(document.querySelector('.error').textContent).toContain(
+        'deve ser menor que o valor parcelado',
+      )
+    })
+
+    it('should return true when all fields are valid', () => {
+      elements.productValue.value = '1000'
+      elements.cashValue.value = '900'
+      elements.installments.value = '10'
+
+      expect(SimulationController.validateForm()).toBe(true)
+    })
+  })
+
+  describe('handleProductValueChange', () => {
+    it('should suggest 5% discount when cashValue is empty', () => {
+      elements.productValue.value = '1.000,00'
+      elements.cashValue.value = ''
+
+      SimulationController.handleProductValueChange({
+        target: elements.productValue,
+      })
+
+      // 1000 * 0.95 = 950
+      expect(elements.cashValue.value).toBe(Utils.formatCurrencyInput(950))
+    })
+
+    it('should not overwrite cashValue when it already has a value', () => {
+      elements.productValue.value = '1.000,00'
+      elements.cashValue.value = '920,00'
+
+      SimulationController.handleProductValueChange({
+        target: elements.productValue,
+      })
+
+      expect(elements.cashValue.value).toBe('920,00')
+    })
+  })
+
+  describe('performSimulation', () => {
+    let getSelicRateSpy
+
+    afterEach(() => {
+      if (getSelicRateSpy) getSelicRateSpy.mockRestore()
+    })
+
+    it('should display cash advantage when cash payment yields lower effective cost', async () => {
+      getSelicRateSpy = jest
+        .spyOn(SelicAPI, 'getSelicRate')
+        .mockResolvedValue({ rate: 10.0, date: '01/01/2025' })
+
+      elements.productValue.value = '1.000,00'
+      elements.cashValue.value = '800,00' // Big discount
+      elements.installments.value = '10'
+
+      await SimulationController.performSimulation()
+
+      expect(elements.results.style.display).toBe('block')
+      expect(elements.cashPayment.textContent).toContain('800,00')
+      const card = document.querySelector('.recommendation-card')
+      expect(card.className).toContain('better-cash')
+      expect(elements.recommendationTitle.textContent).toContain(
+        'Melhor: Pagamento à Vista',
+      )
+    })
+
+    it('should display installment advantage when installments yield lower effective cost', async () => {
+      // Very high Selic rate and minimal cash discount
+      getSelicRateSpy = jest
+        .spyOn(SelicAPI, 'getSelicRate')
+        .mockResolvedValue({ rate: 25.0, date: '01/01/2025' })
+
+      elements.productValue.value = '1.000,00'
+      elements.cashValue.value = '999,00' // Barely any discount
+      elements.installments.value = '24'
+
+      await SimulationController.performSimulation()
+
+      expect(elements.results.style.display).toBe('block')
+      const card = document.querySelector('.recommendation-card')
+      expect(card.className).toContain('better-installment')
+      expect(elements.recommendationTitle.textContent).toContain(
+        'Melhor: Pagamento Parcelado',
+      )
+    })
+
+    it('should handle simulation error gracefully', async () => {
+      getSelicRateSpy = jest
+        .spyOn(SelicAPI, 'getSelicRate')
+        .mockRejectedValue(new Error('API boom'))
+      const consoleErrorSpy = jest
+        .spyOn(console, 'error')
+        .mockImplementation(() => {})
+
+      elements.productValue.value = '1000'
+      elements.cashValue.value = '900'
+      elements.installments.value = '10'
+
+      await SimulationController.performSimulation()
+
+      expect(document.querySelector('.error').textContent).toContain(
+        'Erro ao realizar simulação',
+      )
+      expect(elements.form.classList.contains('loading')).toBe(false)
+
+      consoleErrorSpy.mockRestore()
     })
   })
 })
