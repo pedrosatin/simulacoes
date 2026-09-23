@@ -28,9 +28,9 @@
   },
   "homepage": "https://github.com/pedrosatin/simulacoes#readme",
   "devDependencies": {
-    "jest": "^30.4.2",
-    "jest-environment-jsdom": "^30.4.1",
-    "oxfmt": "^0.59.0",
-    "oxlint": "^1.74.0"
+    "jest": "^30.5.2",
+    "jest-environment-jsdom": "^30.5.2",
+    "oxfmt": "^0.70.0",
+    "oxlint": "^1.85.0"
   }
 }
