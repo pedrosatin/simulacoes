@@ -46,6 +46,14 @@ npm run check:nav       # verify the nav is in sync (used in CI)
 
 Pushes to `master` trigger a GitHub Actions workflow (`.github/workflows/deploy.yml`) that runs tests, lint, and format checks, then publishes the site to GitHub Pages. Only the production files (HTML, CSS, JS, and static assets) are copied into the published directory; test files, configs, and dev-only artifacts are excluded.
 
+## Author
+
+Criado por [@pedrosatin](https://github.com/pedrosatin)
+
+## Contributing
+
+Found a bug or have an idea for a new calculator? Open an issue at [github.com/pedrosatin/simulacoes/issues](https://github.com/pedrosatin/simulacoes/issues).
+
 ## License
 
 MIT. See [LICENSE](LICENSE).
