@@ -10,6 +10,7 @@ const {
   calculateVacationDue,
   calculateThirteenthSalary,
   calculateRescisionBenefits,
+  validateDates,
   CONSTANTS,
 } = require('./rescisao-trabalhista.js')
 
@@ -639,5 +640,122 @@ describe('calculateRescisionBenefits', () => {
     expect(verbas.avisoPrevio).toBe(1800)
     // Multa FGTS 20% de 5000 = 1000
     expect(verbas.multaFGTS).toBe(1000)
+  })
+})
+
+describe('Invalid dates and loop safety (DoS prevention)', () => {
+  it('should return 0 when calculateCompleteYears receives Invalid Date or NaN without looping', () => {
+    const invalidDate = new Date('invalid')
+    const validDate = d('2023-01-01')
+
+    expect(calculateCompleteYears(invalidDate, validDate)).toBe(0)
+    expect(calculateCompleteYears(validDate, invalidDate)).toBe(0)
+    expect(calculateCompleteYears(invalidDate, invalidDate)).toBe(0)
+    expect(calculateCompleteYears(null, validDate)).toBe(0)
+  })
+
+  it('should return 0 when calculateCompleteMonths receives Invalid Date or NaN without looping', () => {
+    const invalidDate = new Date('invalid')
+    const validDate = d('2023-01-01')
+
+    expect(calculateCompleteMonths(invalidDate, validDate)).toBe(0)
+    expect(calculateCompleteMonths(validDate, invalidDate)).toBe(0)
+    expect(calculateCompleteMonths(invalidDate, invalidDate)).toBe(0)
+    expect(calculateCompleteMonths(null, validDate)).toBe(0)
+  })
+
+  it('should return 0 when calculateRemainingDays receives Invalid Date or NaN', () => {
+    const invalidDate = new Date('invalid')
+    const validDate = d('2023-01-01')
+
+    expect(calculateRemainingDays(invalidDate, validDate)).toBe(0)
+    expect(calculateRemainingDays(validDate, invalidDate)).toBe(0)
+    expect(calculateRemainingDays(null, validDate)).toBe(0)
+  })
+
+  it('should safely return zeroed period when calculateWorkPeriod receives Invalid Date', () => {
+    const invalidDate = new Date('invalid')
+    const validDate = d('2023-01-01')
+
+    expect(calculateWorkPeriod(invalidDate, validDate)).toEqual({
+      anos: 0,
+      meses: 0,
+      dias: 0,
+      totalDias: 0,
+      totalMeses: 0,
+    })
+    expect(calculateWorkPeriod(validDate, invalidDate)).toEqual({
+      anos: 0,
+      meses: 0,
+      dias: 0,
+      totalDias: 0,
+      totalMeses: 0,
+    })
+    expect(calculateWorkPeriod(null, undefined)).toEqual({
+      anos: 0,
+      meses: 0,
+      dias: 0,
+      totalDias: 0,
+      totalMeses: 0,
+    })
+  })
+
+  describe('validateDates DOM validation', () => {
+    let originalAlert
+
+    beforeEach(() => {
+      document.body.innerHTML = `
+        <input type="text" id="dataAdmissao" value="" />
+        <input type="text" id="dataRescisao" value="" />
+      `
+      originalAlert = window.alert
+      window.alert = jest.fn()
+    })
+
+    afterEach(() => {
+      window.alert = originalAlert
+    })
+
+    it('should reject malformed or non-ISO dates and alert user', () => {
+      document.getElementById('dataAdmissao').value = '31/12/2024'
+      document.getElementById('dataRescisao').value = '2025-01-15'
+
+      const result = validateDates()
+      expect(result).toBe(false)
+      expect(window.alert).toHaveBeenCalledWith(
+        'Por favor, informe datas válidas para admissão e rescisão.',
+      )
+    })
+
+    it('should reject when dataRescisao is invalid date', () => {
+      document.getElementById('dataAdmissao').value = '2024-01-01'
+      document.getElementById('dataRescisao').value = 'data-invalida'
+
+      const result = validateDates()
+      expect(result).toBe(false)
+      expect(window.alert).toHaveBeenCalledWith(
+        'Por favor, informe datas válidas para admissão e rescisão.',
+      )
+    })
+
+    it('should reject when dataAdmissao >= dataRescisao', () => {
+      document.getElementById('dataAdmissao').value = '2024-05-10'
+      document.getElementById('dataRescisao').value = '2024-05-10'
+
+      const result = validateDates()
+      expect(result).toBe(false)
+      expect(window.alert).toHaveBeenCalledWith(
+        'Data de rescisão deve ser posterior à data de admissão',
+      )
+    })
+
+    it('should accept valid dates where rescisao is within 1 year future', () => {
+      document.getElementById('dataAdmissao').value = '2023-01-01'
+      document.getElementById('dataRescisao').value = '2024-01-01'
+
+      const result = validateDates()
+      expect(result).toBe(true)
+      expect(window.alert).not.toHaveBeenCalled()
+    })
   })
 })
