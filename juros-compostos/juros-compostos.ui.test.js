@@ -211,6 +211,18 @@ describe('JurosCompostosCalculadora', () => {
       expect(text('jurosMontante')).toBe('')
       expect(document.getElementById('jurosResultado').style.display).toBe('')
     })
+
+    it('should refuse a period greater than 100 years / 1200 months', () => {
+      set('jurosTempo', '101')
+      set('jurosTempoPeriodo', 'anos')
+      click('calcJurosBtn')
+
+      expect(alertSpy).toHaveBeenCalledWith(
+        'O período máximo permitido para simulação é de 100 anos (1.200 meses).',
+      )
+      expect(text('jurosMontante')).toBe('')
+      expect(document.getElementById('jurosResultado').style.display).toBe('')
+    })
   })
 
   describe('calcularViverDeRenda', () => {
@@ -336,6 +348,17 @@ describe('JurosCompostosCalculadora', () => {
       expect(alertSpy).toHaveBeenCalledWith('Informe um período válido.')
       expect(text('compararMontanteA')).toBe('')
     })
+
+    it('should refuse a period greater than 100 years / 1200 months', () => {
+      set('compararTempo', '1201')
+      set('compararTempoPeriodo', 'meses')
+      click('calcCompararBtn')
+
+      expect(alertSpy).toHaveBeenCalledWith(
+        'O período máximo permitido para simulação é de 100 anos (1.200 meses).',
+      )
+      expect(text('compararMontanteA')).toBe('')
+    })
   })
 
   describe('calcularAposentadoria', () => {
@@ -391,6 +414,17 @@ describe('JurosCompostosCalculadora', () => {
 
       expect(alertSpy).toHaveBeenCalledWith(
         'A idade de aposentadoria deve ser maior que a idade atual.',
+      )
+      expect(text('aposPatrimonio')).toBe('')
+    })
+
+    it('should refuse a retirement horizon greater than 100 years', () => {
+      set('aposIdadeAtual', '20')
+      set('aposIdadeAposentar', '125')
+      click('calcAposentadoriaBtn')
+
+      expect(alertSpy).toHaveBeenCalledWith(
+        'O período até a aposentadoria não pode exceder 100 anos.',
       )
       expect(text('aposPatrimonio')).toBe('')
     })

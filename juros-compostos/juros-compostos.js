@@ -95,10 +95,12 @@ const JurosMath = {
    * Evolução ano a ano do patrimônio. Retorna array de objetos por ano.
    */
   buildYearlyEvolution(principal, monthlyContribution, monthlyRate, months) {
-    const totalYears = Math.ceil(months / 12)
+    const MAX_MONTHS = 1200 // Limite defensivo de 100 anos para prevenir OOM DoS
+    const clampedMonths = Math.min(Math.max(0, months), MAX_MONTHS)
+    const totalYears = Math.ceil(clampedMonths / 12)
     const rows = Array.from({ length: totalYears })
     for (let year = 1; year <= totalYears; year++) {
-      const monthsElapsed = Math.min(year * 12, months)
+      const monthsElapsed = Math.min(year * 12, clampedMonths)
       const balance = this.futureValue(
         principal,
         monthlyContribution,
@@ -233,6 +235,14 @@ class JurosCompostosCalculadora {
       return
     }
 
+    const MAX_MONTHS = 1200 // 100 anos
+    if (months > MAX_MONTHS) {
+      alert(
+        'O período máximo permitido para simulação é de 100 anos (1.200 meses).',
+      )
+      return
+    }
+
     const total = JurosMath.futureValue(principal, monthly, rate, months)
     const invested = principal + monthly * months
     const interest = total - invested
@@ -333,6 +343,14 @@ class JurosCompostosCalculadora {
       return
     }
 
+    const MAX_MONTHS = 1200 // 100 anos
+    if (months > MAX_MONTHS) {
+      alert(
+        'O período máximo permitido para simulação é de 100 anos (1.200 meses).',
+      )
+      return
+    }
+
     const rateA = this.monthlyRateFrom('compararTaxaA', 'compararTaxaAPeriodo')
     const rateB = this.monthlyRateFrom('compararTaxaB', 'compararTaxaBPeriodo')
 
@@ -374,6 +392,10 @@ class JurosCompostosCalculadora {
     const anos = idadeAposentar - idadeAtual
     if (anos <= 0) {
       alert('A idade de aposentadoria deve ser maior que a idade atual.')
+      return
+    }
+    if (anos > 100) {
+      alert('O período até a aposentadoria não pode exceder 100 anos.')
       return
     }
 

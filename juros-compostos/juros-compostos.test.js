@@ -129,6 +129,20 @@ describe('JurosMath', () => {
         expect(r.balance).toBeCloseTo(r.invested + r.interest, 6)
       })
     })
+
+    it('limita a 100 anos (1200 meses) para prevenir DoS por alocação excessiva', () => {
+      const rows = JurosMath.buildYearlyEvolution(1000, 100, 0.01, 1000000)
+      expect(rows).toHaveLength(100)
+      expect(rows[99].year).toBe(100)
+      expect(rows[99].months).toBe(1200)
+    })
+
+    it('retorna array vazio quando meses <= 0', () => {
+      expect(JurosMath.buildYearlyEvolution(1000, 100, 0.01, 0)).toHaveLength(0)
+      expect(JurosMath.buildYearlyEvolution(1000, 100, 0.01, -12)).toHaveLength(
+        0,
+      )
+    })
   })
 })
 
