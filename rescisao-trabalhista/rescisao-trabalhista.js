@@ -144,8 +144,15 @@ function updateFormBasedOnRescisionType() {
  * Valida se as datas inseridas são consistentes
  */
 function validateDates() {
-  const dataAdmissao = new Date(document.getElementById('dataAdmissao').value)
-  const dataRescisao = new Date(document.getElementById('dataRescisao').value)
+  const admissaoInput = document.getElementById('dataAdmissao')
+  const rescisaoInput = document.getElementById('dataRescisao')
+  const dataAdmissao = new Date(admissaoInput?.value)
+  const dataRescisao = new Date(rescisaoInput?.value)
+
+  if (isNaN(dataAdmissao.getTime()) || isNaN(dataRescisao.getTime())) {
+    alert('Por favor, informe datas válidas para admissão e rescisão.')
+    return false
+  }
 
   if (dataAdmissao >= dataRescisao) {
     alert('Data de rescisão deve ser posterior à data de admissão')
@@ -248,8 +255,17 @@ function collectFormData() {
  * Calcula os anos completos trabalhados
  */
 function calculateCompleteYears(tempDate, dataRescisao) {
+  if (
+    !(tempDate instanceof Date) ||
+    isNaN(tempDate.getTime()) ||
+    !(dataRescisao instanceof Date) ||
+    isNaN(dataRescisao.getTime())
+  ) {
+    return 0
+  }
   let anos = 0
-  for (;;) {
+  const maxYears = 120
+  while (anos < maxYears) {
     const nextYear = new Date(tempDate)
     nextYear.setFullYear(tempDate.getFullYear() + 1)
 
@@ -265,8 +281,17 @@ function calculateCompleteYears(tempDate, dataRescisao) {
  * Calcula os meses completos trabalhados
  */
 function calculateCompleteMonths(tempDate, dataRescisao) {
+  if (
+    !(tempDate instanceof Date) ||
+    isNaN(tempDate.getTime()) ||
+    !(dataRescisao instanceof Date) ||
+    isNaN(dataRescisao.getTime())
+  ) {
+    return 0
+  }
   let meses = 0
-  for (;;) {
+  const maxMonths = 1440
+  while (meses < maxMonths) {
     const nextMonth = new Date(tempDate)
     nextMonth.setMonth(tempDate.getMonth() + 1)
 
@@ -282,6 +307,14 @@ function calculateCompleteMonths(tempDate, dataRescisao) {
  * Calcula os dias restantes trabalhados
  */
 function calculateRemainingDays(tempDate, dataRescisao) {
+  if (
+    !(tempDate instanceof Date) ||
+    isNaN(tempDate.getTime()) ||
+    !(dataRescisao instanceof Date) ||
+    isNaN(dataRescisao.getTime())
+  ) {
+    return 0
+  }
   const diffFinal = dataRescisao.getTime() - tempDate.getTime()
   return Math.round(diffFinal / (1000 * 60 * 60 * 24))
 }
@@ -290,6 +323,21 @@ function calculateRemainingDays(tempDate, dataRescisao) {
  * Calcula o período trabalhado em anos, meses e dias
  */
 function calculateWorkPeriod(dataAdmissao, dataRescisao) {
+  if (
+    !(dataAdmissao instanceof Date) ||
+    isNaN(dataAdmissao.getTime()) ||
+    !(dataRescisao instanceof Date) ||
+    isNaN(dataRescisao.getTime())
+  ) {
+    return {
+      anos: 0,
+      meses: 0,
+      dias: 0,
+      totalDias: 0,
+      totalMeses: 0,
+    }
+  }
+
   const diffTime = dataRescisao.getTime() - dataAdmissao.getTime()
   const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24))
 
@@ -653,6 +701,7 @@ if (typeof module !== 'undefined' && module.exports) {
     calculateCompleteMonths,
     calculateRemainingDays,
     calculateRescisionBenefits,
+    validateDates,
     CONSTANTS,
   }
 }
